@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector android:exitFadeDuration="500"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true"
+          android:drawable="@drawable/preview_btn_back_pressed_big" />
+    <item android:state_focused="true"
+          android:drawable="@drawable/preview_btn_back_pressed_big" />
+    <item android:drawable="@drawable/preview_btn_back_transparent" />
+</selector>

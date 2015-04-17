@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_qd"
+
+        >
+
+    <RelativeLayout
+            android:id="@+id/rl_settings_easy_config"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/qd_setting_item_bg"
+            >
+
+        <ImageView
+                android:id="@+id/iv_settings_easy_config_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_settings"
+                android:layout_centerVertical="true"
+                />
+        <TextView
+
+                android:id="@+id/iv_settings_easy_config_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/iv_settings_easy_config_icon"
+                android:text="@string/prefs_fast"
+                android:layout_alignTop="@+id/iv_settings_easy_config_icon"
+                android:layout_marginLeft="10dp"
+                android:textColor="#ffffffff"
+                android:textSize="16sp"
+                />
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_toRightOf="@+id/iv_settings_easy_config_icon"
+                  android:text="@string/prefs_fast_desc"
+                  android:layout_below="@+id/iv_settings_easy_config_title"
+                  android:layout_marginLeft="10dp"
+                  android:layout_marginTop="5dp"
+                  android:textColor="#ffffffff"
+                />
+
+    </RelativeLayout>
+
+    <View android:layout_width="match_parent"
+          android:layout_marginTop="5dp"
+          android:layout_marginBottom="5dp"
+          android:layout_height="1dp"
+          android:layout_marginLeft="10dp"
+          android:layout_marginRight="10dp"
+          android:background="@drawable/line"
+            />
+
+    <RelativeLayout
+            android:id="@+id/rl_settings_net"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/qd_setting_item_bg"
+            >
+
+        <ImageView
+                android:id="@+id/iv_settings_net_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_network"
+                android:layout_centerVertical="true"
+                />
+
+        <TextView
+                android:id="@+id/iv_settings_net_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/iv_settings_net_icon"
+                android:text="@string/prefs_network"
+                android:layout_marginLeft="10dp"
+                android:textColor="#ffffffff"
+                android:textSize="16sp"
+                />
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_toRightOf="@+id/iv_settings_net_icon"
+                  android:text="@string/prefs_network_desc"
+                  android:layout_below="@+id/iv_settings_net_title"
+                  android:layout_marginLeft="10dp"
+                  android:layout_marginTop="5dp"
+                  android:textColor="#ffffffff"
+                />
+
+    </RelativeLayout>
+
+    <View android:layout_width="match_parent"
+          android:layout_marginTop="5dp"
+          android:layout_marginBottom="5dp"
+          android:layout_height="1dp"
+          android:layout_marginLeft="10dp"
+          android:layout_marginRight="10dp"
+          android:background="@drawable/line"
+            />
+
+    <RelativeLayout
+            android:id="@+id/rl_settings_media"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/qd_setting_item_bg"
+            >
+
+        <ImageView
+                android:id="@+id/iv_settings_media_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_media"
+                android:layout_centerVertical="true"
+                />
+
+        <TextView
+                android:id="@+id/iv_settings_media_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/iv_settings_media_icon"
+                android:text="@string/prefs_media"
+                android:layout_marginLeft="10dp"
+                android:textColor="#ffffffff"
+                android:textSize="16sp"
+                />
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_toRightOf="@+id/iv_settings_media_icon"
+                  android:text="@string/prefs_media_desc"
+                  android:layout_below="@+id/iv_settings_media_title"
+                  android:layout_marginLeft="10dp"
+                  android:layout_marginTop="5dp"
+                  android:textColor="#ffffffff"
+                />
+
+    </RelativeLayout>
+
+    <View android:layout_width="match_parent"
+          android:layout_marginTop="5dp"
+          android:layout_marginBottom="5dp"
+          android:layout_height="1dp"
+          android:layout_marginLeft="10dp"
+          android:layout_marginRight="10dp"
+          android:background="@drawable/line"
+            />
+
+    <RelativeLayout
+            android:id="@+id/rl_settings_user_interface"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/qd_setting_item_bg"
+            >
+
+        <ImageView
+                android:id="@+id/iv_settings_user_interface_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_user_interface"
+                android:layout_centerVertical="true"
+                />
+
+        <TextView
+                android:id="@+id/iv_settings_user_interface_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/iv_settings_user_interface_icon"
+                android:text="@string/prefs_ui"
+                android:layout_marginLeft="10dp"
+                android:textColor="#ffffffff"
+                android:textSize="16sp"
+                />
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_toRightOf="@+id/iv_settings_user_interface_icon"
+                  android:text="@string/prefs_ui_desc"
+                  android:layout_below="@+id/iv_settings_user_interface_title"
+                  android:layout_marginLeft="10dp"
+                  android:layout_marginTop="5dp"
+                  android:textColor="#ffffffff"
+                />
+
+    </RelativeLayout>
+
+    <View android:layout_width="match_parent"
+          android:layout_marginTop="5dp"
+          android:layout_marginBottom="5dp"
+          android:layout_height="1dp"
+          android:layout_marginLeft="10dp"
+          android:layout_marginRight="10dp"
+          android:background="@drawable/line"
+            />
+
+    <RelativeLayout
+            android:id="@+id/rl_settings_call_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/qd_setting_item_bg"
+            >
+
+        <ImageView
+                android:id="@+id/iv_settings_call_options_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_call_options"
+                android:layout_centerVertical="true"
+                />
+
+        <TextView
+                android:id="@+id/iv_settings_call_options_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/iv_settings_call_options_icon"
+                android:text="@string/prefs_calls"
+                android:layout_marginLeft="10dp"
+                android:textColor="#ffffffff"
+                android:textSize="16sp"
+                />
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_toRightOf="@+id/iv_settings_call_options_icon"
+                  android:text="@string/prefs_calls_desc"
+                  android:layout_below="@+id/iv_settings_call_options_title"
+                  android:layout_marginLeft="10dp"
+                  android:layout_marginTop="5dp"
+                  android:textColor="#ffffffff"
+                />
+
+    </RelativeLayout>
+
+    <View android:layout_width="match_parent"
+          android:layout_marginTop="5dp"
+          android:layout_marginBottom="5dp"
+          android:layout_height="1dp"
+          android:layout_marginLeft="10dp"
+          android:layout_marginRight="10dp"
+          android:background="@drawable/line"
+            />
+
+
+    <RelativeLayout
+            android:id="@+id/rl_settings_filters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/qd_setting_item_bg"
+            >
+
+        <ImageView
+                android:id="@+id/iv_settings_filters_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_filters"
+                android:layout_centerVertical="true"
+                />
+
+        <TextView
+                android:id="@+id/iv_settings_filters_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/iv_settings_filters_icon"
+                android:text="@string/filters"
+                android:layout_marginLeft="10dp"
+                android:textColor="#ffffffff"
+                android:textSize="16sp"
+                />
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_toRightOf="@+id/iv_settings_filters_icon"
+                  android:text="@string/filters_desc"
+                  android:layout_below="@+id/iv_settings_filters_title"
+                  android:layout_marginLeft="10dp"
+                  android:layout_marginTop="5dp"
+                  android:textColor="#ffffffff"
+                />
+
+    </RelativeLayout>
+
+</LinearLayout>

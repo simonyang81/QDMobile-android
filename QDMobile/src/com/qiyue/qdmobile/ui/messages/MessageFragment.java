@@ -1,38 +1,13 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.qiyue.qdmobile.ui.messages;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.*;
 import android.database.Cursor;
 import android.net.Uri.Builder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -43,17 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import android.widget.*;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.ISipService;
 import com.qiyue.qdmobile.api.SipMessage;
@@ -63,14 +28,16 @@ import com.qiyue.qdmobile.models.CallerInfo;
 import com.qiyue.qdmobile.service.SipNotifications;
 import com.qiyue.qdmobile.service.SipService;
 import com.qiyue.qdmobile.ui.PickupSipUri;
+import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.SmileyParser;
 import com.qiyue.qdmobile.utils.clipboard.ClipboardWrapper;
-import com.qiyue.qdmobile.utils.contacts.ContactsWrapper;
 import com.qiyue.qdmobile.widgets.AccountChooserButton;
 
-public class MessageFragment extends SherlockListFragment implements LoaderManager.LoaderCallbacks<Cursor>, OnClickListener {
-    private static final String THIS_FILE = "ComposeMessage";
+public class MessageFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, OnClickListener {
+
+    private static final String THIS_FILE = MessageFragment.class.getSimpleName();
+
     private String remoteFrom;
     private TextView fromText;
     private TextView fullFromText;
@@ -79,10 +46,9 @@ public class MessageFragment extends SherlockListFragment implements LoaderManag
     private Button sendButton;
     private SipNotifications notifications;
     private MessageAdapter mAdapter;
-    
 
     public interface OnQuitListener {
-        public void onQuit();
+        void onQuit();
     }
 
     private OnQuitListener quitListener;
@@ -91,15 +57,15 @@ public class MessageFragment extends SherlockListFragment implements LoaderManag
     public void setOnQuitListener(OnQuitListener l) {
         quitListener = l;
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        
 
         ListView lv = getListView();
         lv.setOnCreateContextMenuListener(this);
-        
+
     }
 
     @Override
@@ -110,9 +76,12 @@ public class MessageFragment extends SherlockListFragment implements LoaderManag
         notifications = new SipNotifications(getActivity());
         clipboardManager = ClipboardWrapper.getInstance(getActivity());
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        Log.i(THIS_FILE, "onCreateView()...");
+
         View v = inflater.inflate(R.layout.compose_message_activity, container, false);
 
         fullFromText = (TextView) v.findViewById(R.id.subject);
@@ -121,20 +90,20 @@ public class MessageFragment extends SherlockListFragment implements LoaderManag
         accountChooserButton = (AccountChooserButton) v.findViewById(R.id.accountChooserButton);
         sendButton = (Button) v.findViewById(R.id.send_button);
         accountChooserButton.setShowExternals(false);
-        
+
         return v;
     }
-    
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getListView().setDivider(null);
         fromText.setOnClickListener(this);
         sendButton.setOnClickListener(this);
-        
+
         mAdapter = new MessageAdapter(getActivity(), null);
         getListView().setAdapter(mAdapter);
-        
+
         // Setup from args
         String from = getArguments().getString(SipMessage.FIELD_FROM);
         String fullFrom = getArguments().getString(SipMessage.FIELD_FROM_FULL);
@@ -145,16 +114,15 @@ public class MessageFragment extends SherlockListFragment implements LoaderManag
         if (remoteFrom == null) {
             chooseSipUri();
         }
-        
-        
+
     }
-    
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         getActivity().bindService(new Intent(getActivity(), SipService.class), connection, Context.BIND_AUTO_CREATE);
     }
-    
+
     @Override
     public void onDetach() {
         try {
@@ -165,7 +133,7 @@ public class MessageFragment extends SherlockListFragment implements LoaderManag
         service = null;
         super.onDetach();
     }
-    
+
     @Override
     public void onResume() {
         Log.d(THIS_FILE, "Resume compose message act");
@@ -179,21 +147,20 @@ public class MessageFragment extends SherlockListFragment implements LoaderManag
         notifications.setViewingMessageFrom(null);
     }
 
-    private final static int PICKUP_SIP_URI = 0;
-    
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(THIS_FILE, "On activity result " + requestCode);
-        if (requestCode == PICKUP_SIP_URI) {
+        if (requestCode == Constants.PICKUP_SIP_URI) {
             if (resultCode == Activity.RESULT_OK) {
                 String from = data.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
                 setupFrom(from, from);
             }
             if (TextUtils.isEmpty(remoteFrom)) {
-                if(quitListener != null) {
+                if (quitListener != null) {
                     quitListener.onQuit();
                 }
-            }else {
+            } else {
                 loadMessageContent();
             }
             return;
@@ -214,22 +181,22 @@ public class MessageFragment extends SherlockListFragment implements LoaderManag
             service = null;
         }
     };
-    
+
     private void loadMessageContent() {
         getLoaderManager().restartLoader(0, getArguments(), this);
-        
+
         String from = getArguments().getString(SipMessage.FIELD_FROM);
 
         if (!TextUtils.isEmpty(from)) {
             ContentValues args = new ContentValues();
             args.put(SipMessage.FIELD_READ, true);
             getActivity().getContentResolver().update(SipMessage.MESSAGE_URI, args,
-                    SipMessage.FIELD_FROM + "=?", new String[] {
-                        from
+                    SipMessage.FIELD_FROM + "=?", new String[]{
+                            from
                     });
         }
     }
-    
+
 
     public static Bundle getArguments(String from, String fromFull) {
         Bundle bundle = new Bundle();
@@ -240,7 +207,7 @@ public class MessageFragment extends SherlockListFragment implements LoaderManag
 
         return bundle;
     }
-    
+
 
     private void setupFrom(String from, String fullFrom) {
         Log.d(THIS_FILE, "Setup from " + from);
@@ -250,9 +217,9 @@ public class MessageFragment extends SherlockListFragment implements LoaderManag
                 fromText.setText(remoteFrom);
                 CallerInfo callerInfo = CallerInfo.getCallerInfoFromSipUri(getActivity(), fullFrom);
                 if (callerInfo != null && callerInfo.contactExists) {
-                	fullFromText.setText(callerInfo.name);
+                    fullFromText.setText(callerInfo.name);
                 } else {
-                	fullFromText.setText(SipUri.getDisplayedSimpleContact(fullFrom));
+                    fullFromText.setText(SipUri.getDisplayedSimpleContact(fullFrom));
                 }
                 loadMessageContent();
                 notifications.setViewingMessageFrom(remoteFrom);
@@ -261,8 +228,8 @@ public class MessageFragment extends SherlockListFragment implements LoaderManag
     }
 
     private void chooseSipUri() {
-        Intent pickupIntent = new Intent(getActivity(), PickupSipUri.class);
-        startActivityForResult(pickupIntent, PICKUP_SIP_URI);
+//        Intent pickupIntent = new Intent(getActivity(), PickupSipUri.class);
+//        startActivityForResult(pickupIntent, PICKUP_SIP_URI);
     }
 
     private void sendMessage() {
@@ -271,7 +238,7 @@ public class MessageFragment extends SherlockListFragment implements LoaderManag
             if (acc != null && acc.id != SipProfile.INVALID_ID) {
                 try {
                     String textToSend = bodyInput.getText().toString();
-                    if(!TextUtils.isEmpty(textToSend)) {
+                    if (!TextUtils.isEmpty(textToSend)) {
                         service.sendMessage(textToSend, remoteFrom, (int) acc.id);
                         bodyInput.getText().clear();
                     }
@@ -308,34 +275,34 @@ public class MessageFragment extends SherlockListFragment implements LoaderManag
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
     }
-    
 
-    // Options
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
 
-        int actionRoom = getResources().getBoolean(R.bool.menu_in_bar) ? MenuItem.SHOW_AS_ACTION_IF_ROOM : MenuItem.SHOW_AS_ACTION_NEVER;
-        MenuItem addContactMenu = menu.add(R.string.menu_add_to_contacts);
-        addContactMenu.setIcon(R.drawable.ic_add_contact_holo_dark).setShowAsAction(actionRoom);
-        addContactMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Intent it = ContactsWrapper.getInstance().getAddContactIntent(null, remoteFrom);
-                startActivity(it);
-                return true;
-            }
-        });
-    }
-    
+//    // Options
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//
+//        int actionRoom = getResources().getBoolean(R.bool.menu_in_bar) ? MenuItem.SHOW_AS_ACTION_IF_ROOM : MenuItem.SHOW_AS_ACTION_NEVER;
+//        MenuItem addContactMenu = menu.add(R.string.menu_add_to_contacts);
+//        addContactMenu.setIcon(R.drawable.ic_add_contact_holo_dark).setShowAsAction(actionRoom);
+//        addContactMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                Intent it = ContactsWrapper.getInstance().getAddContactIntent(null, remoteFrom);
+//                startActivity(it);
+//                return true;
+//            }
+//        });
+//    }
+
     // Context menu
     public static final int MENU_COPY = ContextMenu.FIRST;
 
     public void onCreateContextMenu(ContextMenu menu, View v,
-            ContextMenuInfo menuInfo) {
+                                    ContextMenuInfo menuInfo) {
         menu.add(0, MENU_COPY, 0, R.string.copy_message_text);
     }
-    
+
     @Override
     public boolean onContextItemSelected(android.view.MenuItem item) {
         AdapterView.AdapterContextMenuInfo info =
@@ -355,5 +322,5 @@ public class MessageFragment extends SherlockListFragment implements LoaderManag
         }
         return super.onContextItemSelected(item);
     }
-    
+
 }

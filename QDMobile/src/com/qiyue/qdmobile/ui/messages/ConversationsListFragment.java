@@ -1,25 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.qiyue.qdmobile.ui.messages;
 
 import android.app.AlertDialog;
@@ -29,7 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri.Builder;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
@@ -38,27 +15,33 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.melnykov.fab.FloatingActionButton;
+import com.melnykov.fab.ScrollDirectionListener;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipMessage;
 import com.qiyue.qdmobile.service.SipNotifications;
+import com.qiyue.qdmobile.ui.PickupSipUri;
 import com.qiyue.qdmobile.ui.SipHome.ViewPagerVisibilityListener;
 import com.qiyue.qdmobile.ui.messages.ConversationsAdapter.ConversationListItemViews;
+import com.qiyue.qdmobile.utils.Constants;
+import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.widgets.CSSListFragment;
+
+import java.security.acl.LastOwnerException;
 
 /**
  * This activity provides a list view of existing conversations.
  */
 public class ConversationsListFragment extends CSSListFragment implements ViewPagerVisibilityListener {
 	//private static final String THIS_FILE = "Conv List";
+
+    private static final String TAG = ConversationsListFragment.class.getSimpleName();
 	
     // IDs of the main menu items.
     public static final int MENU_COMPOSE_NEW          = 0;
@@ -71,13 +54,89 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
     private boolean mDualPane;
 
     private ConversationsAdapter mAdapter;
-    private View mHeaderView;
+//    private View mHeaderView;
+    private FloatingActionButton mCreateMsg;
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
+
+        Log.i(TAG, "onCreateView()...");
+
+        View v = inflater.inflate(R.layout.message_list_fragment, container, false);
+
+        return v;
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        Log.i(TAG, "onActivityCreated()...");
+
+        ListView lv = (ListView) getActivity().findViewById(android.R.id.list);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                ConversationListItemViews cri = (ConversationListItemViews) view.getTag();
+                viewDetails(position, cri);
+
+            }
+        });
+
+        View.OnClickListener addClickButtonListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickAddMessage();
+            }
+        };
+
+
+        // Header view
+//        mHeaderView = (ViewGroup)
+//                inflater.inflate(R.layout.conversation_list_item, lv, false);
+//        ((TextView) mHeaderView.findViewById(R.id.from) ).setText(R.string.new_message);
+//        ((TextView) mHeaderView.findViewById(R.id.subject) ).setText(R.string.create_new_message);
+//        mHeaderView.findViewById(R.id.quick_contact_photo).setVisibility(View.GONE);
+//        mHeaderView.setOnClickListener(addClickButtonListener);
+
+
+        // Empty view
+        Button bt = (Button) getActivity().findViewById(android.R.id.empty);
+        bt.setOnClickListener(addClickButtonListener);
+
+//        lv.addHeaderView(mHeaderView, null, true);
+        lv.setOnCreateContextMenuListener(this);
+
+        mCreateMsg = (FloatingActionButton) getActivity().findViewById(R.id.fab_create_messages);
+        mCreateMsg.setOnClickListener(addClickButtonListener);
+
+        mCreateMsg.attachToListView(lv, new ScrollDirectionListener() {
+            @Override
+            public void onScrollDown() {
+                Log.d(TAG, "onScrollDown()");
+                mCreateMsg.show(true);
+            }
+
+            @Override
+            public void onScrollUp() {
+                Log.d(TAG, "onScrollUp()");
+                mCreateMsg.hide(true);
+            }
+        }, new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                Log.d(TAG, "onScrollStateChanged()");
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                Log.d(TAG, "onScroll()");
+            }
+        });
+
         setHasOptionsMenu(true);
+        onVisibilityChanged(true);
     }
     
     private void attachAdapter() {
@@ -90,39 +149,13 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
         
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
-        View v = inflater.inflate(R.layout.message_list_fragment, container, false);
-        
-        ListView lv = (ListView) v.findViewById(android.R.id.list);
-
-        View.OnClickListener addClickButtonListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickAddMessage();
-            }
-        };
-        
-
-        // Header view
-        mHeaderView = (ViewGroup)
-                inflater.inflate(R.layout.conversation_list_item, lv, false);
-        ((TextView) mHeaderView.findViewById(R.id.from) ).setText(R.string.new_message);
-        ((TextView) mHeaderView.findViewById(R.id.subject) ).setText(R.string.create_new_message);
-        mHeaderView.findViewById(R.id.quick_contact_photo).setVisibility(View.GONE);
-        mHeaderView.setOnClickListener(addClickButtonListener);
-        // Empty view
-        Button bt = (Button) v.findViewById(android.R.id.empty);
-        bt.setOnClickListener(addClickButtonListener);
-
-        lv.addHeaderView(mHeaderView, null, true);
-        lv.setOnCreateContextMenuListener(this);
-        
-        return v;
-    }
-    
     private void onClickAddMessage() {
-        viewDetails(-getListView().getHeaderViewsCount(), null);
+
+        Intent pickupIntent = new Intent(getActivity(), PickupSipUri.class);
+        startActivityForResult(pickupIntent, Constants.PICKUP_SIP_URI);
+        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+//        viewDetails(-getListView().getHeaderViewsCount(), null);
     }
     
     @Override
@@ -163,29 +196,35 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
         viewDetails(position, number, fromFull);
     }
     
-    
     public void viewDetails(int position, String number, String fromFull) {
-        
+
+        Log.i(TAG, "viewDetails()...");
+
         Bundle b = MessageFragment.getArguments(number, fromFull);
+        Intent it = new Intent(getActivity(), MessageActivity.class);
+        it.putExtras(b);
+        startActivity(it);
+        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-        if (mDualPane) {
-            // If we are not currently showing a fragment for the new
-            // position, we need to create and install a new one.
-            MessageFragment df = new MessageFragment();
-            df.setArguments(b);
-            // Execute a transaction, replacing any existing fragment
-            // with this one inside the frame.
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.details, df, null);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.commit();
-
-            getListView().setItemChecked(position, true);
-        } else {
-            Intent it = new Intent(getActivity(), MessageActivity.class);
-            it.putExtras(b);
-            startActivity(it);
-        }
+//        TODO
+//        if (mDualPane) {
+//            // If we are not currently showing a fragment for the new
+//            // position, we need to create and install a new one.
+//            MessageFragment df = new MessageFragment();
+//            df.setArguments(b);
+//            // Execute a transaction, replacing any existing fragment
+//            // with this one inside the frame.
+//            FragmentTransaction ft = getFragmentManager().beginTransaction();
+//            ft.replace(R.id.details, df, null);
+//            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//            ft.commit();
+//
+//            getListView().setItemChecked(position, true);
+//        } else {
+//            Intent it = new Intent(getActivity(), MessageActivity.class);
+//            it.putExtras(b);
+//            startActivity(it);
+//        }
     }
 
 
@@ -262,15 +301,15 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
         return super.onContextItemSelected(item);
     }
     
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        ConversationListItemViews cri = (ConversationListItemViews) v.getTag();
-        viewDetails(position, cri);
-    }
+//    @Override
+//    public void onListItemClick(ListView l, View v, int position, long id) {
+//        ConversationListItemViews cri = (ConversationListItemViews) v.getTag();
+//        viewDetails(position, cri);
+//    }
 
 
 	/*
-    
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
@@ -310,7 +349,7 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
         }
     }
     */
-    
+
     private void confirmDeleteThread(final String from) {
     	
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

@@ -128,45 +128,46 @@
             android:value="true" />
 
         <activity
-            android:name=".ui.SipHome"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:theme="@style/DarkTheme"
-            android:screenOrientation="portrait"
-            android:uiOptions="splitActionBarWhenNarrow" >
+                android:name=".ui.SipHome"
+                android:label="@string/app_name"
+                android:launchMode="singleTask"
+                android:theme="@style/DarkTheme"
+                android:screenOrientation="portrait"
+                android:uiOptions="splitActionBarWhenNarrow"
+                >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
             </intent-filter>
-            <intent-filter android:priority="10" >
-                <action android:name="com.qiyue.qdmobile.phone.action.DIALER" />
+            <intent-filter android:priority="10">
+                <action android:name="com.qiyue.qdmobile.phone.action.DIALER"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-            <intent-filter android:priority="10" >
-                <action android:name="android.intent.action.DIAL" />
+            <intent-filter android:priority="10">
+                <action android:name="android.intent.action.DIAL"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
 
-                <data android:scheme="sip" />
-                <data android:scheme="csip" />
+                <data android:scheme="sip"/>
+                <data android:scheme="csip"/>
             </intent-filter>
-            <intent-filter android:priority="10" >
-                <action android:name="com.qiyue.qdmobile.phone.action.CALLLOG" />
+            <intent-filter android:priority="10">
+                <action android:name="com.qiyue.qdmobile.phone.action.CALLLOG"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-            <intent-filter android:priority="10" >
-                <action android:name="com.qiyue.qdmobile.phone.action.FAVORITES" />
+            <intent-filter android:priority="10">
+                <action android:name="com.qiyue.qdmobile.phone.action.FAVORITES"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-            <intent-filter android:priority="10" >
-                <action android:name="com.qiyue.qdmobile.phone.action.MESSAGES" />
+            <intent-filter android:priority="10">
+                <action android:name="com.qiyue.qdmobile.phone.action.MESSAGES"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
@@ -455,9 +456,10 @@
         </activity>
         <activity
             android:name=".ui.PickupSipUri"
-            android:configChanges="orientation"
-            android:label="@string/pickup_sip_uri"
-            android:theme="@style/DarkTheme" />
+            android:launchMode="standard"
+            android:theme="@style/DarkTheme.NoTitle"
+            android:screenOrientation="portrait"
+                />
         <activity
             android:name=".ui.incall.InCallMediaControl"
             android:configChanges="orientation"
@@ -517,7 +519,7 @@
             android:name=".ui.messages.MessageActivity"
             android:configChanges="orientation"
             android:launchMode="singleTop"
-            android:theme="@style/DarkTheme"
+            android:theme="@style/Holo.Light"
             android:windowSoftInputMode="stateHidden" />
 
         <!-- Embedded plugins -->

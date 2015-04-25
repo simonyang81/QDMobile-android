@@ -40,36 +40,36 @@ import java.util.ArrayList;
 
 public class SipHome extends SherlockFragmentActivity {
 
-    public static final int ACCOUNTS_MENU           = Menu.FIRST + 1;
-    public static final int PARAMS_MENU             = Menu.FIRST + 2;
-    public static final int CLOSE_MENU              = Menu.FIRST + 3;
-    public static final int HELP_MENU               = Menu.FIRST + 4;
-    public static final int DISTRIB_ACCOUNT_MENU    = Menu.FIRST + 5;
+//    public static final int ACCOUNTS_MENU           = Menu.FIRST + 1;
+//    public static final int PARAMS_MENU             = Menu.FIRST + 2;
+//    public static final int CLOSE_MENU              = Menu.FIRST + 3;
+//    public static final int HELP_MENU               = Menu.FIRST + 4;
+//    public static final int DISTRIB_ACCOUNT_MENU    = Menu.FIRST + 5;
 
     private static final String THIS_FILE = "SIP_HOME";
 
-    private final static int TAB_ID_DIALER = 0;
-    private final static int TAB_ID_CALL_LOG = 1;
-    private final static int TAB_ID_FAVORITES = 2;
-    private final static int TAB_ID_MESSAGES = 3;
-    private final static int TAB_ID_WARNING = 4;
-
-    // protected static final int PICKUP_PHONE = 0;
-    private static final int REQUEST_EDIT_DISTRIBUTION_ACCOUNT = 0;
+//    private final static int TAB_ID_DIALER = 0;
+//    private final static int TAB_ID_CALL_LOG = 1;
+//    private final static int TAB_ID_FAVORITES = 2;
+//    private final static int TAB_ID_MESSAGES = 3;
+//    private final static int TAB_ID_WARNING = 4;
+//
+//    // protected static final int PICKUP_PHONE = 0;
+//    private static final int REQUEST_EDIT_DISTRIBUTION_ACCOUNT = 0;
 
     //private PreferencesWrapper prefWrapper;
     private PreferencesProviderWrapper prefProviderWrapper;
 
     private boolean hasTriedOnceActivateAcc = false;
     // private ImageButton pickupContact;
-    private ViewPager mViewPager;
-//    private TabsAdapter mTabsAdapter;
-    private boolean mDualPane;
+//    private ViewPager mViewPager;
+////    private TabsAdapter mTabsAdapter;
+//    private boolean mDualPane;
+//    private Tab warningTab;
+//    private ObjectAnimator warningTabfadeAnim;
+
+
     private Thread asyncSanityChecker;
-    private Tab warningTab;
-    private ObjectAnimator warningTabfadeAnim;
-
-
     private DialerFragment mDialpadFragment;
     private CallLogListFragment mCallLogFragment;
     private SettingsFragment mSettingsFragment;
@@ -110,21 +110,12 @@ public class SipHome extends SherlockFragmentActivity {
 
         ft.commit();
 
-//        ((ImageView)findViewById(R.id.iv_dial_call)).setImageResource(R.drawable.icon_keypad_selected);
-
         mDialpadBtn = (TextView) findViewById(R.id.menu_dialpad);
         mDialpadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 setMenuButton(MenuButton.dialpad);
-
-//                ((ImageView) findViewById(R.id.iv_dial_call)).setImageResource(R.drawable.icon_keypad_selected);
-//                ((ImageView) findViewById(R.id.iv_rencents)).setImageResource(R.drawable.icon_recents_idle);
-//                ((ImageView) findViewById(R.id.iv_contacts)).setImageResource(R.drawable.icon_contacts_idle);
-//                ((ImageView) findViewById(R.id.iv_messages)).setImageResource(R.drawable.icon_messages_idle);
-//                ((ImageView) findViewById(R.id.iv_settings)).setImageResource(R.drawable.icon_settings_idle);
-
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
                 mDialpadFragment
@@ -146,12 +137,6 @@ public class SipHome extends SherlockFragmentActivity {
             public void onClick(View v) {
 
                 setMenuButton(MenuButton.recents);
-//                ((ImageView) findViewById(R.id.iv_rencents)).setImageResource(R.drawable.icon_recents_selected);
-//                ((ImageView) findViewById(R.id.iv_dial_call)).setImageResource(R.drawable.icon_keypad_idle);
-//                ((ImageView) findViewById(R.id.iv_contacts)).setImageResource(R.drawable.icon_contacts_idle);
-//                ((ImageView) findViewById(R.id.iv_messages)).setImageResource(R.drawable.icon_messages_idle);
-//                ((ImageView) findViewById(R.id.iv_settings)).setImageResource(R.drawable.icon_settings_idle);
-
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
                 mCallLogFragment
@@ -167,35 +152,37 @@ public class SipHome extends SherlockFragmentActivity {
         });
 
         mContactsBtn = (TextView) findViewById(R.id.menu_contacts);
+
+        // TODO
+        mContactsBtn.setVisibility(View.GONE);
         mContactsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 setMenuButton(MenuButton.contacts);
-
-//                ((ImageView) findViewById(R.id.iv_contacts)).setImageResource(R.drawable.icon_contacts_selected);
-//                ((ImageView) findViewById(R.id.iv_rencents)).setImageResource(R.drawable.icon_recents_idle);
-//                ((ImageView) findViewById(R.id.iv_dial_call)).setImageResource(R.drawable.icon_keypad_idle);
-//                ((ImageView) findViewById(R.id.iv_messages)).setImageResource(R.drawable.icon_messages_idle);
-//                ((ImageView) findViewById(R.id.iv_settings)).setImageResource(R.drawable.icon_settings_idle);
             }
         });
 
         mMessagesBtn = (TextView) findViewById(R.id.menu_messages);
-
-        // TODO
-        mMessagesBtn.setVisibility(View.GONE);
         mMessagesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 setMenuButton(MenuButton.messages);
 
-//                ((ImageView) findViewById(R.id.iv_messages)).setImageResource(R.drawable.icon_messages_selected);
-//                ((ImageView) findViewById(R.id.iv_contacts)).setImageResource(R.drawable.icon_contacts_idle);
-//                ((ImageView) findViewById(R.id.iv_rencents)).setImageResource(R.drawable.icon_recents_idle);
-//                ((ImageView) findViewById(R.id.iv_dial_call)).setImageResource(R.drawable.icon_keypad_idle);
-//                ((ImageView) findViewById(R.id.iv_settings)).setImageResource(R.drawable.icon_settings_idle);
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+                mMessagesFragment
+                        = (ConversationsListFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_CONVERSATIONS_LIST);
+                if (mMessagesFragment == null) {
+                    mMessagesFragment = new ConversationsListFragment();
+                }
+                ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+                ft.replace(R.id.content_frame, mMessagesFragment, Constants.FRAGMENT_TAG_CONVERSATIONS_LIST);
+                ft.commit();
+
+//                mMessagesFragment.onVisibilityChanged(true);
+
             }
         });
 

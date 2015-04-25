@@ -1,24 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.ui.messages;
 
 import android.content.Context;
@@ -38,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipMessage;
 import com.qiyue.qdmobile.models.CallerInfo;
@@ -71,7 +51,7 @@ public class MessageAdapter extends ResourceCursorAdapter {
         TextView errorView;
         ImageView deliveredIndicator;
         TextView dateView;
-        QuickContactBadge quickContactView;
+        RoundedImageView quickContactView;
         public LinearLayout containterBlock;
     }
     
@@ -136,9 +116,9 @@ public class MessageAdapter extends ResourceCursorAdapter {
             setPhotoSide(tagView, ArrowPosition.LEFT);
     
             // Photo
-            tagView.quickContactView.assignContactUri(personalInfo.contactContentUri);
+            tagView.quickContactView.setImageURI(personalInfo.contactContentUri);
             ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext, 
-                    tagView.quickContactView.getImageView(),
+                    tagView.quickContactView,
                     personalInfo,
                     R.drawable.ic_contact_picture_holo_dark);
             
@@ -149,28 +129,36 @@ public class MessageAdapter extends ResourceCursorAdapter {
             CallerInfo info = CallerInfo.getCallerInfoFromSipUri(mContext, msg.getFullFrom());
     
             // Photo
-            tagView.quickContactView.assignContactUri(info.contactContentUri);
+            tagView.quickContactView.setImageURI(info.contactContentUri);
             ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext, 
-                    tagView.quickContactView.getImageView(),
+                    tagView.quickContactView,
                     info,
                     R.drawable.ic_contact_picture_holo_dark);
         }
 
     }
-    
+
+//    TODO
     private void setPhotoSide(MessageListItemViews tagView, ArrowPosition pos) {
-        LayoutParams lp = (RelativeLayout.LayoutParams) tagView.quickContactView.getLayoutParams();
-        lp.addRule((pos == ArrowPosition.LEFT) ? RelativeLayout.ALIGN_PARENT_RIGHT
-                : RelativeLayout.ALIGN_PARENT_LEFT);
-        lp.addRule((pos == ArrowPosition.LEFT) ? RelativeLayout.ALIGN_PARENT_LEFT
-                : RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-        
-        lp = (RelativeLayout.LayoutParams) tagView.containterBlock.getLayoutParams();
-        lp.addRule((pos == ArrowPosition.LEFT) ? RelativeLayout.LEFT_OF : RelativeLayout.RIGHT_OF,
-                R.id.quick_contact_photo);
-        lp.addRule((pos == ArrowPosition.LEFT) ? RelativeLayout.RIGHT_OF : RelativeLayout.LEFT_OF,
-                0);
-        tagView.quickContactView.setPosition(pos);
+
+
+        if (pos == ArrowPosition.LEFT) {
+            tagView.containterBlock.setBackgroundResource(R.drawable.chat_head_nux_bubble_left);
+        } else {
+            tagView.containterBlock.setBackgroundResource(R.drawable.chat_head_nux_bubble_right);
+        }
+
+//        LayoutParams lp = (RelativeLayout.LayoutParams) tagView.quickContactView.getLayoutParams();
+//
+//        lp.addRule((pos == ArrowPosition.LEFT) ? RelativeLayout.ALIGN_PARENT_RIGHT
+//                : RelativeLayout.ALIGN_PARENT_LEFT);
+//        lp.addRule((pos == ArrowPosition.LEFT) ? RelativeLayout.ALIGN_PARENT_LEFT
+//                : RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+//
+//        lp = (RelativeLayout.LayoutParams) tagView.containterBlock.getLayoutParams();
+//        lp.addRule((pos == ArrowPosition.LEFT) ? RelativeLayout.LEFT_OF : RelativeLayout.RIGHT_OF, R.id.quick_contact_photo);
+//        lp.addRule((pos == ArrowPosition.LEFT) ? RelativeLayout.RIGHT_OF : RelativeLayout.LEFT_OF, 0);
+//        tagView.quickContactView.setPosition(pos);
 
     }
 
@@ -184,7 +172,7 @@ public class MessageAdapter extends ResourceCursorAdapter {
         tagView.contentView = (TextView) view.findViewById(R.id.text_view);
         tagView.errorView = (TextView) view.findViewById(R.id.error_view);
         tagView.dateView = (TextView) view.findViewById(R.id.date_view);
-        tagView.quickContactView = (QuickContactBadge) view.findViewById(R.id.quick_contact_photo);
+        tagView.quickContactView = (RoundedImageView) view.findViewById(R.id.quick_contact_photo);
         tagView.deliveredIndicator = (ImageView) view.findViewById(R.id.delivered_indicator);
 
         view.setTag(tagView);

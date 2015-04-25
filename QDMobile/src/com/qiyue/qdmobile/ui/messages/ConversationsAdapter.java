@@ -34,6 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipMessage;
 import com.qiyue.qdmobile.api.SipUri;
@@ -58,7 +59,7 @@ public class ConversationsAdapter extends SimpleCursorAdapter {
     public static final class ConversationListItemViews {
         TextView fromView;
         TextView dateView;
-        QuickContactBadge quickContactView;
+        RoundedImageView quickContactView;
         int position;
         String to;
         String from;
@@ -79,7 +80,7 @@ public class ConversationsAdapter extends SimpleCursorAdapter {
         ConversationListItemViews tagView = new ConversationListItemViews();
         tagView.fromView = (TextView) view.findViewById(R.id.from);
         tagView.dateView = (TextView) view.findViewById(R.id.date);
-        tagView.quickContactView = (QuickContactBadge) view.findViewById(R.id.quick_contact_photo);
+        tagView.quickContactView = (RoundedImageView) view.findViewById(R.id.quick_contact_photo);
         view.setTag(tagView);
         //view.setOnClickListener(mPrimaryActionListener);
 
@@ -125,9 +126,9 @@ public class ConversationsAdapter extends SimpleCursorAdapter {
         
         
         // Photo
-        tagView.quickContactView.assignContactUri(info.contactContentUri);
+        tagView.quickContactView.setImageURI(info.contactContentUri);
         ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext, 
-                tagView.quickContactView.getImageView(),
+                tagView.quickContactView,
                 info,
                 R.drawable.ic_contact_picture_holo_dark);
 

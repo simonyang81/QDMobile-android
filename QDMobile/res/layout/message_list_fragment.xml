@@ -16,41 +16,56 @@
 -->
 
 <!-- Layout parameters are set programmatically. -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <include layout="@layout/generic_list_progress_view" />
-
-    <FrameLayout
-        android:id="@+id/listContainer"
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:fab="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" >
+        android:orientation="vertical">
 
-        <ListView
-            android:id="@android:id/list"
+    <include layout="@layout/generic_list_progress_view"/>
+
+    <FrameLayout
+            android:id="@+id/listContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/right_panel_margin_vertical"
-            android:layout_marginLeft="@dimen/right_panel_margin_left"
-            android:layout_marginTop="@dimen/right_panel_margin_vertical"
-            android:divider="@null"
-            android:fadingEdge="none"
-            android:fadingEdgeLength="@dimen/right_panel_fading_edge"
-            android:scrollbarStyle="outsideOverlay" />
+            android:visibility="gone">
+
+        <ListView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/right_panel_margin_vertical"
+                android:layout_marginLeft="@dimen/right_panel_margin_left"
+                android:layout_marginTop="@dimen/right_panel_margin_vertical"
+                android:divider="@null"
+                android:fadingEdge="none"
+                android:fadingEdgeLength="@dimen/right_panel_fading_edge"
+                android:scrollbarStyle="outsideOverlay"/>
+
+        <com.melnykov.fab.FloatingActionButton
+                android:id="@+id/fab_create_messages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_add_white_24dp"
+                fab:fab_colorNormal="@color/accent"
+                fab:fab_colorPressed="@color/accent_pressed"
+                fab:fab_colorRipple="@color/ripple"/>
 
         <Button
-            android:id="@android:id/empty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawableLeft="@drawable/ic_menu_msg_compose_holo_dark"
-            android:drawablePadding="10dip"
-            android:gravity="center"
-            android:text="@string/menu_compose_new"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:id="@android:id/empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:drawableLeft="@drawable/ic_menu_msg_compose_holo_dark"
+                android:drawablePadding="10dip"
+                android:gravity="center"
+                android:text="@string/menu_compose_new"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+
     </FrameLayout>
 
 </FrameLayout>

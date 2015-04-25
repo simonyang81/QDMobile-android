@@ -1,35 +1,10 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.qiyue.qdmobile.ui.messages;
 
 import android.os.Bundle;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
-import com.qiyue.qdmobile.ui.messages.MessageFragment.OnQuitListener;
-import com.qiyue.qdmobile.utils.Compatibility;
+import android.support.v4.app.FragmentActivity;
 
-public class MessageActivity extends SherlockFragmentActivity implements OnQuitListener {
+public class MessageActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,28 +17,28 @@ public class MessageActivity extends SherlockFragmentActivity implements OnQuitL
 
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, detailFragment).commit();
-            detailFragment.setOnQuitListener(this);
+//            detailFragment.setOnQuitListener(this);
         }
     }
+//
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+////        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == Compatibility.getHomeMenuId()) {
-            finish();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onQuit() {
-        finish();
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (item.getItemId() == Compatibility.getHomeMenuId()) {
+//            finish();
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
+//
+//    @Override
+//    public void onQuit() {
+//        finish();
+//    }
 }

@@ -79,6 +79,12 @@
         <item name="android:layout_margin">5dp</item>
     </style>
 
+    <style name="Holo.Light" parent="android:Theme.Holo.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/fade</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
     <style name="DarkTheme" parent="@style/Theme.Sherlock"></style>
 
     <style name="DarkTheme.Dialog" parent="Theme.Sherlock.Dialog">

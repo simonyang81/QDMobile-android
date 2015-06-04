@@ -11,7 +11,7 @@
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_qd"
+            android:background="@drawable/bg_shape"
             android:layout_alignParentTop="true"
             android:layout_above="@+id/ll_menu_btn"
             />
@@ -20,7 +20,7 @@
             android:id="@+id/ll_menu_btn"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:background="@drawable/_ics_dial_bg_normal"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -30,7 +30,7 @@
 
         <TextView
                 android:id="@+id/menu_dialpad"
-                android:text="键盘"
+                android:text="@string/menu_dialpad"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -45,7 +45,7 @@
 
         <TextView
                 android:id="@+id/menu_recents"
-                android:text="最近通话"
+                android:text="@string/menu_recents"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
 
         <TextView
                 android:id="@+id/menu_messages"
-                android:text="信息"
+                android:text="@string/menu_messages"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
 
         <TextView
                 android:id="@+id/menu_settings"
-                android:text="设置"
+                android:text="@string/menu_more"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"

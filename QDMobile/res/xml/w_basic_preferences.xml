@@ -24,7 +24,8 @@
         android:key="display_name"
         android:singleLine="true"
         android:summary="@string/w_common_display_name_desc"
-        android:title="@string/w_common_display_name" />
+        android:title="@string/w_common_display_name"
+            />
     <EditTextPreference
         android:dialogMessage="@string/w_basic_username_desc"
         android:inputType="textVisiblePassword"

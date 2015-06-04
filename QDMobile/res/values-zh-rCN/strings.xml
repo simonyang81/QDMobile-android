@@ -89,4 +89,9 @@
     <string name="uri_im">自定义SIP协议的即时通讯</string>
     <string name="uri_sip">网络呼叫</string>
 
+    <string name="menu_dialpad">键盘</string>
+    <string name="menu_recents">最近通话</string>
+    <string name="menu_messages">信息</string>
+    <string name="menu_more">更多</string>
+
 </resources>

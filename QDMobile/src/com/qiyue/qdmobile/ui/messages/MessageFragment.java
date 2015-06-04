@@ -228,8 +228,8 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
     }
 
     private void chooseSipUri() {
-//        Intent pickupIntent = new Intent(getActivity(), PickupSipUri.class);
-//        startActivityForResult(pickupIntent, PICKUP_SIP_URI);
+        Intent pickupIntent = new Intent(getActivity(), PickupSipUri.class);
+        startActivityForResult(pickupIntent, Constants.PICKUP_SIP_URI);
     }
 
     private void sendMessage() {

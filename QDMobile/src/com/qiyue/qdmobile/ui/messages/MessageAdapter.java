@@ -22,8 +22,8 @@ import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipMessage;
 import com.qiyue.qdmobile.models.CallerInfo;
 import com.qiyue.qdmobile.utils.ContactsAsyncHelper;
+import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.SmileyParser;
-import com.qiyue.qdmobile.widgets.contactbadge.QuickContactBadge;
 import com.qiyue.qdmobile.widgets.contactbadge.QuickContactBadge.ArrowPosition;
 
 import java.text.SimpleDateFormat;
@@ -31,20 +31,21 @@ import java.util.Date;
 
 public class MessageAdapter extends ResourceCursorAdapter {
 
+    private static final String TAG = MessageAdapter.class.getSimpleName();
+
     private static SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
     TextAppearanceSpan mTextSmallSpan;
     private CallerInfo personalInfo;
     
-
-
     public MessageAdapter(Context context, Cursor c) {
         super(context, R.layout.message_list_item, c, 0);
         mTextSmallSpan = new TextAppearanceSpan(context, android.R.style.TextAppearance_Small);
 
         personalInfo = CallerInfo.getCallerInfoForSelf(mContext);
-        
-    }
 
+        Log.d(TAG, "personalInfo.phoneNumber: " + personalInfo.phoneNumber);
+
+    }
 
     public static final class MessageListItemViews {
         TextView contentView;
@@ -82,7 +83,6 @@ public class MessageAdapter extends ResourceCursorAdapter {
         }
         
         tagView.dateView.setText(timestamp);
-        
 
         // Delivery state
         if (type == SipMessage.MESSAGE_TYPE_QUEUED) {
@@ -110,55 +110,66 @@ public class MessageAdapter extends ResourceCursorAdapter {
 
         // Subject
         tagView.contentView.setText(formatMessage(number, subject, mimeType));
-        
-        
-        if(msg.isOutgoing()) {
+
+
+        if (msg.isOutgoing()) {
             setPhotoSide(tagView, ArrowPosition.LEFT);
     
-            // Photo
-            tagView.quickContactView.setImageURI(personalInfo.contactContentUri);
-            ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext, 
-                    tagView.quickContactView,
-                    personalInfo,
-                    R.drawable.ic_contact_picture_holo_dark);
-            
-        }else {
+//            TODO
+//            tagView.quickContactView.setImageURI(personalInfo.contactContentUri);
+
+//            ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext,
+//                    tagView.quickContactView,
+//                    personalInfo,
+//                    R.drawable.ic_contact_picture_holo_dark);
+
+        } else {
             setPhotoSide(tagView, ArrowPosition.RIGHT);
             
-            // Contact
-            CallerInfo info = CallerInfo.getCallerInfoFromSipUri(mContext, msg.getFullFrom());
-    
-            // Photo
-            tagView.quickContactView.setImageURI(info.contactContentUri);
-            ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext, 
-                    tagView.quickContactView,
-                    info,
-                    R.drawable.ic_contact_picture_holo_dark);
+//            TODO
+//            CallerInfo info = CallerInfo.getCallerInfoFromSipUri(mContext, msg.getFullFrom());
+
+//            tagView.quickContactView.setImageURI(info.contactContentUri);
+
+//            ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext,
+//                    tagView.quickContactView,
+//                    info,
+//                    R.drawable.ic_contact_picture_holo_dark);
         }
+
+
+//        String number = cursor.getString(cursor.getColumnIndex(SipMessage.FIELD_FROM_FULL));
+        CallerInfo info = CallerInfo.getCallerInfoFromSipUri(mContext, msg.getFullFrom());
+
+        Log.d(TAG, "info.phoneNumber: " + info.phoneNumber);
+
+        // Photo
+        tagView.quickContactView.setImageURI(info.contactContentUri);
+        ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext,
+                tagView.quickContactView,
+                info,
+                R.drawable.ic_contact_picture_holo_dark);
 
     }
 
-//    TODO
     private void setPhotoSide(MessageListItemViews tagView, ArrowPosition pos) {
 
-
+        LayoutParams content_lp = (RelativeLayout.LayoutParams) tagView.containterBlock.getLayoutParams();
+        LayoutParams contact_photo_lp = (RelativeLayout.LayoutParams) tagView.quickContactView.getLayoutParams();
         if (pos == ArrowPosition.LEFT) {
-            tagView.containterBlock.setBackgroundResource(R.drawable.chat_head_nux_bubble_left);
-        } else {
             tagView.containterBlock.setBackgroundResource(R.drawable.chat_head_nux_bubble_right);
+            contact_photo_lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+            contact_photo_lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            content_lp.addRule(RelativeLayout.RIGHT_OF, 0);
+            content_lp.addRule(RelativeLayout.LEFT_OF, R.id.quick_contact_photo);
+        } else {
+            tagView.containterBlock.setBackgroundResource(R.drawable.chat_head_nux_bubble_left);
+            contact_photo_lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+            contact_photo_lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            content_lp.addRule(RelativeLayout.LEFT_OF, 0);
+            content_lp.addRule(RelativeLayout.RIGHT_OF, R.id.quick_contact_photo);
         }
 
-//        LayoutParams lp = (RelativeLayout.LayoutParams) tagView.quickContactView.getLayoutParams();
-//
-//        lp.addRule((pos == ArrowPosition.LEFT) ? RelativeLayout.ALIGN_PARENT_RIGHT
-//                : RelativeLayout.ALIGN_PARENT_LEFT);
-//        lp.addRule((pos == ArrowPosition.LEFT) ? RelativeLayout.ALIGN_PARENT_LEFT
-//                : RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-//
-//        lp = (RelativeLayout.LayoutParams) tagView.containterBlock.getLayoutParams();
-//        lp.addRule((pos == ArrowPosition.LEFT) ? RelativeLayout.LEFT_OF : RelativeLayout.RIGHT_OF, R.id.quick_contact_photo);
-//        lp.addRule((pos == ArrowPosition.LEFT) ? RelativeLayout.RIGHT_OF : RelativeLayout.LEFT_OF, 0);
-//        tagView.quickContactView.setPosition(pos);
 
     }
 

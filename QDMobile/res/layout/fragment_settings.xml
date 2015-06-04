@@ -4,9 +4,17 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_qd"
-
         >
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/menu_text_color"
+            android:text="@string/menu_more"
+            android:textColor="#FFFFFFFF"
+            android:gravity="center"
+            android:textSize="18sp"
+            />
 
     <RelativeLayout
             android:id="@+id/rl_settings_easy_config"
@@ -26,7 +34,6 @@
                 android:layout_centerVertical="true"
                 />
         <TextView
-
                 android:id="@+id/iv_settings_easy_config_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -34,7 +41,7 @@
                 android:text="@string/prefs_fast"
                 android:layout_alignTop="@+id/iv_settings_easy_config_icon"
                 android:layout_marginLeft="10dp"
-                android:textColor="#ffffffff"
+                android:textColor="@color/setting_text_color"
                 android:textSize="16sp"
                 />
 
@@ -45,7 +52,7 @@
                   android:layout_below="@+id/iv_settings_easy_config_title"
                   android:layout_marginLeft="10dp"
                   android:layout_marginTop="5dp"
-                  android:textColor="#ffffffff"
+                  android:textColor="@color/setting_text_color"
                 />
 
     </RelativeLayout>
@@ -84,7 +91,7 @@
                 android:layout_toRightOf="@+id/iv_settings_net_icon"
                 android:text="@string/prefs_network"
                 android:layout_marginLeft="10dp"
-                android:textColor="#ffffffff"
+                android:textColor="@color/setting_text_color"
                 android:textSize="16sp"
                 />
 
@@ -95,7 +102,7 @@
                   android:layout_below="@+id/iv_settings_net_title"
                   android:layout_marginLeft="10dp"
                   android:layout_marginTop="5dp"
-                  android:textColor="#ffffffff"
+                  android:textColor="@color/setting_text_color"
                 />
 
     </RelativeLayout>
@@ -134,7 +141,7 @@
                 android:layout_toRightOf="@+id/iv_settings_media_icon"
                 android:text="@string/prefs_media"
                 android:layout_marginLeft="10dp"
-                android:textColor="#ffffffff"
+                android:textColor="@color/setting_text_color"
                 android:textSize="16sp"
                 />
 
@@ -145,7 +152,7 @@
                   android:layout_below="@+id/iv_settings_media_title"
                   android:layout_marginLeft="10dp"
                   android:layout_marginTop="5dp"
-                  android:textColor="#ffffffff"
+                  android:textColor="@color/setting_text_color"
                 />
 
     </RelativeLayout>
@@ -184,7 +191,7 @@
                 android:layout_toRightOf="@+id/iv_settings_user_interface_icon"
                 android:text="@string/prefs_ui"
                 android:layout_marginLeft="10dp"
-                android:textColor="#ffffffff"
+                android:textColor="@color/setting_text_color"
                 android:textSize="16sp"
                 />
 
@@ -195,7 +202,7 @@
                   android:layout_below="@+id/iv_settings_user_interface_title"
                   android:layout_marginLeft="10dp"
                   android:layout_marginTop="5dp"
-                  android:textColor="#ffffffff"
+                  android:textColor="@color/setting_text_color"
                 />
 
     </RelativeLayout>
@@ -234,7 +241,7 @@
                 android:layout_toRightOf="@+id/iv_settings_call_options_icon"
                 android:text="@string/prefs_calls"
                 android:layout_marginLeft="10dp"
-                android:textColor="#ffffffff"
+                android:textColor="@color/setting_text_color"
                 android:textSize="16sp"
                 />
 
@@ -245,7 +252,7 @@
                   android:layout_below="@+id/iv_settings_call_options_title"
                   android:layout_marginLeft="10dp"
                   android:layout_marginTop="5dp"
-                  android:textColor="#ffffffff"
+                  android:textColor="@color/setting_text_color"
                 />
 
     </RelativeLayout>
@@ -285,18 +292,19 @@
                 android:layout_toRightOf="@+id/iv_settings_filters_icon"
                 android:text="@string/filters"
                 android:layout_marginLeft="10dp"
-                android:textColor="#ffffffff"
+                android:textColor="@color/setting_text_color"
                 android:textSize="16sp"
                 />
 
-        <TextView android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_toRightOf="@+id/iv_settings_filters_icon"
-                  android:text="@string/filters_desc"
-                  android:layout_below="@+id/iv_settings_filters_title"
-                  android:layout_marginLeft="10dp"
-                  android:layout_marginTop="5dp"
-                  android:textColor="#ffffffff"
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/iv_settings_filters_icon"
+                android:text="@string/filters_desc"
+                android:layout_below="@+id/iv_settings_filters_title"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/setting_text_color"
                 />
 
     </RelativeLayout>

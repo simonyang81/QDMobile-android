@@ -39,22 +39,16 @@ import java.security.acl.LastOwnerException;
  * This activity provides a list view of existing conversations.
  */
 public class ConversationsListFragment extends CSSListFragment implements ViewPagerVisibilityListener {
-	//private static final String THIS_FILE = "Conv List";
 
     private static final String TAG = ConversationsListFragment.class.getSimpleName();
-	
-    // IDs of the main menu items.
-    public static final int MENU_COMPOSE_NEW          = 0;
-    public static final int MENU_DELETE_ALL           = 1;
 
     // IDs of the context menu items for the list of conversations.
     public static final int MENU_DELETE               = 0;
     public static final int MENU_VIEW                 = 1;
-	
-    private boolean mDualPane;
+
+//    private boolean mDualPane;
 
     private ConversationsAdapter mAdapter;
-//    private View mHeaderView;
     private FloatingActionButton mCreateMsg;
 
     @Override
@@ -74,15 +68,17 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
         Log.i(TAG, "onActivityCreated()...");
 
         ListView lv = (ListView) getActivity().findViewById(android.R.id.list);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                ConversationListItemViews cri = (ConversationListItemViews) view.getTag();
-                viewDetails(position, cri);
-
-            }
-        });
+//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                android.util.Log.d(TAG, "ListView onItemClick()...");
+//
+//                ConversationListItemViews cri = (ConversationListItemViews) view.getTag();
+//                viewDetails(position, cri);
+//
+//            }
+//        });
 
         View.OnClickListener addClickButtonListener = new View.OnClickListener() {
             @Override
@@ -91,22 +87,7 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
             }
         };
 
-
-        // Header view
-//        mHeaderView = (ViewGroup)
-//                inflater.inflate(R.layout.conversation_list_item, lv, false);
-//        ((TextView) mHeaderView.findViewById(R.id.from) ).setText(R.string.new_message);
-//        ((TextView) mHeaderView.findViewById(R.id.subject) ).setText(R.string.create_new_message);
-//        mHeaderView.findViewById(R.id.quick_contact_photo).setVisibility(View.GONE);
-//        mHeaderView.setOnClickListener(addClickButtonListener);
-
-
-        // Empty view
-        Button bt = (Button) getActivity().findViewById(android.R.id.empty);
-        bt.setOnClickListener(addClickButtonListener);
-
-//        lv.addHeaderView(mHeaderView, null, true);
-        lv.setOnCreateContextMenuListener(this);
+//        lv.setOnCreateContextMenuListener(this);
 
         mCreateMsg = (FloatingActionButton) getActivity().findViewById(R.id.fab_create_messages);
         mCreateMsg.setOnClickListener(addClickButtonListener);
@@ -138,46 +119,54 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
         setHasOptionsMenu(true);
         onVisibilityChanged(true);
     }
-    
+
     private void attachAdapter() {
         // Header view add
-        if(mAdapter == null) {
+        if (mAdapter == null) {
             // Adapter
             mAdapter = new ConversationsAdapter(getActivity(), null);
             setListAdapter(mAdapter);
+
+            mAdapter.setCallbackListener(new ConversationsAdapter.ConversationItemClick() {
+                @Override
+                public void callback(View view, final int position) {
+                    ConversationListItemViews cri = (ConversationListItemViews) view.getTag();
+                    viewDetails(cri);
+                }
+            });
         }
-        
+
     }
 
     private void onClickAddMessage() {
 
-        Intent pickupIntent = new Intent(getActivity(), PickupSipUri.class);
-        startActivityForResult(pickupIntent, Constants.PICKUP_SIP_URI);
-        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//        Intent pickupIntent = new Intent(getActivity(), PickupSipUri.class);
+//        startActivityForResult(pickupIntent, Constants.PICKUP_SIP_URI);
+//        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-//        viewDetails(-getListView().getHeaderViewsCount(), null);
+        viewDetails(null);
     }
-    
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
-        // View management
-        mDualPane = getResources().getBoolean(R.bool.use_dual_panes);
+//    @Override
+//    public void onViewCreated(View view, Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//
+//        // View management
+//        mDualPane = getResources().getBoolean(R.bool.use_dual_panes);
+//
+//        // Modify list view
+//        ListView lv = getListView();
+//        lv.setVerticalFadingEdgeEnabled(true);
+//        // lv.setCacheColorHint(android.R.color.transparent);
+//        if (mDualPane) {
+//            lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+//            lv.setItemsCanFocus(false);
+//        } else {
+//            lv.setChoiceMode(ListView.CHOICE_MODE_NONE);
+//            lv.setItemsCanFocus(true);
+//        }
+//    }
 
-        // Modify list view
-        ListView lv = getListView();
-        lv.setVerticalFadingEdgeEnabled(true);
-        // lv.setCacheColorHint(android.R.color.transparent);
-        if (mDualPane) {
-            lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-            lv.setItemsCanFocus(false);
-        } else {
-            lv.setChoiceMode(ListView.CHOICE_MODE_NONE);
-            lv.setItemsCanFocus(true);
-        }
-    }
-    
     @Override
     public void onResume() {
         super.onResume();
@@ -186,17 +175,17 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
         nManager.cancelMessages();
     }
 
-    public void viewDetails(int position, ConversationListItemViews cri) {
+    public void viewDetails(ConversationListItemViews cri) {
         String number = null;
         String fromFull = null;
-        if(cri != null) {
+        if (cri != null) {
             number = cri.getRemoteNumber();
             fromFull = cri.fromFull;
         }
-        viewDetails(position, number, fromFull);
+        viewDetails(number, fromFull);
     }
-    
-    public void viewDetails(int position, String number, String fromFull) {
+
+    public void viewDetails(String number, String fromFull) {
 
         Log.i(TAG, "viewDetails()...");
 
@@ -232,8 +221,7 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        
-        
+
         MenuItem writeMenu = menu.add(R.string.menu_compose_new);
         writeMenu.setIcon(R.drawable.ic_menu_msg_compose_holo_dark).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         writeMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -257,9 +245,9 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
             });
         }
     }
-    
-    
-    
+
+
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getActivity(), SipMessage.THREAD_URI, null, null, null, null);
@@ -274,34 +262,34 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
             menu.add(0, MENU_DELETE, 0, R.string.menu_delete);
         }
     }
-    
-    @Override
-    public boolean onContextItemSelected(android.view.MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info =
-                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        
-        if (info.position > 0) {
-            ConversationListItemViews cri = (ConversationListItemViews) info.targetView.getTag();
-            
-            if(cri != null) {
-                switch (item.getItemId()) {
-                case MENU_DELETE: {
-                    confirmDeleteThread(cri.getRemoteNumber());
-                    break;
-                }
-                case MENU_VIEW: {
-                    viewDetails(info.position, cri);
-                    break;
-                }
-                default:
-                    break;
-                }
-            }
-        }
-        return super.onContextItemSelected(item);
-    }
-    
+
 //    @Override
+//    public boolean onContextItemSelected(android.view.MenuItem item) {
+//        AdapterView.AdapterContextMenuInfo info =
+//                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+//
+//        if (info.position > 0) {
+//            ConversationListItemViews cri = (ConversationListItemViews) info.targetView.getTag();
+//
+//            if(cri != null) {
+//                switch (item.getItemId()) {
+//                case MENU_DELETE: {
+//                    confirmDeleteThread(cri.getRemoteNumber());
+//                    break;
+//                }
+//                case MENU_VIEW: {
+//                    viewDetails(info.position, cri);
+//                    break;
+//                }
+//                default:
+//                    break;
+//                }
+//            }
+//        }
+//        return super.onContextItemSelected(item);
+//    }
+//
+////    @Override
 //    public void onListItemClick(ListView l, View v, int position, long id) {
 //        ConversationListItemViews cri = (ConversationListItemViews) v.getTag();
 //        viewDetails(position, cri);
@@ -318,7 +306,7 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
         return super.onPrepareOptionsMenu(menu);
     }
 
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
@@ -351,7 +339,7 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
     */
 
     private void confirmDeleteThread(final String from) {
-    	
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.confirm_dialog_title)
             .setIcon(android.R.drawable.ic_dialog_alert)
@@ -388,7 +376,7 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
                 alreadyLoaded = true;
             }
         }
-        
+
         if (visible && isResumed()) {
             ListView lv = getListView();
             if (lv != null && mAdapter != null) {
@@ -410,7 +398,7 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        viewDetails(checkedPos, nbr, fromFull);
+                                        viewDetails(nbr, fromFull);
                                     }
                                 });
                             }
@@ -428,6 +416,6 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
             mAdapter.changeCursor(c);
         }
     }
-	
-    
+
+
 }

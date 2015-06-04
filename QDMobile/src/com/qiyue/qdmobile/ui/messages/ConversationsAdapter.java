@@ -1,25 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.qiyue.qdmobile.ui.messages;
 
 import android.content.Context;
@@ -30,6 +8,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.format.DateUtils;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -40,9 +19,10 @@ import com.qiyue.qdmobile.api.SipMessage;
 import com.qiyue.qdmobile.api.SipUri;
 import com.qiyue.qdmobile.models.CallerInfo;
 import com.qiyue.qdmobile.utils.ContactsAsyncHelper;
-import com.qiyue.qdmobile.widgets.contactbadge.QuickContactBadge;
 
 public class ConversationsAdapter extends SimpleCursorAdapter {
+
+    private static final String TAG = ConversationsAdapter.class.getSimpleName();
 
 	private Context mContext;
 	
@@ -54,6 +34,16 @@ public class ConversationsAdapter extends SimpleCursorAdapter {
                         R.id.subject
                 }, 0);
         mContext = context;
+    }
+
+    public interface ConversationItemClick {
+        void callback(View view, int position);
+    }
+
+    private ConversationItemClick mConversationItemClick;
+
+    public void setCallbackListener(ConversationItemClick callbackListener) {
+        mConversationItemClick = callbackListener;
     }
 
     public static final class ConversationListItemViews {
@@ -88,7 +78,7 @@ public class ConversationsAdapter extends SimpleCursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(final View view, Context context, Cursor cursor) {
         super.bindView(view, context, cursor);
 
         final ConversationListItemViews tagView = (ConversationListItemViews) view.getTag();
@@ -98,32 +88,14 @@ public class ConversationsAdapter extends SimpleCursorAdapter {
         
         //int read = cursor.getInt(cursor.getColumnIndex(SipMessage.FIELD_READ));
         long date = cursor.getLong(cursor.getColumnIndex(SipMessage.FIELD_DATE));
-        
-        
+
         tagView.fromFull = fromFull;
         tagView.to = to_number;
         tagView.from = nbr;
         tagView.position = cursor.getPosition();
         
-        
-        /*
-        Drawable background = (read == 0)?
-                context.getResources().getDrawable(R.drawable.conversation_item_background_unread) :
-                context.getResources().getDrawable(R.drawable.conversation_item_background_read);
-        
-        view.setBackgroundDrawable(background);
-         */
         String number = cursor.getString(cursor.getColumnIndex(SipMessage.FIELD_FROM_FULL));
         CallerInfo info = CallerInfo.getCallerInfoFromSipUri(mContext, number);
-        
-        /*
-        final Uri lookupUri = info.contactContentUri;
-        final String name = info.name;
-        final int ntype = info.numberType;
-        final String label = info.phoneLabel;
-        CharSequence formattedNumber = SipUri.getCanonicalSipContact(number, false);
-        */
-        
         
         // Photo
         tagView.quickContactView.setImageURI(info.contactContentUri);
@@ -139,11 +111,20 @@ public class ConversationsAdapter extends SimpleCursorAdapter {
         // Set the date/time field by mixing relative and absolute times.
         int flags = DateUtils.FORMAT_ABBREV_RELATIVE;
         tagView.dateView.setText(DateUtils.getRelativeTimeSpanString(date, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS, flags));
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick() message item ");
+
+                if (mConversationItemClick != null) {
+                    mConversationItemClick.callback(v, tagView.position);
+                }
+            }
+        });
     }
     
     
-    
-
     private static final StyleSpan STYLE_BOLD = new StyleSpan(Typeface.BOLD);
 
     private CharSequence formatMessage(Cursor cursor) {
@@ -169,7 +150,6 @@ public class ConversationsAdapter extends SimpleCursorAdapter {
         if (counter > 1) {
             buf.append(" (" + counter + ") ");
         }
-       
 
         int read = cursor.getInt(cursor.getColumnIndex(SipMessage.FIELD_READ));
         // Unread messages are shown in bold

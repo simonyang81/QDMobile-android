@@ -64,10 +64,8 @@ public class CallerInfo {
     public Uri contactRingtoneUri;
     public Uri contactContentUri;
     
-    
     private static LruCache<String, CallerInfo> callerCache;
-    
-    
+
     private static class CallerInfoLruCache extends LruCache<String, CallerInfo> {
         final Context mContext;
         public CallerInfoLruCache(Context context) {

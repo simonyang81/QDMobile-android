@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import android.support.v4.app.FragmentActivity;
 
-public class MessageActivity extends FragmentActivity {
+public class MessageActivity extends FragmentActivity implements MessageFragment.OnQuitListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,7 +17,7 @@ public class MessageActivity extends FragmentActivity {
 
             getSupportFragmentManager().beginTransaction()
                     .add(android.R.id.content, detailFragment).commit();
-//            detailFragment.setOnQuitListener(this);
+            detailFragment.setOnQuitListener(this);
         }
     }
 //
@@ -37,8 +37,8 @@ public class MessageActivity extends FragmentActivity {
 //        return super.onOptionsItemSelected(item);
 //    }
 //
-//    @Override
-//    public void onQuit() {
-//        finish();
-//    }
+    @Override
+    public void onQuit() {
+        finish();
+    }
 }

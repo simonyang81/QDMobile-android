@@ -80,4 +80,9 @@
     <string name="busy">忙碌</string>
     <string name="uri_sip">網路電話</string>
 
+    <string name="menu_dialpad">鍵盤</string>
+    <string name="menu_recents">最近通話</string>
+    <string name="menu_messages">信息</string>
+    <string name="menu_more">更多</string>
+
 </resources>

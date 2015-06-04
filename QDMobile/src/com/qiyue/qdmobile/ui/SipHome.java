@@ -40,34 +40,11 @@ import java.util.ArrayList;
 
 public class SipHome extends SherlockFragmentActivity {
 
-//    public static final int ACCOUNTS_MENU           = Menu.FIRST + 1;
-//    public static final int PARAMS_MENU             = Menu.FIRST + 2;
-//    public static final int CLOSE_MENU              = Menu.FIRST + 3;
-//    public static final int HELP_MENU               = Menu.FIRST + 4;
-//    public static final int DISTRIB_ACCOUNT_MENU    = Menu.FIRST + 5;
-
     private static final String THIS_FILE = "SIP_HOME";
 
-//    private final static int TAB_ID_DIALER = 0;
-//    private final static int TAB_ID_CALL_LOG = 1;
-//    private final static int TAB_ID_FAVORITES = 2;
-//    private final static int TAB_ID_MESSAGES = 3;
-//    private final static int TAB_ID_WARNING = 4;
-//
-//    // protected static final int PICKUP_PHONE = 0;
-//    private static final int REQUEST_EDIT_DISTRIBUTION_ACCOUNT = 0;
-
-    //private PreferencesWrapper prefWrapper;
     private PreferencesProviderWrapper prefProviderWrapper;
 
     private boolean hasTriedOnceActivateAcc = false;
-    // private ImageButton pickupContact;
-//    private ViewPager mViewPager;
-////    private TabsAdapter mTabsAdapter;
-//    private boolean mDualPane;
-//    private Tab warningTab;
-//    private ObjectAnimator warningTabfadeAnim;
-
 
     private Thread asyncSanityChecker;
     private DialerFragment mDialpadFragment;

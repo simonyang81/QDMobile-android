@@ -339,7 +339,7 @@
             android:name=".wizards.BasePrefsWizard"
             android:configChanges="orientation"
             android:label="@string/edit"
-            android:theme="@style/DarkTheme" />
+            android:theme="@style/DarkTheme.NoTitle" />
 
         <!-- Call management -->
         <receiver
@@ -519,7 +519,7 @@
             android:name=".ui.messages.MessageActivity"
             android:configChanges="orientation"
             android:launchMode="singleTop"
-            android:theme="@style/Holo.Light"
+            android:theme="@style/DarkTheme.NoTitle"
             android:windowSoftInputMode="stateHidden" />
 
         <!-- Embedded plugins -->

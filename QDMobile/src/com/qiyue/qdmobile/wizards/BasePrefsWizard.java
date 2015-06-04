@@ -172,16 +172,16 @@ public class BasePrefsWizard extends GenericPrefs {
 		saveButton.setEnabled(wizard.canSave());
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(Menu.NONE, SAVE_MENU, Menu.NONE, R.string.save).setIcon(android.R.drawable.ic_menu_save);
-		if (account.id != SipProfile.INVALID_ID) {
-			menu.add(Menu.NONE, TRANSFORM_MENU, Menu.NONE, R.string.choose_wizard).setIcon(android.R.drawable.ic_menu_edit);
-			menu.add(Menu.NONE, FILTERS_MENU, Menu.NONE, R.string.filters).setIcon(R.drawable.ic_menu_filter);
-			menu.add(Menu.NONE, DELETE_MENU, Menu.NONE, R.string.delete_account).setIcon(android.R.drawable.ic_menu_delete);
-		}
-		return super.onCreateOptionsMenu(menu);
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		menu.add(Menu.NONE, SAVE_MENU, Menu.NONE, R.string.save).setIcon(android.R.drawable.ic_menu_save);
+//		if (account.id != SipProfile.INVALID_ID) {
+//			menu.add(Menu.NONE, TRANSFORM_MENU, Menu.NONE, R.string.choose_wizard).setIcon(android.R.drawable.ic_menu_edit);
+//			menu.add(Menu.NONE, FILTERS_MENU, Menu.NONE, R.string.filters).setIcon(R.drawable.ic_menu_filter);
+//			menu.add(Menu.NONE, DELETE_MENU, Menu.NONE, R.string.delete_account).setIcon(android.R.drawable.ic_menu_delete);
+//		}
+//		return super.onCreateOptionsMenu(menu);
+//	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
@@ -202,37 +202,37 @@ public class BasePrefsWizard extends GenericPrefs {
         return currentActivityCode;
     }
 	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case SAVE_MENU:
-			saveAndFinish();
-			return true;
-		case TRANSFORM_MENU:
-			startActivityForResult(new Intent(this, WizardChooser.class), CHOOSE_WIZARD);
-			return true;
-		case DELETE_MENU:
-			if (account.id != SipProfile.INVALID_ID) {
-				getContentResolver().delete(ContentUris.withAppendedId(SipProfile.ACCOUNT_ID_URI_BASE, account.id), null, null);
-				setResult(RESULT_OK, getIntent());
-				finish();
-			}
-			return true;
-		case FILTERS_MENU:
-			if (account.id != SipProfile.INVALID_ID) {
-				Intent it = new Intent(this, AccountFilters.class);
-				it.putExtra(SipProfile.FIELD_ID, account.id);
-				it.putExtra(SipProfile.FIELD_DISPLAY_NAME, account.display_name);
-				it.putExtra(SipProfile.FIELD_WIZARD, account.wizard);
-				startActivityForResult(it, MODIFY_FILTERS);
-				return true;
-			}
-			break;
-		default:
-			break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		switch (item.getItemId()) {
+//		case SAVE_MENU:
+//			saveAndFinish();
+//			return true;
+//		case TRANSFORM_MENU:
+//			startActivityForResult(new Intent(this, WizardChooser.class), CHOOSE_WIZARD);
+//			return true;
+//		case DELETE_MENU:
+//			if (account.id != SipProfile.INVALID_ID) {
+//				getContentResolver().delete(ContentUris.withAppendedId(SipProfile.ACCOUNT_ID_URI_BASE, account.id), null, null);
+//				setResult(RESULT_OK, getIntent());
+//				finish();
+//			}
+//			return true;
+//		case FILTERS_MENU:
+//			if (account.id != SipProfile.INVALID_ID) {
+//				Intent it = new Intent(this, AccountFilters.class);
+//				it.putExtra(SipProfile.FIELD_ID, account.id);
+//				it.putExtra(SipProfile.FIELD_DISPLAY_NAME, account.display_name);
+//				it.putExtra(SipProfile.FIELD_WIZARD, account.wizard);
+//				startActivityForResult(it, MODIFY_FILTERS);
+//				return true;
+//			}
+//			break;
+//		default:
+//			break;
+//		}
+//		return super.onOptionsItemSelected(item);
+//	}
 
 
 	@Override

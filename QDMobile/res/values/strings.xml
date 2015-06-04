@@ -115,4 +115,9 @@
     <string name="uri_im">IM with custom SIP scheme</string>
     <string name="uri_sip">Internet call</string>
 
+    <string name="menu_dialpad">Dialpad</string>
+    <string name="menu_recents">Call Log</string>
+    <string name="menu_messages">Message</string>
+    <string name="menu_more">More</string>
+
 </resources>

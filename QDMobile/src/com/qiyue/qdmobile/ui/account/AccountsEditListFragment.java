@@ -552,8 +552,27 @@ public class AccountsEditListFragment extends CSSListFragment implements /*OnQui
 	}
 	
 	private void onClickAddAccount() {
-	    startActivityForResult(new Intent(getActivity(), WizardChooser.class),
-                CHOOSE_WIZARD);
+
+
+//        Intent result = getActivity().getIntent();
+//        result.putExtra(WizardUtils.ID, "BASIC");
+//
+//        getActivity().setResult(getActivity().RESULT_OK, result);
+
+//        Intent intent = new Intent(getActivity(), WizardChooser.class);
+//        intent.putExtra(WizardUtils.ID, "BASIC");
+//
+//        getActivity().setResult(getActivity().RESULT_OK, intent);
+////        startActivityForResult(intent, CHOOSE_WIZARD);
+//        startActivity(intent);
+
+
+//        String wizardId = data.getStringExtra(WizardUtils.ID);
+//        if (wizardId != null) {
+//        }
+
+        showDetails(SipProfile.INVALID_ID, "BASIC");
+
 	}
 
     @Override

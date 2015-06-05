@@ -32,17 +32,14 @@ import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.SmileyParser;
 import com.qiyue.qdmobile.utils.clipboard.ClipboardWrapper;
-import com.qiyue.qdmobile.widgets.AccountChooserButton;
 
 public class MessageFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, OnClickListener {
 
     private static final String THIS_FILE = MessageFragment.class.getSimpleName();
 
     private String remoteFrom;
-    private TextView fromText;
     private TextView fullFromText;
     private EditText bodyInput;
-    private AccountChooserButton accountChooserButton;
     private Button sendButton;
     private SipNotifications notifications;
     private MessageAdapter mAdapter;
@@ -65,7 +62,6 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
 
         ListView lv = getListView();
         lv.setOnCreateContextMenuListener(this);
-
     }
 
     @Override
@@ -85,12 +81,8 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
         View v = inflater.inflate(R.layout.compose_message_activity, container, false);
 
         fullFromText = (TextView) v.findViewById(R.id.subject);
-        fromText = (TextView) v.findViewById(R.id.subjectLabel);
         bodyInput = (EditText) v.findViewById(R.id.embedded_text_editor);
         sendButton = (Button) v.findViewById(R.id.send_button);
-
-        accountChooserButton = (AccountChooserButton) v.findViewById(R.id.accountChooserButton);
-        accountChooserButton.setShowExternals(false);
 
         return v;
     }
@@ -99,9 +91,7 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getListView().setDivider(null);
-        fromText.setOnClickListener(this);
         sendButton.setOnClickListener(this);
-
 
         // Setup from args
         String from = getArguments().getString(SipMessage.FIELD_FROM);
@@ -149,7 +139,6 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
         super.onPause();
         notifications.setViewingMessageFrom(null);
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -200,7 +189,6 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
         }
     }
 
-
     public static Bundle getArguments(String from, String fromFull) {
         Bundle bundle = new Bundle();
         if (from != null) {
@@ -217,7 +205,7 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
         if (from != null) {
             if (remoteFrom != from) {
                 remoteFrom = from;
-                fromText.setText(remoteFrom);
+
                 CallerInfo callerInfo = CallerInfo.getCallerInfoFromSipUri(getActivity(), fullFrom);
                 if (callerInfo != null && callerInfo.contactExists) {
                     fullFromText.setText(callerInfo.name);
@@ -235,9 +223,36 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
         startActivityForResult(pickupIntent, Constants.PICKUP_SIP_URI);
     }
 
+    private static final String[] ACC_PROJECTION = new String[] {
+            SipProfile.FIELD_ID,
+            SipProfile.FIELD_ACC_ID, // Needed for default domain
+            SipProfile.FIELD_REG_URI, // Needed for default domain
+            SipProfile.FIELD_PROXY, // Needed for default domain
+            SipProfile.FIELD_DEFAULT_URI_SCHEME, // Needed for default scheme
+            SipProfile.FIELD_DISPLAY_NAME,
+            SipProfile.FIELD_WIZARD
+    };
+
+//    TODO
     private void sendMessage() {
-        if (service != null) {
-            SipProfile acc = accountChooserButton.getSelectedAccount();
+
+        if (service == null) {
+            Log.e(THIS_FILE, "sendMessage(), the service is null...");
+            return;
+        }
+
+        Cursor c = getActivity().getContentResolver().query(
+                SipProfile.ACCOUNT_URI, ACC_PROJECTION,
+                SipProfile.FIELD_ACTIVE + "=?",
+                new String[] {"1"},
+                null);
+
+        try {
+            SipProfile acc = null;
+            if (c != null && c.moveToFirst()) {
+                acc = new SipProfile(c);
+            }
+
             if (acc != null && acc.id != SipProfile.INVALID_ID) {
                 try {
                     String textToSend = bodyInput.getText().toString();
@@ -249,7 +264,19 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
                     Log.e(THIS_FILE, "Not able to send message");
                 }
             }
+
+        } catch (Exception e) {
+            Log.e(THIS_FILE, "sendMessage(), " + e.toString());
+        } finally {
+            try {
+                if (c != null && c.isClosed() == false) {
+                    c.close();
+                }
+            } catch (Exception e) {
+                Log.e(THIS_FILE, "sendMessage() close cursor error, " + e.toString());
+            }
         }
+
     }
 
     @Override

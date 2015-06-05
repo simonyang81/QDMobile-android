@@ -323,11 +323,11 @@ public class CallLogAdapter extends GroupingListAdapter
 
     private void setPhoto(CallLogListItemViews views, CallerInfo ci) {
 
-        views.quickContactView.setImageURI(ci.contactContentUri);
-        ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext, views.quickContactView
-                ,
-                ci,
-                R.drawable.ic_contact_picture_holo_dark);
+        if (ci != null && ci.photoUri != null) {
+            views.quickContactView.setImageURI(ci.photoUri);
+        } else {
+            views.quickContactView.setImageResource(R.drawable.ic_contact_picture_holo_dark);
+        }
     }
 
     @Override

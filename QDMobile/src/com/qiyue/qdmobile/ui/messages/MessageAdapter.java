@@ -21,7 +21,6 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipMessage;
 import com.qiyue.qdmobile.models.CallerInfo;
-import com.qiyue.qdmobile.utils.ContactsAsyncHelper;
 import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.SmileyParser;
 import com.qiyue.qdmobile.widgets.contactbadge.QuickContactBadge.ArrowPosition;
@@ -119,18 +118,9 @@ public class MessageAdapter extends ResourceCursorAdapter {
         // Subject
         tagView.contentView.setText(formatMessage(number, subject, mimeType));
 
-
         if (msg.isOutgoing()) {
             setPhotoSide(tagView, ArrowPosition.LEFT);
     
-//            TODO
-//            tagView.quickContactView.setImageURI(personalInfo.contactContentUri);
-
-//            ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext,
-//                    tagView.quickContactView,
-//                    personalInfo,
-//                    R.drawable.ic_contact_picture_holo_dark);
-
             if (personalInfo != null && personalInfo.photoUri != null) {
                 tagView.quickContactView.setImageURI(personalInfo.photoUri);
             } else {
@@ -146,37 +136,7 @@ public class MessageAdapter extends ResourceCursorAdapter {
                 tagView.quickContactView.setImageResource(R.drawable.ic_contact_picture_holo_dark);
             }
 
-//            ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext,
-//                    tagView.quickContactView,
-//                    mToContactInfo,
-//                    R.drawable.ic_contact_picture_holo_dark);
-            
-//            TODO
-//            CallerInfo info = CallerInfo.getCallerInfoFromSipUri(mContext, msg.getFullFrom());
-
-//            tagView.quickContactView.setImageURI(info.contactContentUri);
-
-//            ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext,
-//                    tagView.quickContactView,
-//                    info,
-//                    R.drawable.ic_contact_picture_holo_dark);
         }
-
-
-//        String number = cursor.getString(cursor.getColumnIndex(SipMessage.FIELD_FROM_FULL));
-//        CallerInfo info = CallerInfo.getCallerInfoFromSipUri(mContext, msg.getFullFrom());
-//        CallerInfo.getCallerInfoForSelf(mContext);
-//
-//        if (info != null) {
-//            Log.d(TAG, "info: " + info.toString());
-//        }
-//
-//        // Photo
-//        tagView.quickContactView.setImageURI(info.contactContentUri);
-//        ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext,
-//                tagView.quickContactView,
-//                info,
-//                R.drawable.ic_contact_picture_holo_dark);
 
     }
 
@@ -190,10 +150,12 @@ public class MessageAdapter extends ResourceCursorAdapter {
             contact_photo_lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             content_lp.addRule(RelativeLayout.RIGHT_OF, 0);
             content_lp.addRule(RelativeLayout.LEFT_OF, R.id.quick_contact_photo);
+            content_lp.setMargins(20, 0, 0, 0);
         } else {
             tagView.containterBlock.setBackgroundResource(R.drawable.chat_head_nux_bubble_left);
             contact_photo_lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
             contact_photo_lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            contact_photo_lp.setMargins(20, 0, 0, 0);
             content_lp.addRule(RelativeLayout.LEFT_OF, 0);
             content_lp.addRule(RelativeLayout.RIGHT_OF, R.id.quick_contact_photo);
         }

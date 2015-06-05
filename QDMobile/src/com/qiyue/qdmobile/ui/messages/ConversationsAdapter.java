@@ -98,11 +98,16 @@ public class ConversationsAdapter extends SimpleCursorAdapter {
         CallerInfo info = CallerInfo.getCallerInfoFromSipUri(mContext, number);
         
         // Photo
-        tagView.quickContactView.setImageURI(info.contactContentUri);
-        ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext, 
-                tagView.quickContactView,
-                info,
-                R.drawable.ic_contact_picture_holo_dark);
+        if (info != null && info.photoUri != null) {
+            tagView.quickContactView.setImageURI(info.photoUri);
+        } else {
+            tagView.quickContactView.setImageResource(R.drawable.ic_contact_picture_holo_dark);
+
+        }
+//        ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext,
+//                tagView.quickContactView,
+//                info,
+//                R.drawable.ic_contact_picture_holo_dark);
 
         // From
         tagView.fromView.setText(formatMessage(cursor));

@@ -46,8 +46,6 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
     public static final int MENU_DELETE               = 0;
     public static final int MENU_VIEW                 = 1;
 
-//    private boolean mDualPane;
-
     private ConversationsAdapter mAdapter;
     private FloatingActionButton mCreateMsg;
 
@@ -68,17 +66,6 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
         Log.i(TAG, "onActivityCreated()...");
 
         ListView lv = (ListView) getActivity().findViewById(android.R.id.list);
-//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                android.util.Log.d(TAG, "ListView onItemClick()...");
-//
-//                ConversationListItemViews cri = (ConversationListItemViews) view.getTag();
-//                viewDetails(position, cri);
-//
-//            }
-//        });
 
         View.OnClickListener addClickButtonListener = new View.OnClickListener() {
             @Override
@@ -86,8 +73,6 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
                 onClickAddMessage();
             }
         };
-
-//        lv.setOnCreateContextMenuListener(this);
 
         mCreateMsg = (FloatingActionButton) getActivity().findViewById(R.id.fab_create_messages);
         mCreateMsg.setOnClickListener(addClickButtonListener);

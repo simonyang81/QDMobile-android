@@ -87,8 +87,9 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
         fullFromText = (TextView) v.findViewById(R.id.subject);
         fromText = (TextView) v.findViewById(R.id.subjectLabel);
         bodyInput = (EditText) v.findViewById(R.id.embedded_text_editor);
-        accountChooserButton = (AccountChooserButton) v.findViewById(R.id.accountChooserButton);
         sendButton = (Button) v.findViewById(R.id.send_button);
+
+        accountChooserButton = (AccountChooserButton) v.findViewById(R.id.accountChooserButton);
         accountChooserButton.setShowExternals(false);
 
         return v;
@@ -101,8 +102,6 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
         fromText.setOnClickListener(this);
         sendButton.setOnClickListener(this);
 
-        mAdapter = new MessageAdapter(getActivity(), null);
-        getListView().setAdapter(mAdapter);
 
         // Setup from args
         String from = getArguments().getString(SipMessage.FIELD_FROM);
@@ -114,6 +113,10 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
         if (remoteFrom == null) {
             chooseSipUri();
         }
+
+        mAdapter = new MessageAdapter(getActivity(), null);
+        getListView().setAdapter(mAdapter);
+        mAdapter.setFullFrom(fullFrom);
 
     }
 
@@ -210,7 +213,7 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
 
 
     private void setupFrom(String from, String fullFrom) {
-        Log.d(THIS_FILE, "Setup from " + from);
+        Log.d(THIS_FILE, "setupFrom(), from: " + from + "; fullFrom: " + fullFrom);
         if (from != null) {
             if (remoteFrom != from) {
                 remoteFrom = from;

@@ -123,4 +123,20 @@ public class CallerInfo {
         return ContactsWrapper.getInstance().findSelfInfo(context);
     }
 
+    @Override
+    public String toString() {
+        return "CallerInfo{" +
+                "contactExists=" + contactExists +
+                ", personId=" + personId +
+                ", name='" + name + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", phoneLabel='" + phoneLabel + '\'' +
+                ", numberType=" + numberType +
+                ", numberLabel='" + numberLabel + '\'' +
+                ", photoId=" + photoId +
+                ", photoUri=" + photoUri +
+                ", contactRingtoneUri=" + contactRingtoneUri +
+                ", contactContentUri=" + contactContentUri +
+                '}';
+    }
 }

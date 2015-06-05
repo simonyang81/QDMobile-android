@@ -36,6 +36,8 @@ public class MessageAdapter extends ResourceCursorAdapter {
     private static SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss");
     TextAppearanceSpan mTextSmallSpan;
     private CallerInfo personalInfo;
+    private CallerInfo mToContactInfo;
+    private String mFullFrom;
     
     public MessageAdapter(Context context, Cursor c) {
         super(context, R.layout.message_list_item, c, 0);
@@ -43,8 +45,14 @@ public class MessageAdapter extends ResourceCursorAdapter {
 
         personalInfo = CallerInfo.getCallerInfoForSelf(mContext);
 
-        Log.d(TAG, "personalInfo.phoneNumber: " + personalInfo.phoneNumber);
+        if (personalInfo != null) {
+            Log.d(TAG, "personalInfo: " + personalInfo.toString());
+        }
+    }
 
+    public void setFullFrom(String fullFrom) {
+        mFullFrom = fullFrom;
+        mToContactInfo = CallerInfo.getCallerInfoFromSipUri(mContext, mFullFrom);
     }
 
     public static final class MessageListItemViews {
@@ -123,8 +131,25 @@ public class MessageAdapter extends ResourceCursorAdapter {
 //                    personalInfo,
 //                    R.drawable.ic_contact_picture_holo_dark);
 
+            if (personalInfo != null && personalInfo.photoUri != null) {
+                tagView.quickContactView.setImageURI(personalInfo.photoUri);
+            } else {
+                tagView.quickContactView.setImageResource(R.drawable.ic_contact_picture_holo_dark);
+            }
+
         } else {
             setPhotoSide(tagView, ArrowPosition.RIGHT);
+
+            if (mToContactInfo != null && mToContactInfo.photoUri != null) {
+                tagView.quickContactView.setImageURI(mToContactInfo.photoUri);
+            } else {
+                tagView.quickContactView.setImageResource(R.drawable.ic_contact_picture_holo_dark);
+            }
+
+//            ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext,
+//                    tagView.quickContactView,
+//                    mToContactInfo,
+//                    R.drawable.ic_contact_picture_holo_dark);
             
 //            TODO
 //            CallerInfo info = CallerInfo.getCallerInfoFromSipUri(mContext, msg.getFullFrom());
@@ -139,16 +164,19 @@ public class MessageAdapter extends ResourceCursorAdapter {
 
 
 //        String number = cursor.getString(cursor.getColumnIndex(SipMessage.FIELD_FROM_FULL));
-        CallerInfo info = CallerInfo.getCallerInfoFromSipUri(mContext, msg.getFullFrom());
-
-        Log.d(TAG, "info.phoneNumber: " + info.phoneNumber);
-
-        // Photo
-        tagView.quickContactView.setImageURI(info.contactContentUri);
-        ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext,
-                tagView.quickContactView,
-                info,
-                R.drawable.ic_contact_picture_holo_dark);
+//        CallerInfo info = CallerInfo.getCallerInfoFromSipUri(mContext, msg.getFullFrom());
+//        CallerInfo.getCallerInfoForSelf(mContext);
+//
+//        if (info != null) {
+//            Log.d(TAG, "info: " + info.toString());
+//        }
+//
+//        // Photo
+//        tagView.quickContactView.setImageURI(info.contactContentUri);
+//        ContactsAsyncHelper.updateImageViewWithContactPhotoAsync(mContext,
+//                tagView.quickContactView,
+//                info,
+//                R.drawable.ic_contact_picture_holo_dark);
 
     }
 

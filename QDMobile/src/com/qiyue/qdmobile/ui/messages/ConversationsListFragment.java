@@ -1,15 +1,10 @@
 package com.qiyue.qdmobile.ui.messages;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri.Builder;
 import android.os.Bundle;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -17,23 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ScrollDirectionListener;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipMessage;
 import com.qiyue.qdmobile.service.SipNotifications;
-import com.qiyue.qdmobile.ui.PickupSipUri;
 import com.qiyue.qdmobile.ui.SipHome.ViewPagerVisibilityListener;
 import com.qiyue.qdmobile.ui.messages.ConversationsAdapter.ConversationListItemViews;
-import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.widgets.CSSListFragment;
 
-import java.security.acl.LastOwnerException;
 
 /**
  * This activity provides a list view of existing conversations.
@@ -202,34 +190,34 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
     }
 
 
-    // Options
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        MenuItem writeMenu = menu.add(R.string.menu_compose_new);
-        writeMenu.setIcon(R.drawable.ic_menu_msg_compose_holo_dark).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        writeMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                onClickAddMessage();
-                return true;
-            }
-        });
-
-        if (getListAdapter() != null && getListAdapter().getCount() > 0) {
-
-            MenuItem deleteAllMenu = menu.add(R.string.menu_delete_all);
-            deleteAllMenu.setIcon(android.R.drawable.ic_menu_delete).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-            deleteAllMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    confirmDeleteThread(null);
-                    return true;
-                }
-            });
-        }
-    }
+//    // Options
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//
+//        MenuItem writeMenu = menu.add(R.string.menu_compose_new);
+//        writeMenu.setIcon(R.drawable.ic_menu_msg_compose_holo_dark).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//        writeMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                onClickAddMessage();
+//                return true;
+//            }
+//        });
+//
+//        if (getListAdapter() != null && getListAdapter().getCount() > 0) {
+//
+//            MenuItem deleteAllMenu = menu.add(R.string.menu_delete_all);
+//            deleteAllMenu.setIcon(android.R.drawable.ic_menu_delete).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+//            deleteAllMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+//                @Override
+//                public boolean onMenuItemClick(MenuItem item) {
+//                    confirmDeleteThread(null);
+//                    return true;
+//                }
+//            });
+//        }
+//    }
 
 
 
@@ -323,30 +311,30 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
     }
     */
 
-    private void confirmDeleteThread(final String from) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.confirm_dialog_title)
-            .setIcon(android.R.drawable.ic_dialog_alert)
-        .setCancelable(true)
-        .setPositiveButton(R.string.delete, new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				if(TextUtils.isEmpty(from)) {
-				    getActivity().getContentResolver().delete(SipMessage.MESSAGE_URI, null, null);
-				}else {
-				    Builder threadUriBuilder = SipMessage.THREAD_ID_URI_BASE.buildUpon();
-				    threadUriBuilder.appendEncodedPath(from);
-				    getActivity().getContentResolver().delete(threadUriBuilder.build(), null, null);
-				}
-			}
-		})
-        .setNegativeButton(R.string.no, null)
-        .setMessage(TextUtils.isEmpty(from)
-                ? R.string.confirm_delete_all_conversations
-                        : R.string.confirm_delete_conversation)
-        .show();
-    }
+//    private void confirmDeleteThread(final String from) {
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setTitle(R.string.confirm_dialog_title)
+//            .setIcon(android.R.drawable.ic_dialog_alert)
+//        .setCancelable(true)
+//        .setPositiveButton(R.string.delete, new OnClickListener() {
+//			@Override
+//			public void onClick(DialogInterface dialog, int which) {
+//				if(TextUtils.isEmpty(from)) {
+//				    getActivity().getContentResolver().delete(SipMessage.MESSAGE_URI, null, null);
+//				}else {
+//				    Builder threadUriBuilder = SipMessage.THREAD_ID_URI_BASE.buildUpon();
+//				    threadUriBuilder.appendEncodedPath(from);
+//				    getActivity().getContentResolver().delete(threadUriBuilder.build(), null, null);
+//				}
+//			}
+//		})
+//        .setNegativeButton(R.string.no, null)
+//        .setMessage(TextUtils.isEmpty(from)
+//                ? R.string.confirm_delete_all_conversations
+//                        : R.string.confirm_delete_conversation)
+//        .show();
+//    }
 
     boolean alreadyLoaded = false;
 
@@ -397,7 +385,7 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
 
     @Override
     public void changeCursor(Cursor c) {
-        if(mAdapter != null) {
+        if (mAdapter != null) {
             mAdapter.changeCursor(c);
         }
     }

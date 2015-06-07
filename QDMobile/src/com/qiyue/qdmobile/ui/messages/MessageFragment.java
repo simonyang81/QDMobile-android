@@ -223,15 +223,6 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
         startActivityForResult(pickupIntent, Constants.PICKUP_SIP_URI);
     }
 
-    private static final String[] ACC_PROJECTION = new String[] {
-            SipProfile.FIELD_ID,
-            SipProfile.FIELD_ACC_ID, // Needed for default domain
-            SipProfile.FIELD_REG_URI, // Needed for default domain
-            SipProfile.FIELD_PROXY, // Needed for default domain
-            SipProfile.FIELD_DEFAULT_URI_SCHEME, // Needed for default scheme
-            SipProfile.FIELD_DISPLAY_NAME,
-            SipProfile.FIELD_WIZARD
-    };
 
 //    TODO
     private void sendMessage() {
@@ -242,7 +233,7 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
         }
 
         Cursor c = getActivity().getContentResolver().query(
-                SipProfile.ACCOUNT_URI, ACC_PROJECTION,
+                SipProfile.ACCOUNT_URI, Constants.ACC_PROJECTION,
                 SipProfile.FIELD_ACTIVE + "=?",
                 new String[] {"1"},
                 null);

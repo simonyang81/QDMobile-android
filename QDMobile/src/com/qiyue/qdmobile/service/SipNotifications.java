@@ -89,7 +89,7 @@ public class SipNotifications {
 		}
 	}
 
-    private Integer notificationPrimaryTextColor = null;
+//    private Integer notificationPrimaryTextColor = null;
 
     private static String TO_SEARCH = "Search";
 	// Retrieve notification textColor with android < 2.3
@@ -114,11 +114,11 @@ public class SipNotifications {
 	            final TextView text = (TextView) gp.getChildAt(i);
 	            final String szText = text.getText().toString();
 	            if (TO_SEARCH.equals(szText)) {
-	                notificationPrimaryTextColor = text.getTextColors().getDefaultColor();
+//	                notificationPrimaryTextColor = text.getTextColors().getDefaultColor();
 	                return true;
 	            }
 	        } else if (gp.getChildAt(i) instanceof ViewGroup) {
-	            if(recurseSearchNotificationPrimaryText((ViewGroup) gp.getChildAt(i))) {
+	            if (recurseSearchNotificationPrimaryText((ViewGroup) gp.getChildAt(i))) {
 	                return true;
 	            }
 	        }
@@ -220,15 +220,21 @@ public class SipNotifications {
 	// Announces
 
 	// Register
-	public synchronized void notifyRegisteredAccounts(ArrayList<SipProfileState> activeAccountsInfos, boolean showNumbers) {
+	public synchronized void notifyRegisteredAccounts(ArrayList<SipProfileState> activeAccountsInfos,
+													  boolean showNumbers, boolean hasRegistered) {
 		if (!isServiceWrapper) {
 			Log.e(THIS_FILE, "Trying to create a service notification from outside the service");
 			return;
 		}
-		int icon = R.drawable.ic_stat_sipok;
-		CharSequence tickerText = context.getString(R.string.service_ticker_registered_text);
+
+		int icon = hasRegistered ? android.R.drawable.stat_sys_speakerphone
+				: android.R.drawable.stat_notify_error;
+
+		CharSequence tickerText = hasRegistered ?
+				  context.getString(R.string.service_ticker_registered_text)
+				: context.getString(R.string.service_ticker_no_registered_text);
+
 		long when = System.currentTimeMillis();
-		
 
         Builder nb = new NotificationCompat.Builder(context);
         nb.setSmallIcon(icon);
@@ -236,28 +242,36 @@ public class SipNotifications {
         nb.setWhen(when);
 		Intent notificationIntent = new Intent(SipManager.ACTION_SIP_DIALER);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent contentIntent
+				= PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		
-		RegistrationNotification contentView = new RegistrationNotification(context.getPackageName());
-		contentView.clearRegistrations();
-		if(!Compatibility.isCompatible(9)) {
-		    contentView.setTextsColor(notificationPrimaryTextColor);
-		}
-		contentView.addAccountInfos(context, activeAccountsInfos);
+//		RegistrationNotification contentView = new RegistrationNotification(context.getPackageName());
+//		contentView.clearRegistrations();
+//		if (!Compatibility.isCompatible(9)) {
+//		    contentView.setTextsColor(notificationPrimaryTextColor);
+//		}
+
+//		contentView.setTextsColor(context.getResources().getColor(android.R.color.black));
+//		contentView.addAccountInfos(context, activeAccountsInfos);
 
 		// notification.setLatestEventInfo(context, contentTitle,
 		// contentText, contentIntent);
 		nb.setOngoing(true);
 		nb.setOnlyAlertOnce(true);
+		nb.setContentTitle(context.getString(R.string.app_name));
+		nb.setContentText(hasRegistered ?
+				context.getString(R.string.service_ticker_registered_text)
+				: context.getString(R.string.service_ticker_no_registered_text));
         nb.setContentIntent(contentIntent);
-        nb.setContent(contentView);
+//        nb.setContent(contentView);
+
+//		nb.setContentIntent(contentIntent);
 		
 		Notification notification = nb.build();
 		notification.flags |= Notification.FLAG_NO_CLEAR;
 		// We have to re-write content view because getNotification setLatestEventInfo implicitly
-        notification.contentView = contentView;
+//        notification.contentView = contentView;
 		if (showNumbers) {
-            // This only affects android 2.3 and lower
             notification.number = activeAccountsInfos.size();
         }
 		startForegroundCompat(REGISTER_NOTIF_ID, notification);
@@ -265,7 +279,7 @@ public class SipNotifications {
 	
 	/**
 	 * Format the remote contact name for the call info
-	 * @param callInfo the callinfo to format
+	 * @param remoteContact the callinfo to format
 	 * @return the name to display for the contact
 	 */
 	private String formatRemoteContactString(String remoteContact) {
@@ -287,7 +301,7 @@ public class SipNotifications {
 	/**
 	 * Format the notification title for a call info
 	 * @param title
-	 * @param callInfo
+	 * @param accId
 	 * @return
 	 */
 	private String formatNotificationTitle(int title, long accId) {

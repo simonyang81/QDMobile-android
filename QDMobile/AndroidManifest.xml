@@ -131,7 +131,7 @@
                 android:name=".ui.SipHome"
                 android:label="@string/app_name"
                 android:launchMode="singleTask"
-                android:theme="@style/DarkTheme"
+                android:theme="@style/Holo.Light"
                 android:screenOrientation="portrait"
                 android:uiOptions="splitActionBarWhenNarrow"
                 >
@@ -176,7 +176,7 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:targetActivity=".ui.SipHome"
-            android:theme="@style/DarkTheme"
+            android:theme="@style/DarkTheme.NoTitle"
             android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

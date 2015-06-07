@@ -38,7 +38,8 @@
     <string name="messages_tab_name_text">信息</string>
     <string name="favorites_tab_name_text">收藏</string>
     <string name="menu_disconnect">断开</string>
-    <string name="service_ticker_registered_text">SIP 已注册</string>
+    <string name="service_ticker_registered_text">QDMobile SIP 已注册</string>
+    <string name="service_ticker_no_registered_text">QDMobile SIP 还没有注册</string>
     <string name="outgoing_call_chooser_call_text">呼叫</string>
     <string name="reorder">重新排序</string>
     <string name="backup_restore">备份/恢复</string>

@@ -116,7 +116,7 @@ public class MessageAdapter extends ResourceCursorAdapter {
         }
 
         // Subject
-        tagView.contentView.setText(formatMessage(number, subject, mimeType));
+        tagView.contentView.setText(formatMessage(subject, mimeType));
 
         if (msg.isOutgoing()) {
             setPhotoSide(tagView, ArrowPosition.LEFT);
@@ -182,8 +182,8 @@ public class MessageAdapter extends ResourceCursorAdapter {
     }
 
 
-    private CharSequence formatMessage(String contact, String body,
-            String contentType) {
+    private CharSequence formatMessage(String body, String contentType) {
+
         SpannableStringBuilder buf = new SpannableStringBuilder();
         if (!TextUtils.isEmpty(body)) {
             // Converts html to spannable if ContentType is "text/html".
@@ -201,12 +201,11 @@ public class MessageAdapter extends ResourceCursorAdapter {
         // bottom of the text field, assuming there are two lines for the
         // message and the sent time.
         buf.append("\n");
-        int startOffset = buf.length();
 
-        startOffset = buf.length();
-
-        buf.setSpan(mTextSmallSpan, startOffset, buf.length(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        int startOffset = buf.length();
+//
+//        buf.setSpan(mTextSmallSpan, startOffset, buf.length(),
+//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         return buf;
     }

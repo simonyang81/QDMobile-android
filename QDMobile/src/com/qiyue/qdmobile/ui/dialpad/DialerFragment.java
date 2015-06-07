@@ -10,10 +10,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.PhoneNumberUtils;
@@ -34,49 +36,40 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.ISipService;
 import com.qiyue.qdmobile.api.SipCallSession;
 import com.qiyue.qdmobile.api.SipConfigManager;
 import com.qiyue.qdmobile.api.SipManager;
 import com.qiyue.qdmobile.api.SipProfile;
-import com.qiyue.qdmobile.api.SipUri.ParsedSipContactInfos;
-import com.qiyue.qdmobile.models.Filter;
 import com.qiyue.qdmobile.ui.SipHome;
 import com.qiyue.qdmobile.ui.SipHome.ViewPagerVisibilityListener;
 import com.qiyue.qdmobile.ui.dialpad.DialerLayout.OnAutoCompleteListVisibilityChangedListener;
 import com.qiyue.qdmobile.utils.CallHandlerPlugin;
 import com.qiyue.qdmobile.utils.CallHandlerPlugin.OnLoadListener;
+import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.DialingFeedback;
 import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.PreferencesWrapper;
 import com.qiyue.qdmobile.utils.Theme;
 import com.qiyue.qdmobile.utils.contacts.ContactsSearchAdapter;
-import com.qiyue.qdmobile.widgets.AccountChooserButton;
-import com.qiyue.qdmobile.widgets.AccountChooserButton.OnAccountChangeListener;
 import com.qiyue.qdmobile.widgets.DialerCallBar;
 import com.qiyue.qdmobile.widgets.DialerCallBar.OnDialActionListener;
 import com.qiyue.qdmobile.widgets.Dialpad;
 import com.qiyue.qdmobile.widgets.Dialpad.OnDialKeyListener;
 
-public class DialerFragment extends SherlockFragment implements OnClickListener, OnLongClickListener,
+public class DialerFragment extends Fragment implements OnClickListener, OnLongClickListener,
         OnDialKeyListener, TextWatcher, OnDialActionListener, ViewPagerVisibilityListener, OnKeyListener,
         OnAutoCompleteListVisibilityChangedListener {
 
     private static final String THIS_FILE = "DialerFragment";
 
-    protected static final int PICKUP_PHONE = 0;
+//    protected static final int PICKUP_PHONE = 0;
 
     //private Drawable digitsBackground, digitsEmptyBackground;
     private DigitsEditText digits;
@@ -85,7 +78,7 @@ public class DialerFragment extends SherlockFragment implements OnClickListener,
 
     //private View digitDialer;
 
-    private AccountChooserButton accountChooserButton;
+//    private AccountChooserButton accountChooserButton;
     private Boolean isDigit = null;
     /* , isTablet */
     
@@ -139,7 +132,7 @@ public class DialerFragment extends SherlockFragment implements OnClickListener,
 
     private DialerLayout dialerLayout;
 
-    private MenuItem accountChooserFilterItem;
+//    private MenuItem accountChooserFilterItem;
 
     private TextView rewriteTextInfo;
 
@@ -187,17 +180,18 @@ public class DialerFragment extends SherlockFragment implements OnClickListener,
         autoCompleteList = (ListView) v.findViewById(R.id.autoCompleteList);
         rewriteTextInfo = (TextView) v.findViewById(R.id.rewriteTextInfo);
         
-        accountChooserButton = (AccountChooserButton) v.findViewById(R.id.accountChooserButton);
-        
-        accountChooserFilterItem = accountChooserButton.addExtraMenuItem(R.string.apply_rewrite);
-        accountChooserFilterItem.setCheckable(true);
-        accountChooserFilterItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                setRewritingFeature(!accountChooserFilterItem.isChecked());
-                return true;
-            }
-        });
+//        accountChooserButton = (AccountChooserButton) v.findViewById(R.id.accountChooserButton);
+//
+//        accountChooserFilterItem = accountChooserButton.addExtraMenuItem(R.string.apply_rewrite);
+//
+//        accountChooserFilterItem.setCheckable(true);
+//        accountChooserFilterItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                setRewritingFeature(!accountChooserFilterItem.isChecked());
+//                return true;
+//            }
+//        });
         setRewritingFeature(prefsWrapper.getPreferenceBooleanValue(SipConfigManager.REWRITE_RULES_DIALER));
         
         dialerLayout = (DialerLayout) v.findViewById(R.id.top_digit_dialer);
@@ -217,8 +211,8 @@ public class DialerFragment extends SherlockFragment implements OnClickListener,
         dialerLayout.setAutoCompleteListVisibiltyChangedListener(this);
 
         // Account chooser button setup
-        accountChooserButton.setShowExternals(true);
-        accountChooserButton.setOnAccountChangeListener(accountButtonChangeListener);
+//        accountChooserButton.setShowExternals(true);
+//        accountChooserButton.setOnAccountChangeListener(accountButtonChangeListener);
 
         // Dialpad
         dialPad.setOnDialKeyListener(this);
@@ -253,7 +247,7 @@ public class DialerFragment extends SherlockFragment implements OnClickListener,
     @Override
     public void onResume() {
         super.onResume();
-        if(callBar != null) {
+        if (callBar != null) {
             callBar.setVideoEnabled(prefsWrapper.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO));
         }
     }
@@ -381,17 +375,17 @@ public class DialerFragment extends SherlockFragment implements OnClickListener,
         }
     };
     
-    OnAccountChangeListener accountButtonChangeListener = new OnAccountChangeListener() {
-        @Override
-        public void onChooseAccount(SipProfile account) {
-            long accId = SipProfile.INVALID_ID;
-            if (account != null) {
-                accId = account.id;
-            }
-            autoCompleteAdapter.setSelectedAccount(accId);
-            applyRewritingInfo();
-        }
-    };
+//    OnAccountChangeListener accountButtonChangeListener = new OnAccountChangeListener() {
+//        @Override
+//        public void onChooseAccount(SipProfile account) {
+//            long accId = SipProfile.INVALID_ID;
+//            if (account != null) {
+//                accId = account.id;
+//            }
+//            autoCompleteAdapter.setSelectedAccount(accId);
+//            applyRewritingInfo();
+//        }
+//    };
     
     private void attachButtonListener(View v, int id, boolean longAttach) {
         View button = v.findViewById(id);
@@ -477,8 +471,8 @@ public class DialerFragment extends SherlockFragment implements OnClickListener,
             dialFeedback.hapticFeedback();
             keyPressed(KeyEvent.KEYCODE_PLUS);
             return true;
-        }else if(vId == R.id.button1) {
-            if(digits.length() == 0) {
+        } else if (vId == R.id.button1) {
+            if (digits.length() == 0) {
                 placeVMCall();
                 return true;
             }
@@ -536,15 +530,15 @@ public class DialerFragment extends SherlockFragment implements OnClickListener,
             return;
         }
         isDigit = !textMode;
-        if(digits == null) {
+        if (digits == null) {
             return;
         }
-        if(isDigit) {
+        if (isDigit) {
             // We need to clear the field because the formatter will now 
             // apply and unapply to this field which could lead to wrong values when unapplied
             digits.getText().clear();
             digits.addTextChangedListener(digitFormater);
-        }else {
+        } else {
             digits.removeTextChangedListener(digitFormater);
         }
         digits.setCursorVisible(!isDigit);
@@ -557,11 +551,11 @@ public class DialerFragment extends SherlockFragment implements OnClickListener,
         //        : R.drawable.ic_menu_switch_digit);
 
         // Invalidate to ask to require the text button to a digit button
-        getSherlockActivity().supportInvalidateOptionsMenu();
+//        getSherlockActivity().supportInvalidateOptionsMenu();
     }
     
     private boolean hasAutocompleteList() {
-        if(!isDigit) {
+        if (!isDigit) {
             return true;
         }
         return dialerLayout.canShowList();
@@ -573,7 +567,7 @@ public class DialerFragment extends SherlockFragment implements OnClickListener,
      * @param value the new text to see in the text field
      */
     public void setTextFieldValue(CharSequence value) {
-        if(digits == null) {
+        if (digits == null) {
             initText = value.toString();
             return;
         }
@@ -597,30 +591,30 @@ public class DialerFragment extends SherlockFragment implements OnClickListener,
     @Override
     public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
         afterTextChanged(digits.getText());
-        String newText = digits.getText().toString();
+//        String newText = digits.getText().toString();
         // Allow account chooser button to automatically change again as we have clear field
-        accountChooserButton.setChangeable(TextUtils.isEmpty(newText));
+//        accountChooserButton.setChangeable(TextUtils.isEmpty(newText));
         applyRewritingInfo();
     }
 
-    // Options
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        int action = getResources().getBoolean(R.bool.menu_in_bar) ? MenuItem.SHOW_AS_ACTION_IF_ROOM : MenuItem.SHOW_AS_ACTION_NEVER;
-        MenuItem delMenu = menu.add(isDigit ? R.string.switch_to_text : R.string.switch_to_digit);
-        delMenu.setIcon(
-                isDigit ? R.drawable.ic_menu_switch_txt
-                        : R.drawable.ic_menu_switch_digit).setShowAsAction( action );
-        delMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                setTextDialing(isDigit);
-                return true;
-            }
-        });
-    }
+//    // Options
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//
+//        int action = getResources().getBoolean(R.bool.menu_in_bar) ? MenuItem.SHOW_AS_ACTION_IF_ROOM : MenuItem.SHOW_AS_ACTION_NEVER;
+//        MenuItem delMenu = menu.add(isDigit ? R.string.switch_to_text : R.string.switch_to_digit);
+//        delMenu.setIcon(
+//                isDigit ? R.drawable.ic_menu_switch_txt
+//                        : R.drawable.ic_menu_switch_digit).setShowAsAction( action );
+//        delMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                setTextDialing(isDigit);
+//                return true;
+//            }
+//        });
+//    }
 
     @Override
     public void placeCall() {
@@ -641,21 +635,33 @@ public class DialerFragment extends SherlockFragment implements OnClickListener,
         String toCall = "";
         Long accountToUse = SipProfile.INVALID_ID;
         // Find account to use
-        SipProfile acc = accountChooserButton.getSelectedAccount();
-        if(acc == null) {
+//        SipProfile acc = accountChooserButton.getSelectedAccount();
+
+        Cursor c = getActivity().getContentResolver().query(
+                SipProfile.ACCOUNT_URI, Constants.ACC_PROJECTION,
+                SipProfile.FIELD_ACTIVE + "=?",
+                new String[]{"1"},
+                null);
+
+        SipProfile acc = null;
+        if (c != null && c.moveToFirst()) {
+            acc = new SipProfile(c);
+        }
+
+        if (acc == null) {
             return;
         }
 
         accountToUse = acc.id;
         // Find number to dial
         toCall = digits.getText().toString();
-        if(isDigit) {
+        if (isDigit) {
             toCall = PhoneNumberUtils.stripSeparators(toCall);
         }
 
-        if(accountChooserFilterItem != null && accountChooserFilterItem.isChecked()) {
-            toCall = rewriteNumber(toCall);
-        }
+//        if (accountChooserFilterItem != null && accountChooserFilterItem.isChecked()) {
+//            toCall = rewriteNumber(toCall);
+//        }
         
         if (TextUtils.isEmpty(toCall)) {
             return;
@@ -686,8 +692,20 @@ public class DialerFragment extends SherlockFragment implements OnClickListener,
     
     public void placeVMCall() {
         Long accountToUse = SipProfile.INVALID_ID;
+//        SipProfile acc = null;
+
+//        acc = accountChooserButton.getSelectedAccount();
+        Cursor c = getActivity().getContentResolver().query(
+                SipProfile.ACCOUNT_URI, Constants.ACC_PROJECTION,
+                SipProfile.FIELD_ACTIVE + "=?",
+                new String[] {"1"},
+                null);
+
         SipProfile acc = null;
-        acc = accountChooserButton.getSelectedAccount();
+        if (c != null && c.moveToFirst()) {
+            acc = new SipProfile(c);
+        }
+
         if (acc == null) {
             // Maybe we could inform user nothing will happen here?
             return;
@@ -867,37 +885,39 @@ public class DialerFragment extends SherlockFragment implements OnClickListener,
     // In dialer rewriting feature
     
     private void setRewritingFeature(boolean active) {
-        accountChooserFilterItem.setChecked(active);
+//        accountChooserFilterItem.setChecked(active);
+
         rewriteTextInfo.setVisibility(active?View.VISIBLE:View.GONE);
-        if(active) {
+        if (active) {
              applyRewritingInfo();
         }
         prefsWrapper.setPreferenceBooleanValue(SipConfigManager.REWRITE_RULES_DIALER, active);
     }
     
-    private String rewriteNumber(String number) {
-        SipProfile acc = accountChooserButton.getSelectedAccount();
-        if (acc == null) {
-            return number;
-        }
-        String numberRewrite = Filter.rewritePhoneNumber(getActivity(), acc.id, number);
-        if(TextUtils.isEmpty(numberRewrite)) {
-            return "";
-        }
-        ParsedSipContactInfos finalCallee = acc.formatCalleeNumber(numberRewrite);
-        return finalCallee.getReadableSipUri();
-    }
+//    private String rewriteNumber(String number) {
+//        SipProfile acc = accountChooserButton.getSelectedAccount();
+//        if (acc == null) {
+//            return number;
+//        }
+//        String numberRewrite = Filter.rewritePhoneNumber(getActivity(), acc.id, number);
+//        if(TextUtils.isEmpty(numberRewrite)) {
+//            return "";
+//        }
+//        ParsedSipContactInfos finalCallee = acc.formatCalleeNumber(numberRewrite);
+//        return finalCallee.getReadableSipUri();
+//    }
     
     private void applyRewritingInfo() {
         // Rewrite information textView update
-        String newText = digits.getText().toString();
-        if(accountChooserFilterItem != null && accountChooserFilterItem.isChecked()) {
-            if(isDigit) {
-                newText = PhoneNumberUtils.stripSeparators(newText);
-            }
-            rewriteTextInfo.setText(rewriteNumber(newText));
-        }else {
-            rewriteTextInfo.setText("");
-        }
+//        String newText = digits.getText().toString();
+//        if (accountChooserFilterItem != null && accountChooserFilterItem.isChecked()) {
+//            if(isDigit) {
+//                newText = PhoneNumberUtils.stripSeparators(newText);
+//            }
+//            rewriteTextInfo.setText(rewriteNumber(newText));
+//        } else {
+//        }
+
+        rewriteTextInfo.setText("");
     }
 }

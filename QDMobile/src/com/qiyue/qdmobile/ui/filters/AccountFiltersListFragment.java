@@ -139,24 +139,24 @@ public class AccountFiltersListFragment extends CSSListFragment {
         getLoaderManager().initLoader(0, null, this);
 	}
 	
-	// Menu stuff
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.add(R.string.add_filter)
-                .setIcon(android.R.drawable.ic_menu_add)
-                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        onClickAddFilter();
-                        return true;
-                    }
-                })
-                .setShowAsAction(
-                        MenuItem.SHOW_AS_ACTION_IF_ROOM );
-
-		
-		super.onCreateOptionsMenu(menu, inflater);
-	}
+//	// Menu stuff
+//	@Override
+//	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        menu.add(R.string.add_filter)
+//                .setIcon(android.R.drawable.ic_menu_add)
+//                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem item) {
+//                        onClickAddFilter();
+//                        return true;
+//                    }
+//                })
+//                .setShowAsAction(
+//                        MenuItem.SHOW_AS_ACTION_IF_ROOM );
+//
+//
+//		super.onCreateOptionsMenu(menu, inflater);
+//	}
 	
 
     @Override
@@ -165,7 +165,6 @@ public class AccountFiltersListFragment extends CSSListFragment {
         // Use custom drag and drop view -- reuse the one of accounts_edit_list
         View v = inflater.inflate(R.layout.accounts_edit_list, container, false);
 
-        
         final DragnDropListView lv = (DragnDropListView) v.findViewById(android.R.id.list);
         
         lv.setGrabberId(R.id.grabber);

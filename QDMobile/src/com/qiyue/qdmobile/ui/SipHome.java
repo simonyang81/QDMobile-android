@@ -12,12 +12,9 @@ import android.os.Bundle;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import android.view.*;
-import android.widget.ImageView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.internal.nineoldandroids.animation.ObjectAnimator;
-import com.actionbarsherlock.view.Menu;
+
+import com.nineoldandroids.animation.ValueAnimator;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipConfigManager;
 import com.qiyue.qdmobile.api.SipManager;
@@ -28,7 +25,6 @@ import com.qiyue.qdmobile.ui.dialpad.DialerFragment;
 import com.qiyue.qdmobile.ui.favorites.FavListFragment;
 import com.qiyue.qdmobile.ui.messages.ConversationsListFragment;
 import com.qiyue.qdmobile.ui.prefs.SettingsFragment;
-import com.qiyue.qdmobile.ui.warnings.WarningFragment;
 import com.qiyue.qdmobile.utils.*;
 import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.NightlyUpdater.UpdaterPopupLauncher;
@@ -38,7 +34,7 @@ import com.qiyue.qdmobile.wizards.WizardUtils.WizardInfo;
 
 import java.util.ArrayList;
 
-public class SipHome extends SherlockFragmentActivity {
+public class SipHome extends FragmentActivity {
 
     private static final String THIS_FILE = "SIP_HOME";
 
@@ -47,14 +43,20 @@ public class SipHome extends SherlockFragmentActivity {
     private boolean hasTriedOnceActivateAcc = false;
 
     private Thread asyncSanityChecker;
+
     private DialerFragment mDialpadFragment;
     private CallLogListFragment mCallLogFragment;
     private SettingsFragment mSettingsFragment;
-    private WarningFragment mWarningFragment;
+//    private WarningFragment mWarningFragment;
 
     private TextView mDialpadBtn, mRecentsBtn, mContactsBtn, mMessagesBtn, mSettingsBtn;
 
     private Typeface mRBCLightFontFace;
+
+    private ViewGroup mHeaderGroup;
+
+    private int mMenuHeight;
+
 
     /**
      * Listener interface for Fragments accommodated in {@link ViewPager}
@@ -74,17 +76,21 @@ public class SipHome extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.sip_home);
+        setContentView(R.layout.sip_home_one_pane);
 
         mRBCLightFontFace = Typeface.createFromAsset(getAssets(), Constants.FONTS_RBC_LIGHT);
+
+        mHeaderGroup = (ViewGroup) findViewById(R.id.ll_menu_btn);
+        mMenuHeight = getResources().getDimensionPixelSize(R.dimen.menu_height);
+
+        hideMenu();
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-        mDialpadFragment = (DialerFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_DIALPAD);
-        if (mDialpadFragment == null) {
-            mDialpadFragment = new DialerFragment();
+        FlashFragment flashFragment = (FlashFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_FLASH);
+        if (flashFragment == null) {
+            flashFragment = new FlashFragment();
         }
-        ft.replace(R.id.content_frame, mDialpadFragment, Constants.FRAGMENT_TAG_DIALPAD);
-
+        ft.replace(R.id.content_frame, flashFragment, Constants.FRAGMENT_TAG_FLASH);
         ft.commit();
 
         mDialpadBtn = (TextView) findViewById(R.id.menu_dialpad);
@@ -185,7 +191,6 @@ public class SipHome extends SherlockFragmentActivity {
                 // TODO,
 //                startActivityForResult(new Intent(SipManager.ACTION_UI_PREFS_GLOBAL), CHANGE_PREFS);
 
-
             }
         });
 
@@ -209,11 +214,11 @@ public class SipHome extends SherlockFragmentActivity {
 
     }
 
-    enum MenuButton {
+    public enum MenuButton {
         dialpad, recents, contacts, messages, settings
     }
 
-    private void setMenuButton(MenuButton menuButton) {
+    public void setMenuButton(MenuButton menuButton) {
 
         Drawable dialpadDrawable = getResources().getDrawable(R.drawable.icon_keypad_idle),
                  recentsDrawable = getResources().getDrawable(R.drawable.icon_recents_idle),
@@ -481,6 +486,63 @@ public class SipHome extends SherlockFragmentActivity {
         sendBroadcast(intent);
         if (quit) {
             finish();
+        }
+    }
+
+    public void showMenu() {
+        if (mHeaderGroup != null) {
+            ViewGroup.LayoutParams menu_lp = mHeaderGroup.getLayoutParams();
+            menu_lp.height = mMenuHeight;
+            mHeaderGroup.setLayoutParams(menu_lp);
+        }
+    }
+
+    public void hideMenu() {
+        if (mHeaderGroup != null) {
+            ViewGroup.LayoutParams menu_lp = mHeaderGroup.getLayoutParams();
+            menu_lp.height = 0;
+            mHeaderGroup.setLayoutParams(menu_lp);
+        }
+    }
+
+    public void hideMenuWithAnimator() {
+        if (mHeaderGroup != null) {
+
+            final ViewGroup.LayoutParams menu_lp = mHeaderGroup.getLayoutParams();
+            ValueAnimator animator = ValueAnimator.ofInt(mMenuHeight, 0).setDuration(300);
+
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    menu_lp.height = (Integer) valueAnimator.getAnimatedValue();
+                    mHeaderGroup.setLayoutParams(menu_lp);
+                }
+            });
+
+            animator.start();
+        }
+    }
+
+    public void showMenuWithAnimator() {
+        if (mHeaderGroup != null) {
+
+            final ViewGroup.LayoutParams menu_lp = mHeaderGroup.getLayoutParams();
+            if (menu_lp.height == mMenuHeight) {
+                return;
+            }
+
+            ValueAnimator animator = ValueAnimator.ofInt(0, mMenuHeight).setDuration(300);
+
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    menu_lp.height = (Integer) valueAnimator.getAnimatedValue();
+                    mHeaderGroup.setLayoutParams(menu_lp);
+
+                }
+            });
+
+            animator.start();
         }
     }
 

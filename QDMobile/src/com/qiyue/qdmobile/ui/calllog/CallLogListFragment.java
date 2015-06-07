@@ -1,6 +1,7 @@
 package com.qiyue.qdmobile.ui.calllog;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,15 +16,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipManager;
 import com.qiyue.qdmobile.api.SipProfile;
@@ -32,8 +25,6 @@ import com.qiyue.qdmobile.ui.SipHome.ViewPagerVisibilityListener;
 import com.qiyue.qdmobile.ui.calllog.CallLogAdapter.OnCallLogAction;
 import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.widgets.CSSListFragment;
-
-import java.util.ArrayList;
 
 /**
  * Displays a list of call log entries.
@@ -48,7 +39,7 @@ public class CallLogListFragment extends CSSListFragment implements ViewPagerVis
 
     private boolean mDualPane;
 
-    private ActionMode mMode;
+//    private ActionMode mMode;
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -97,18 +88,18 @@ public class CallLogListFragment extends CSSListFragment implements ViewPagerVis
             lv.setItemsCanFocus(true);
         }
         
-        // Map long press
-        lv.setLongClickable(true);
-        lv.setOnItemLongClickListener(new OnItemLongClickListener() {
-
-            @Override
-            public boolean onItemLongClick(AdapterView<?> ad, View v, int pos, long id) {
-                turnOnActionMode();
-                getListView().setItemChecked(pos, true);
-                mMode.invalidate();
-                return true;
-            }
-        });
+//        // Map long press
+//        lv.setLongClickable(true);
+//        lv.setOnItemLongClickListener(new OnItemLongClickListener() {
+//
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> ad, View v, int pos, long id) {
+//                turnOnActionMode();
+//                getListView().setItemChecked(pos, true);
+//                mMode.invalidate();
+//                return true;
+//            }
+//        });
     }
     
     @Override
@@ -137,7 +128,7 @@ public class CallLogListFragment extends CSSListFragment implements ViewPagerVis
             mShowOptionsMenu = visible;
             // Invalidate the options menu since we are changing the list of
             // options shown in it.
-            SherlockFragmentActivity activity = getSherlockActivity();
+            Activity activity = getActivity();
             if (activity != null) {
                 activity.invalidateOptionsMenu();
             }
@@ -178,27 +169,27 @@ public class CallLogListFragment extends CSSListFragment implements ViewPagerVis
         }
         
         
-        if(!visible && mMode != null) {
-            mMode.finish();
-        }
+//        if(!visible && mMode != null) {
+//            mMode.finish();
+//        }
     }
 
-    // Options
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        int actionRoom = getResources().getBoolean(R.bool.menu_in_bar) ? MenuItem.SHOW_AS_ACTION_IF_ROOM : MenuItem.SHOW_AS_ACTION_NEVER;
-        MenuItem delMenu = menu.add(R.string.callLog_delete_all);
-        delMenu.setIcon(R.drawable.ic_ab_trash_dark).setShowAsAction(actionRoom);
-        delMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                deleteAllCalls();
-                return true;
-            }
-        });
-    }
+//    // Options
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//
+//        int actionRoom = getResources().getBoolean(R.bool.menu_in_bar) ? MenuItem.SHOW_AS_ACTION_IF_ROOM : MenuItem.SHOW_AS_ACTION_NEVER;
+//        MenuItem delMenu = menu.add(R.string.callLog_delete_all);
+//        delMenu.setIcon(R.drawable.ic_ab_trash_dark).setShowAsAction(actionRoom);
+//        delMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                deleteAllCalls();
+//                return true;
+//            }
+//        });
+//    }
 
     private void deleteAllCalls() {
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
@@ -239,12 +230,12 @@ public class CallLogListFragment extends CSSListFragment implements ViewPagerVis
     @Override
     public void viewDetails(int position, long[] callIds) {
         ListView lv = getListView();
-        if(mMode != null) {
-            lv.setItemChecked(position, !lv.isItemChecked(position));
-            mMode.invalidate();
-            // Don't see details in this case
-            return;
-        }
+//        if (mMode != null) {
+//            lv.setItemChecked(position, !lv.isItemChecked(position));
+//            mMode.invalidate();
+//            // Don't see details in this case
+//            return;
+//        }
         
         if (mDualPane) {
             // If we are not currently showing a fragment for the new
@@ -270,11 +261,11 @@ public class CallLogListFragment extends CSSListFragment implements ViewPagerVis
 
     @Override
     public void placeCall(String number, Long accId) {
-        if(!TextUtils.isEmpty(number)) {
+        if (!TextUtils.isEmpty(number)) {
             Intent it = new Intent(Intent.ACTION_CALL);
             it.setData(SipUri.forgeSipUri(SipManager.PROTOCOL_CSIP, SipUri.getCanonicalSipContact(number, false)));
             it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            if(accId != null) {
+            if (accId != null) {
                 it.putExtra(SipProfile.FIELD_ACC_ID, accId);
             }
             getActivity().startActivity(it);
@@ -282,123 +273,123 @@ public class CallLogListFragment extends CSSListFragment implements ViewPagerVis
     }
 
     
-    // Action mode
+//    // Action mode
+//
+//    private void turnOnActionMode() {
+//        Log.d(THIS_FILE, "Long press");
+//        mMode = getSherlockActivity().startActionMode(new CallLogActionMode());
+//        ListView lv = getListView();
+//        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+//
+//    }
     
-    private void turnOnActionMode() {
-        Log.d(THIS_FILE, "Long press");
-        mMode = getSherlockActivity().startActionMode(new CallLogActionMode());
-        ListView lv = getListView();
-        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        
-    }
+//    private class CallLogActionMode implements ActionMode.Callback {
+//
+//        @Override
+//        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+//            Log.d(THIS_FILE, "onCreateActionMode");
+//            getActivity().getSupportMenuInflater().inflate(R.menu.call_log_menu, menu);
+//            return true;
+//        }
+//
+//        @Override
+//        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+//            Log.d(THIS_FILE, "onPrepareActionMode");
+//            ListView lv = getListView();
+//            int nbrCheckedItem = 0;
+//
+//            for (int i = 0; i < lv.getCount(); i++) {
+//                if (lv.isItemChecked(i)) {
+//                    nbrCheckedItem++;
+//                }
+//            }
+//            menu.findItem(R.id.delete).setVisible(nbrCheckedItem > 0);
+//            menu.findItem(R.id.dialpad).setVisible(nbrCheckedItem == 1);
+//            return false;
+//        }
+//
+//        @Override
+//        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+//            int itemId = item.getItemId();
+//            if(itemId == R.id.delete) {
+//                actionModeDelete();
+//                return true;
+//            }else if(itemId == R.id.invert_selection) {
+//                actionModeInvertSelection();
+//                return true;
+//            }else if(itemId == R.id.dialpad) {
+//                actionModeDialpad();
+//                return true;
+//            }
+//            return false;
+//        }
+//
+//        @Override
+//        public void onDestroyActionMode(ActionMode mode) {
+//            Log.d(THIS_FILE, "onDestroyActionMode");
+//
+//            ListView lv = getListView();
+//            // Uncheck all
+//            int count = lv.getAdapter().getCount();
+//            for (int i = 0; i < count; i++) {
+//                lv.setItemChecked(i, false);
+//            }
+//            mMode = null;
+//        }
+//
+//    }
     
-    private class CallLogActionMode  implements ActionMode.Callback {
-
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            Log.d(THIS_FILE, "onCreateActionMode");
-            getSherlockActivity().getSupportMenuInflater().inflate(R.menu.call_log_menu, menu);
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            Log.d(THIS_FILE, "onPrepareActionMode");
-            ListView lv = getListView();
-            int nbrCheckedItem = 0;
-
-            for (int i = 0; i < lv.getCount(); i++) {
-                if (lv.isItemChecked(i)) {
-                    nbrCheckedItem++;
-                }
-            }
-            menu.findItem(R.id.delete).setVisible(nbrCheckedItem > 0);
-            menu.findItem(R.id.dialpad).setVisible(nbrCheckedItem == 1);
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            int itemId = item.getItemId();
-            if(itemId == R.id.delete) {
-                actionModeDelete();
-                return true;
-            }else if(itemId == R.id.invert_selection) {
-                actionModeInvertSelection();
-                return true;
-            }else if(itemId == R.id.dialpad) {
-                actionModeDialpad();
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            Log.d(THIS_FILE, "onDestroyActionMode");
-
-            ListView lv = getListView();
-            // Uncheck all
-            int count = lv.getAdapter().getCount();
-            for (int i = 0; i < count; i++) {
-                lv.setItemChecked(i, false);
-            }
-            mMode = null;
-        }
-        
-    }
-    
-    private void actionModeDelete() {
-        ListView lv = getListView();
-        
-        ArrayList<Long> checkedIds = new ArrayList<Long>();
-        
-        for(int i = 0; i < lv.getCount(); i++) {
-            if(lv.isItemChecked(i)) {
-                long[] selectedIds = mAdapter.getCallIdsAtPosition(i);
-                
-                for(long id : selectedIds) {
-                    checkedIds.add(id);
-                }
-                
-            }
-        }
-        if(checkedIds.size() > 0) {
-            String strCheckedIds = TextUtils.join(", ", checkedIds);
-            Log.d(THIS_FILE, "Checked positions ("+ strCheckedIds +")");
-            getActivity().getContentResolver().delete(SipManager.CALLLOG_URI, CallLog.Calls._ID + " IN ("+strCheckedIds+")", null);
-            mMode.finish();
-        }
-    }
-    
-    private void actionModeInvertSelection() {
-        ListView lv = getListView();
-
-        for(int i = 0; i < lv.getCount(); i++) {
-            lv.setItemChecked(i, !lv.isItemChecked(i));
-        }
-        mMode.invalidate();
-    }
-    
-    private void actionModeDialpad() {
-        
-        ListView lv = getListView();
-
-        for(int i = 0; i < lv.getCount(); i++) {
-            if(lv.isItemChecked(i)) {
-                mAdapter.getItem(i);
-                String number = mAdapter.getCallRemoteAtPostion(i);
-                if(!TextUtils.isEmpty(number)) {
-                    Intent it = new Intent(Intent.ACTION_DIAL);
-                    it.setData(SipUri.forgeSipUri(SipManager.PROTOCOL_SIP, number));
-                    startActivity(it);
-                }
-                break;
-            }
-        }
-        mMode.invalidate();
-        
-    }
+//    private void actionModeDelete() {
+//        ListView lv = getListView();
+//
+//        ArrayList<Long> checkedIds = new ArrayList<Long>();
+//
+//        for(int i = 0; i < lv.getCount(); i++) {
+//            if(lv.isItemChecked(i)) {
+//                long[] selectedIds = mAdapter.getCallIdsAtPosition(i);
+//
+//                for(long id : selectedIds) {
+//                    checkedIds.add(id);
+//                }
+//
+//            }
+//        }
+//        if(checkedIds.size() > 0) {
+//            String strCheckedIds = TextUtils.join(", ", checkedIds);
+//            Log.d(THIS_FILE, "Checked positions ("+ strCheckedIds +")");
+//            getActivity().getContentResolver().delete(SipManager.CALLLOG_URI, CallLog.Calls._ID + " IN ("+strCheckedIds+")", null);
+//            mMode.finish();
+//        }
+//    }
+//
+//    private void actionModeInvertSelection() {
+//        ListView lv = getListView();
+//
+//        for(int i = 0; i < lv.getCount(); i++) {
+//            lv.setItemChecked(i, !lv.isItemChecked(i));
+//        }
+//        mMode.invalidate();
+//    }
+//
+//    private void actionModeDialpad() {
+//
+//        ListView lv = getListView();
+//
+//        for(int i = 0; i < lv.getCount(); i++) {
+//            if(lv.isItemChecked(i)) {
+//                mAdapter.getItem(i);
+//                String number = mAdapter.getCallRemoteAtPostion(i);
+//                if(!TextUtils.isEmpty(number)) {
+//                    Intent it = new Intent(Intent.ACTION_DIAL);
+//                    it.setData(SipUri.forgeSipUri(SipManager.PROTOCOL_SIP, number));
+//                    startActivity(it);
+//                }
+//                break;
+//            }
+//        }
+//        mMode.invalidate();
+//
+//    }
     
     @Override
     public void changeCursor(Cursor c) {

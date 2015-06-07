@@ -165,70 +165,70 @@ public class AccountsEditListFragment extends CSSListFragment implements /*OnQui
 	private static final int CHANGE_WIZARD = 1;
 	
 	// Menu stuff
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.add(R.string.add_account)
-                .setIcon(android.R.drawable.ic_menu_add)
-                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        onClickAddAccount();
-                        return true;
-                    }
-                })
-                .setShowAsAction(
-                        MenuItem.SHOW_AS_ACTION_IF_ROOM );
-
-        menu.add(R.string.reorder).setIcon(android.R.drawable.ic_menu_sort_by_size)
-                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        AccountsEditListAdapter ad = (AccountsEditListAdapter) getListAdapter();
-                        ad.toggleDraggable();
-                        return true;
-                    }
-                }).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-		
-        menu.add(R.string.backup_restore).setIcon(android.R.drawable.ic_menu_save)
-                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-
-                        // Populate choice list
-                        List<String> items = new ArrayList<String>();
-                        items.add(getResources().getString(R.string.backup));
-                        final File backupDir = PreferencesWrapper.getConfigFolder(getActivity());
-                        if (backupDir != null) {
-                            String[] filesNames = backupDir.list();
-                            for (String fileName : filesNames) {
-                                items.add(fileName);
-                            }
-                        }
-
-                        final String[] fItems = (String[]) items.toArray(new String[0]);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle(R.string.backup_restore);
-                        builder.setItems(fItems, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int item) {
-                                if (item == 0) {
-                                    SipProfileJson.saveSipConfiguration(getActivity());
-                                } else {
-                                    File fileToRestore = new File(backupDir + File.separator
-                                            + fItems[item]);
-                                    SipProfileJson.restoreSipConfiguration(getActivity(),
-                                            fileToRestore);
-                                }
-                            }
-                        });
-                        builder.setCancelable(true);
-                        AlertDialog backupDialog = builder.create();
-                        backupDialog.show();
-                        return true;
-                    }
-                });
-		
-		super.onCreateOptionsMenu(menu, inflater);
-	}
+//	@Override
+//	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        menu.add(R.string.add_account)
+//                .setIcon(android.R.drawable.ic_menu_add)
+//                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem item) {
+//                        onClickAddAccount();
+//                        return true;
+//                    }
+//                })
+//                .setShowAsAction(
+//                        MenuItem.SHOW_AS_ACTION_IF_ROOM );
+//
+//        menu.add(R.string.reorder).setIcon(android.R.drawable.ic_menu_sort_by_size)
+//                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem item) {
+//                        AccountsEditListAdapter ad = (AccountsEditListAdapter) getListAdapter();
+//                        ad.toggleDraggable();
+//                        return true;
+//                    }
+//                }).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+//
+//        menu.add(R.string.backup_restore).setIcon(android.R.drawable.ic_menu_save)
+//                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem item) {
+//
+//                        // Populate choice list
+//                        List<String> items = new ArrayList<String>();
+//                        items.add(getResources().getString(R.string.backup));
+//                        final File backupDir = PreferencesWrapper.getConfigFolder(getActivity());
+//                        if (backupDir != null) {
+//                            String[] filesNames = backupDir.list();
+//                            for (String fileName : filesNames) {
+//                                items.add(fileName);
+//                            }
+//                        }
+//
+//                        final String[] fItems = (String[]) items.toArray(new String[0]);
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                        builder.setTitle(R.string.backup_restore);
+//                        builder.setItems(fItems, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int item) {
+//                                if (item == 0) {
+//                                    SipProfileJson.saveSipConfiguration(getActivity());
+//                                } else {
+//                                    File fileToRestore = new File(backupDir + File.separator
+//                                            + fItems[item]);
+//                                    SipProfileJson.restoreSipConfiguration(getActivity(),
+//                                            fileToRestore);
+//                                }
+//                            }
+//                        });
+//                        builder.setCancelable(true);
+//                        AlertDialog backupDialog = builder.create();
+//                        backupDialog.show();
+//                        return true;
+//                    }
+//                });
+//
+//		super.onCreateOptionsMenu(menu, inflater);
+//	}
 	
 	private static final String THIS_FILE = null;
 

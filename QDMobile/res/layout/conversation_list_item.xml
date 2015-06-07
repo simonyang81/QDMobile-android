@@ -9,7 +9,6 @@
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="?android:attr/listPreferredItemHeight"
-            android:background="?attr/actionBarItemBackground"
             android:gravity="center"
             android:paddingRight="10dip">
 

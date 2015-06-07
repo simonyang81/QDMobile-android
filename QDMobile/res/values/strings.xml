@@ -55,7 +55,8 @@
     <string name="messages_tab_name_text">Messages</string>
     <string name="favorites_tab_name_text">Favorites</string>
     <string name="menu_disconnect">Disconnect</string>
-    <string name="service_ticker_registered_text">SIP Registered</string>
+    <string name="service_ticker_registered_text">QDMobile SIP Registered</string>
+    <string name="service_ticker_no_registered_text">QDMobile SIP has not been registered</string>
     <string name="outgoing_call_chooser_call_text">Call</string>
     <string name="reorder">Reorder</string>
     <string name="backup_restore">Backup / Restore</string>

@@ -48,4 +48,6 @@
     <dimen name="message_item_text_padding_top">5dip</dimen>
     <dimen name="message_contact_photo_size">54dip</dimen>
 
+    <dimen name="menu_height">70dp</dimen>
+
 </resources>

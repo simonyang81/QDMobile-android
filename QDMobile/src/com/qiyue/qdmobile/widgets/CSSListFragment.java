@@ -1,24 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.widgets;
 
 import android.database.Cursor;
@@ -36,31 +15,32 @@ public abstract class CSSListFragment extends ListFragment implements LoaderMana
     private View mListContainer = null;
     private View mProgressContainer = null;
     private boolean mListShown = false;
+
     @Override
     public void setListShown(boolean shown) {
         setListShown(shown, true);
     }
-    
+
     @Override
     public void setListShownNoAnimation(boolean shown) {
         setListShown(shown, false);
     }
-    
+
     private void setListShown(boolean shown, boolean animate) {
         ensureCustomList();
-        if(mListShown == shown) {
+        if (mListShown == shown) {
             return;
         }
         mListShown = shown;
-        if(mListContainer != null && mProgressContainer != null) {
-            if(shown) {
-                if(animate) {
+        if (mListContainer != null && mProgressContainer != null) {
+            if (shown) {
+                if (animate) {
                     mListContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
                 }
                 mListContainer.setVisibility(View.VISIBLE);
                 mProgressContainer.setVisibility(View.GONE);
-            }else {
-                if(animate) {
+            } else {
+                if (animate) {
                     mListContainer.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
                 }
                 mListContainer.setVisibility(View.GONE);
@@ -68,12 +48,12 @@ public abstract class CSSListFragment extends ListFragment implements LoaderMana
             }
         }
     }
-    
+
     /**
-     * Make sure our private reference to views are correct. 
+     * Make sure our private reference to views are correct.
      */
     private void ensureCustomList() {
-        if(mListContainer != null) {
+        if (mListContainer != null) {
             return;
         }
         mListContainer = getView().findViewById(R.id.listContainer);
@@ -81,7 +61,7 @@ public abstract class CSSListFragment extends ListFragment implements LoaderMana
     }
 
     public abstract Loader<Cursor> onCreateLoader(int loader, Bundle args);
-    
+
 
     /**
      * {@inheritDoc}
@@ -89,9 +69,9 @@ public abstract class CSSListFragment extends ListFragment implements LoaderMana
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         changeCursor(data);
-        if(isResumed()) {
+        if (isResumed()) {
             setListShown(true);
-        }else {
+        } else {
             setListShownNoAnimation(true);
         }
     }
@@ -103,15 +83,16 @@ public abstract class CSSListFragment extends ListFragment implements LoaderMana
     public void onLoaderReset(Loader<Cursor> loader) {
         changeCursor(null);
     }
-    
+
     /**
      * Request a cursor change to the adapter. <br/>
      * To be implemented by extenders.
+     *
      * @param c the new cursor to replace the old one
      */
     public abstract void changeCursor(Cursor c);
-    
-    
+
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         // When we will recycle this view, the stored shown and list containers becomes invalid

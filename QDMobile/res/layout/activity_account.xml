@@ -1,0 +1,60 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_shape"
+    android:orientation="vertical"
+    tools:context="com.qiyue.qdmobile.ui.account.AccountActivity">
+
+    <TextView
+        android:id="@+id/add_account_title"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/menu_text_color"
+        android:gravity="center"
+        android:text="@string/add_account_title"
+        android:textColor="#FFFFFFFF"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/add_account_scan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:drawableLeft="@drawable/icon_scan"
+        android:drawablePadding="20dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:text="@string/add_account_scan"
+        android:textColor="@android:color/black"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:background="@drawable/qd_setting_item_bg"
+
+        />
+
+    <View android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/line"
+        />
+
+    <TextView
+        android:id="@+id/add_account_manually"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/icon_settings"
+        android:drawablePadding="20dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:text="@string/add_account_manually"
+        android:textColor="@android:color/black"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:background="@drawable/qd_setting_item_bg"
+        />
+
+
+</LinearLayout>

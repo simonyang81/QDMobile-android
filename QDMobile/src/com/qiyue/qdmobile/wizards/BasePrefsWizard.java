@@ -1,24 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.wizards;
 
 import android.content.ContentUris;
@@ -32,14 +11,15 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import com.google.gson.Gson;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipManager;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.db.DBProvider;
 import com.qiyue.qdmobile.models.Filter;
-import com.qiyue.qdmobile.ui.filters.AccountFilters;
+import com.qiyue.qdmobile.models.ZXingAccountJSON;
 import com.qiyue.qdmobile.ui.prefs.GenericPrefs;
+import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.PreferencesWrapper;
 import com.qiyue.qdmobile.wizards.WizardUtils.WizardInfo;
@@ -93,7 +73,17 @@ public class BasePrefsWizard extends GenericPrefs {
 				saveAndFinish();
 			}
 		});
-        wizard.fillLayout(account);
+
+		String accountJSON = intent.getStringExtra(Constants.EXTRA_ACCOUNT_JSON);
+
+		if (TextUtils.isEmpty(accountJSON) == false) {
+			Gson gson = new Gson();
+			ZXingAccountJSON accountJsonObj = gson.fromJson(accountJSON, ZXingAccountJSON.class);
+			wizard.fillLayout(accountJsonObj);
+		} else {
+			wizard.fillLayout(account);
+		}
+
 	}
 
 	private boolean isResumed = false;
@@ -143,9 +133,9 @@ public class BasePrefsWizard extends GenericPrefs {
 		}
 		wizardId = wId;
 		wizard.setParent(this);
-		if(getSupportActionBar() != null) {
-		    getSupportActionBar().setIcon(WizardUtils.getWizardIconRes(wizardId));
-		}
+//		if (getSupportActionBar() != null) {
+//		    getSupportActionBar().setIcon(WizardUtils.getWizardIconRes(wizardId));
+//		}
 		return true;
 	}
 
@@ -157,7 +147,7 @@ public class BasePrefsWizard extends GenericPrefs {
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-	    if(isResumed) {
+	    if (isResumed) {
     		updateDescriptions();
     		updateValidation();
 	    }
@@ -247,7 +237,7 @@ public class BasePrefsWizard extends GenericPrefs {
 			}
 		}
 		
-		if(requestCode > FINAL_ACTIVITY_CODE) {
+		if (requestCode > FINAL_ACTIVITY_CODE) {
 		    wizard.onActivityResult(requestCode, resultCode, data);
 		}
 	}
@@ -313,7 +303,8 @@ public class BasePrefsWizard extends GenericPrefs {
             prefs.startEditing();
 			wizard.setDefaultParams(prefs);
             prefs.endEditing();
-			getContentResolver().update(ContentUris.withAppendedId(SipProfile.ACCOUNT_ID_URI_BASE, account.id), account.getDbContentValues(), null, null);
+			getContentResolver().update(ContentUris.withAppendedId(SipProfile.ACCOUNT_ID_URI_BASE, account.id),
+					account.getDbContentValues(), null, null);
 		}
 
 		// Mainly if global preferences were changed, we have to restart sip stack 
@@ -328,8 +319,8 @@ public class BasePrefsWizard extends GenericPrefs {
      * @param account
      */
     private void applyNewAccountDefault(SipProfile account) {
-        if(account.use_rfc5626) {
-            if(TextUtils.isEmpty(account.rfc5626_instance_id)) {
+        if (account.use_rfc5626) {
+            if (TextUtils.isEmpty(account.rfc5626_instance_id)) {
                 String autoInstanceId = (UUID.randomUUID()).toString();
                 account.rfc5626_instance_id = "<urn:uuid:"+autoInstanceId+">";
             }

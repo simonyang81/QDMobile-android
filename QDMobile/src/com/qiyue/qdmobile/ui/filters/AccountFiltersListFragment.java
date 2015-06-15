@@ -190,7 +190,7 @@ public class AccountFiltersListFragment extends CSSListFragment {
                 
                 // Finally save that in db
                 ContentResolver cr = getActivity().getContentResolver();
-                for(i=0; i<orderedList.size(); i++) {
+                for (i=0; i<orderedList.size(); i++) {
                     Uri uri = ContentUris.withAppendedId(SipManager.FILTER_ID_URI_BASE, orderedList.get(i));
                     ContentValues cv = new ContentValues();
                     cv.put(Filter.FIELD_PRIORITY, i);
@@ -219,18 +219,18 @@ public class AccountFiltersListFragment extends CSSListFragment {
     }
     
     private void updateCheckedItem() {
-    	if(curCheckFilterId != SipProfile.INVALID_ID) {
-	    	for(int i=0; i<getListAdapter().getCount(); i++) {
-	        	long profId = getListAdapter().getItemId(i);
-	        	if(profId == curCheckFilterId) {
-	        		getListView().setItemChecked(i, true);
-	        	}
-	        }
-    	}else {
-    		for(int i=0; i<getListAdapter().getCount(); i++) {
-    			getListView().setItemChecked(i, false);
-    		}
-    	}
+        if (curCheckFilterId != SipProfile.INVALID_ID) {
+            for (int i = 0; i < getListAdapter().getCount(); i++) {
+                long profId = getListAdapter().getItemId(i);
+                if (profId == curCheckFilterId) {
+                    getListView().setItemChecked(i, true);
+                }
+            }
+        } else {
+            for (int i = 0; i < getListAdapter().getCount(); i++) {
+                getListView().setItemChecked(i, false);
+            }
+        }
     }
     
 

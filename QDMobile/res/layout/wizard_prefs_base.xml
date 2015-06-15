@@ -1,78 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/bg_shape"
+    android:orientation="vertical">
+
+
+    <ListView
+        android:id="@android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:background="@drawable/bg_shape"
-        >
+        android:layout_above="@+id/validation_bar"
+        android:drawSelectorOnTop="false"
+        android:layoutAnimation="@anim/layout_slide_right"
+        android:persistentDrawingCache="animation|scrolling" />
 
     <LinearLayout
-            android:id="@+id/settings_container"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_above="@+id/validation_bar"
-            android:orientation="vertical">
+        android:id="@+id/validation_bar"
+        style="@style/ButtonBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
 
-        <LinearLayout
-                android:id="@+id/custom_wizard_row"
-                android:layout_width="fill_parent"
-                android:layout_height="?android:attr/listPreferredItemHeight"
-                android:background="?attr/actionBarItemBackground"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-            <TextView
-                    android:id="@+id/custom_wizard_text"
-                    android:layout_width="fill_parent"
-                    android:layout_height="0dip"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingLeft="12dip"
-                    android:paddingRight="12dip"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@android:color/white"/>
-
-            <ImageView
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dip"
-                    android:background="@android:drawable/divider_horizontal_dark"
-                    android:contentDescription="@string/empty_description"/>
-        </LinearLayout>
-
-        <ListView
-                android:id="@android:id/list"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:drawSelectorOnTop="false"
-                android:layoutAnimation="@anim/layout_slide_right"
-                android:persistentDrawingCache="animation|scrolling"/>
-    </LinearLayout>
-
-    <LinearLayout
-            android:id="@+id/validation_bar"
-            style="@style/ButtonBar"
+        <Button
+            android:id="@+id/cancel_bt"
+            style="@style/ButtonBarButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal">
+            android:layout_weight="0.5"
+            android:text="@string/cancel"
+            android:textColor="@color/viewfinder_mask"
+            />
 
         <Button
-                android:id="@+id/cancel_bt"
-                style="@style/ButtonBarButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="@string/cancel"/>
-
-        <Button
-                android:id="@+id/save_bt"
-                style="@style/ButtonBarButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="@string/save"/>
+            android:id="@+id/save_bt"
+            style="@style/ButtonBarButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/save"
+            android:textColor="@android:color/black"
+            />
     </LinearLayout>
 
 </RelativeLayout>

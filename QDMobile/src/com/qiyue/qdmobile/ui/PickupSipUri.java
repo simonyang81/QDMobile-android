@@ -42,7 +42,7 @@ public class PickupSipUri extends Activity implements OnClickListener {
                 return false;
             }
         });
-        sipUri.setShowExternals(false);
+//        sipUri.setShowExternals(false);
 
     }
 

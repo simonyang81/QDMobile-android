@@ -361,11 +361,11 @@ public class AccountChooserButton extends LinearLayout implements OnClickListene
     public SipProfile getSelectedAccount() {
         if (account == null) {
             SipProfile retAcc = new SipProfile();
-            if(showExternals) {
+            if (showExternals) {
                 Map<String, String> handlers = CallHandlerPlugin.getAvailableCallHandlers(getContext());
                 boolean includeGsm = Compatibility.canMakeGSMCall(getContext()); 
                 
-                if(includeGsm) {
+                if (includeGsm) {
                     for (String callHandler : handlers.keySet()) {
                         // Try to prefer the GSM handler
                         if (callHandler.equalsIgnoreCase(telCmp.flattenToString())) {

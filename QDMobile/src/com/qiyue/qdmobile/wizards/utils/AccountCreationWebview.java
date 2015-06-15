@@ -54,7 +54,7 @@ public class AccountCreationWebview {
         creationListener = l;
         webCreationPage = url;
         
-        settingsContainer = (ViewGroup) parent.findViewById(R.id.settings_container);
+//        settingsContainer = (ViewGroup) parent.findViewById(R.id.settings_container);
         validationBar = (ViewGroup) parent.findViewById(R.id.validation_bar);
         
         ViewGroup globalContainer = (ViewGroup) settingsContainer.getParent();
@@ -71,15 +71,14 @@ public class AccountCreationWebview {
         webSettings.setSupportZoom(false);
         webSettings.setCacheMode(WebSettings.LOAD_NORMAL);
         webSettings.setNeedInitialFocus(true);
-        webView.addJavascriptInterface(new JSInterface(), "CSipSimpleWizard");
-        
+
         // Adds Progress bar Support
         webView.setWebChromeClient(new WebChromeClient() {
             public void onProgressChanged(WebView view, int progress) {
-                if(progress < 100) {
+                if (progress < 100) {
                     loadingProgressBar.setVisibility(View.VISIBLE);
-                    loadingProgressBar.setProgress(progress); 
-                }else {
+                    loadingProgressBar.setProgress(progress);
+                } else {
                     loadingProgressBar.setVisibility(View.GONE);
                 }
             }

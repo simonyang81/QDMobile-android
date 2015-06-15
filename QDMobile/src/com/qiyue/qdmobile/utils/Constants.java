@@ -28,6 +28,8 @@ public class Constants {
             SipProfile.FIELD_WIZARD
     };
 
+    public static final String EXTRA_ACCOUNT_JSON = "EXTRA_ACCOUNT_JSON";
+
 
 }
 

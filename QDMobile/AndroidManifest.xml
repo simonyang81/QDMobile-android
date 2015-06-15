@@ -5,16 +5,16 @@
     android:versionCode="1"
     android:versionName="1" >
 
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="16" />
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
         android:normalScreens="true"
         android:smallScreens="true"
         android:xlargeScreens="true" />
-
-    <uses-sdk
-        android:minSdkVersion="16"
-        android:targetSdkVersion="16" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -101,6 +101,10 @@
         android:name="android.hardware.camera.front"
         android:required="false" />
 
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
     <application
         android:allowBackup="true"
         android:backupAgent=".backup.SipBackupAgent"
@@ -128,51 +132,50 @@
             android:value="true" />
 
         <activity
-                android:name=".ui.SipHome"
-                android:label="@string/app_name"
-                android:launchMode="singleTask"
-                android:theme="@style/Holo.Light"
-                android:screenOrientation="portrait"
-                android:uiOptions="splitActionBarWhenNarrow"
-                >
+            android:name=".ui.SipHome"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Holo.Light"
+            android:uiOptions="splitActionBarWhenNarrow" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
             </intent-filter>
-            <intent-filter android:priority="10">
-                <action android:name="com.qiyue.qdmobile.phone.action.DIALER"/>
+            <intent-filter android:priority="10" >
+                <action android:name="com.qiyue.qdmobile.phone.action.DIALER" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            <intent-filter android:priority="10">
-                <action android:name="android.intent.action.DIAL"/>
+            <intent-filter android:priority="10" >
+                <action android:name="android.intent.action.DIAL" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:scheme="sip"/>
-                <data android:scheme="csip"/>
+                <data android:scheme="sip" />
+                <data android:scheme="csip" />
             </intent-filter>
-            <intent-filter android:priority="10">
-                <action android:name="com.qiyue.qdmobile.phone.action.CALLLOG"/>
+            <intent-filter android:priority="10" >
+                <action android:name="com.qiyue.qdmobile.phone.action.CALLLOG" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            <intent-filter android:priority="10">
-                <action android:name="com.qiyue.qdmobile.phone.action.FAVORITES"/>
+            <intent-filter android:priority="10" >
+                <action android:name="com.qiyue.qdmobile.phone.action.FAVORITES" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            <intent-filter android:priority="10">
-                <action android:name="com.qiyue.qdmobile.phone.action.MESSAGES"/>
+            <intent-filter android:priority="10" >
+                <action android:name="com.qiyue.qdmobile.phone.action.MESSAGES" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity-alias
-            android:name="com.qiyue.qdmobile.ui.SipDialer"
+            android:name=".ui.SipDialer"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:targetActivity=".ui.SipHome"
@@ -244,14 +247,15 @@
                 <action android:name="com.qiyue.qdmobile.accounts.activate" />
             </intent-filter>
         </receiver>
-        <!--<receiver-->
-            <!--android:name=".service.DeviceStateReceiver"-->
-            <!--android:permission="android.permission.CONFIGURE_SIP"-->
-            <!--android:process=":sipStack" >-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.qiyue.qdmobile.accounts.activate" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        <!-- <receiver -->
+        <!-- android:name=".service.DeviceStateReceiver" -->
+        <!-- android:permission="android.permission.CONFIGURE_SIP" -->
+        <!-- android:process=":sipStack" > -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="com.qiyue.qdmobile.accounts.activate" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+
 
         <!-- Main ui -->
         <activity
@@ -385,7 +389,7 @@
         </activity>
 
         <activity-alias
-            android:name="com.qiyue.qdmobile.ui.PrivilegedOutgoingSipCallBroadcaster"
+            android:name=".ui.PrivilegedOutgoingSipCallBroadcaster"
             android:configChanges="orientation"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
@@ -401,7 +405,7 @@
             </intent-filter>
         </activity-alias>
         <activity-alias
-            android:name="com.qiyue.qdmobile.ui.PrivilegedOutgoingCallBroadcaster"
+            android:name=".ui.PrivilegedOutgoingCallBroadcaster"
             android:configChanges="orientation"
             android:enabled="false"
             android:excludeFromRecents="true"
@@ -457,9 +461,8 @@
         <activity
             android:name=".ui.PickupSipUri"
             android:launchMode="standard"
-            android:theme="@style/DarkTheme.NoTitle"
             android:screenOrientation="portrait"
-                />
+            android:theme="@style/DarkTheme.NoTitle" />
         <activity
             android:name=".ui.incall.InCallMediaControl"
             android:configChanges="orientation"
@@ -576,6 +579,20 @@
         <activity
             android:name=".wizards.impl.MondotalkCreate"
             android:theme="@style/DarkTheme" />
+        <activity
+            android:name=".ui.account.AccountActivity"
+            android:label="@string/title_activity_account"
+            android:theme="@style/Holo.Light"
+            android:screenOrientation="portrait"
+
+            />
+        <activity android:name=".zxing.CaptureActivity"
+            android:screenOrientation="portrait"
+            android:clearTaskOnLaunch="true"
+            android:stateNotNeeded="true"
+            android:theme="@style/Holo.Light"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
     </application>
 
 </manifest>

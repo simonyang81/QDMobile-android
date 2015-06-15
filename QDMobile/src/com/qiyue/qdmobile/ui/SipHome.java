@@ -19,10 +19,9 @@ import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipConfigManager;
 import com.qiyue.qdmobile.api.SipManager;
 import com.qiyue.qdmobile.api.SipProfile;
-import com.qiyue.qdmobile.ui.account.AccountsEditList;
+import com.qiyue.qdmobile.ui.account.AccountActivity;
 import com.qiyue.qdmobile.ui.calllog.CallLogListFragment;
 import com.qiyue.qdmobile.ui.dialpad.DialerFragment;
-import com.qiyue.qdmobile.ui.favorites.FavListFragment;
 import com.qiyue.qdmobile.ui.messages.ConversationsListFragment;
 import com.qiyue.qdmobile.ui.prefs.SettingsFragment;
 import com.qiyue.qdmobile.utils.*;
@@ -291,7 +290,7 @@ public class SipHome extends FragmentActivity {
     }
 
     private ConversationsListFragment mMessagesFragment;
-    private FavListFragment mPhoneFavoriteFragment;
+//    private FavListFragment mPhoneFavoriteFragment;
 
     private void asyncSanityCheck() {
         // if(Compatibility.isCompatible(9)) {
@@ -390,7 +389,7 @@ public class SipHome extends FragmentActivity {
                     accountIntent = new Intent(this, BasePrefsWizard.class);
                     accountIntent.putExtra(SipProfile.FIELD_WIZARD, distribWizard.id);
                 } else {
-                    accountIntent = new Intent(this, AccountsEditList.class);
+                    accountIntent = new Intent(this, AccountActivity.class);
                 }
 
                 if (accountIntent != null) {

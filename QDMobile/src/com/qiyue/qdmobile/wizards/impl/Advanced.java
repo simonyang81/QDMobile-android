@@ -1,24 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.wizards.impl;
 
 import android.preference.CheckBoxPreference;
@@ -29,11 +8,13 @@ import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.api.SipUri;
 import com.qiyue.qdmobile.api.SipUri.ParsedSipContactInfos;
+import com.qiyue.qdmobile.models.ZXingAccountJSON;
 
 import java.util.HashMap;
 
 public class Advanced extends BaseImplementation {
-	protected static final String THIS_FILE = "Advanced W";
+
+	protected static final String THIS_FILE = Advanced.class.getSimpleName();
 	
 	protected EditTextPreference accountDisplayName;
 	protected EditTextPreference accountUserName;
@@ -83,27 +64,38 @@ public class Advanced extends BaseImplementation {
 		setFieldTextSafe(accountServer, serverFull);
 		setFieldTextSafe(accountCallerId, parsedInfo.displayName);
         setFieldTextSafe(accountUserName, parsedInfo.userName);
-		
-		if(!TextUtils.isEmpty(account.username)
-		        && !account.username.equals(parsedInfo.userName)) {
-		    setFieldTextSafe(accountAuthId, account.username);
-	    }else {
-            setFieldTextSafe(accountAuthId, "");
-	        
-	    }
+
+		if (!TextUtils.isEmpty(account.username)
+				&& !account.username.equals(parsedInfo.userName)) {
+			setFieldTextSafe(accountAuthId, account.username);
+		} else {
+			setFieldTextSafe(accountAuthId, "");
+
+		}
 
         setFieldTextSafe(accountPassword, account.data);
-        if(accountUseTcp != null) {
-            accountUseTcp.setChecked(account.transport == SipProfile.TRANSPORT_TCP);
-        }
-        
-		if(account.proxies != null && account.proxies.length > 0) {
-	        setFieldTextSafe(accountProxy, account.proxies[0].replaceFirst("sip:", ""));
-		}else {
-		    setFieldTextSafe(accountProxy, "");
+		if (accountUseTcp != null) {
+			accountUseTcp.setChecked(account.transport == SipProfile.TRANSPORT_TCP);
+		}
+
+		if (account.proxies != null && account.proxies.length > 0) {
+			setFieldTextSafe(accountProxy, account.proxies[0].replaceFirst("sip:", ""));
+		} else {
+			setFieldTextSafe(accountProxy, "");
 		}
 	}
-	
+
+	@Override
+	public void fillLayout(ZXingAccountJSON accountJsonObj) {
+		bindFields();
+
+		accountDisplayName.setText(accountJsonObj.display);
+		accountUserName.setText(accountJsonObj.account);
+		accountServer.setText(accountJsonObj.sip);
+		accountPassword.setText(accountJsonObj.passwd);
+
+	}
+
 	private void setFieldTextSafe(EditTextPreference pref, String value) {
 	    if(pref != null) {
 	        pref.setText(value);

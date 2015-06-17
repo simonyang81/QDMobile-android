@@ -1,24 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.utils;
 
 import android.content.ContentResolver;
@@ -42,7 +21,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
-
 public class PreferencesWrapper {
 	
 	//Internal use
@@ -52,16 +30,13 @@ public class PreferencesWrapper {
 	public static final String HAS_ALREADY_SETUP_SERVICE = "has_already_setup_service";
     public static final String LAST_KNOWN_VERSION_PREF = "last_known_version";
     public static final String LAST_KNOWN_ANDROID_VERSION_PREF = "last_known_aos_version";
-	
-	
+
 	private static final String THIS_FILE = "PreferencesWrapper";
 	private SharedPreferences prefs;
 	private ContentResolver resolver;
 	private Context context;
     private Editor sharedEditor;
 
-	
-	
 	public final static HashMap<String, String> STRING_PREFS = new HashMap<String, String>(){
 		private static final long serialVersionUID = 1L;
 	{
@@ -221,7 +196,7 @@ public class PreferencesWrapper {
 		//Calls
 		put(SipConfigManager.AUTO_RECORD_CALLS, false);
 		put(SipConfigManager.SUPPORT_MULTIPLE_CALLS, false);
-        put(SipConfigManager.USE_VIDEO, false);
+        put(SipConfigManager.USE_VIDEO, Constants.USE_VIDEO);
         put(SipConfigManager.PLAY_WAITTONE_ON_HOLD, false);
 		
 		//Secure

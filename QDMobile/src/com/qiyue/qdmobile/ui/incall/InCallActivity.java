@@ -1,25 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.qiyue.qdmobile.ui.incall;
 
 import android.app.AlertDialog;
@@ -70,6 +48,7 @@ import com.qiyue.qdmobile.ui.incall.locker.IOnLeftRightChoice;
 import com.qiyue.qdmobile.ui.incall.locker.InCallAnswerControls;
 import com.qiyue.qdmobile.ui.incall.locker.ScreenLocker;
 import com.qiyue.qdmobile.utils.CallsUtils;
+import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.DialingFeedback;
 import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.PreferencesProviderWrapper;
@@ -82,18 +61,16 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class InCallActivity extends SherlockFragmentActivity implements IOnCallActionTrigger, 
+public class InCallActivity extends SherlockFragmentActivity implements IOnCallActionTrigger,
         IOnLeftRightChoice, ProximityDirector, OnDtmfListener {
+
     private static final int QUIT_DELAY = 3000;
     private final static String THIS_FILE = "InCallActivity";
-    //private final static int DRAGGING_DELAY = 150;
-    
 
     private Object callMutex = new Object();
     private SipCallSession[] callsInfo = null;
     private MediaState lastMediaState;
-    
-    
+
     private ViewGroup mainFrame;
     private InCallControls inCallControls;
 
@@ -118,12 +95,12 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
     // Dnd views
     //private ImageView endCallTarget, holdTarget, answerTarget, xferTarget;
     //private Rect endCallTargetRect, holdTargetRect, answerTargetRect, xferTargetRect;
-    
+
 
     private SurfaceView cameraPreview;
     private CallProximityManager proximityManager;
     private KeyguardWrapper keyguardManager;
-    
+
     private boolean useAutoDetectSpeaker = false;
     private InCallAnswerControls inCallAnswerControls;
     private CallsAdapter activeCallsAdapter;
@@ -133,7 +110,6 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
     private final static int PICKUP_SIP_URI_XFER = 0;
     private final static int PICKUP_SIP_URI_NEW_CALL = 1;
     private static final String CALL_ID = "call_id";
-    
 
     @SuppressWarnings("deprecation")
     @Override
@@ -156,13 +132,12 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
         // callInfo.getCallId()+" state "+callInfo.getRemoteContact());
         powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK
-                | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE,
+                        | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE,
                 "com.csipsimple.onIncomingCall");
         wakeLock.setReferenceCounted(false);
-        
-        
+
         takeKeyEvents(true);
-        
+
         // Cache findViews
         mainFrame = (ViewGroup) findViewById(R.id.mainFrame);
         inCallControls = (InCallControls) findViewById(R.id.inCallControls);
@@ -176,18 +151,17 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
         inCallControls.setOnTriggerListener(this);
         inCallAnswerControls.setOnTriggerListener(this);
 
-        if(activeCallsAdapter == null) {
+        if (activeCallsAdapter == null) {
             activeCallsAdapter = new CallsAdapter(true);
         }
         activeCallsGrid.setAdapter(activeCallsAdapter);
-        
 
-        if(heldCallsAdapter == null) {
+        if (heldCallsAdapter == null) {
             heldCallsAdapter = new CallsAdapter(false);
         }
         heldCallsGrid.setAdapter(heldCallsAdapter);
 
-        
+
         ScreenLocker lockOverlay = (ScreenLocker) findViewById(R.id.lockerOverlay);
         lockOverlay.setActivity(this);
         lockOverlay.setOnLeftRightListener(this);
@@ -210,7 +184,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
         registerReceiver(callStateReceiver, new IntentFilter(SipManager.ACTION_SIP_CALL_CHANGED));
         registerReceiver(callStateReceiver, new IntentFilter(SipManager.ACTION_SIP_MEDIA_CHANGED));
         registerReceiver(callStateReceiver, new IntentFilter(SipManager.ACTION_ZRTP_SHOW_SAS));
-        
+
         proximityManager = new CallProximityManager(this, this, lockOverlay);
         keyguardManager = KeyguardWrapper.getKeyguardManager(this);
 
@@ -224,22 +198,21 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
             quitTimer = new Timer("Quit-timer");
         }
 
-        
         useAutoDetectSpeaker = prefsWrapper.getPreferenceBooleanValue(SipConfigManager.AUTO_DETECT_SPEAKER);
-        
+
         applyTheme();
         proximityManager.startTracking();
-        
+
         inCallControls.setCallState(initialSession);
         inCallAnswerControls.setCallState(initialSession);
     }
-    
+
 
     @Override
     protected void onStart() {
         Log.d(THIS_FILE, "Start in call");
         super.onStart();
-        
+
         keyguardManager.unlock();
     }
 
@@ -253,10 +226,10 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
         xferTargetRect = null;
         */
         dialFeedback.resume();
-        
+
 
         runOnUiThread(new UpdateUIFromCallRunnable());
-        
+
     }
 
     @Override
@@ -274,10 +247,10 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
     @Override
     protected void onDestroy() {
 
-        if(infoDialog != null) {
+        if (infoDialog != null) {
             infoDialog.dismiss();
         }
-        
+
         if (quitTimer != null) {
             quitTimer.cancel();
             quitTimer.purge();
@@ -307,21 +280,21 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
         } catch (IllegalArgumentException e) {
             // That's the case if not registered (early quit)
         }
-        
-        if(activeCallsGrid != null) {
+
+        if (activeCallsGrid != null) {
             activeCallsGrid.terminate();
         }
-        
+
         detachVideoPreview();
         //handler.setActivityInstance(null);
         super.onDestroy();
     }
-    
+
     @SuppressWarnings("deprecation")
     private void attachVideoPreview() {
         // Video stuff
-        if(prefsWrapper.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO)) {
-            if(cameraPreview == null) {
+        if (Constants.USE_VIDEO || prefsWrapper.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO)) {
+            if (cameraPreview == null) {
                 Log.d(THIS_FILE, "Create Local Renderer");
                 cameraPreview = ViERenderer.CreateLocalRenderer(this);
                 RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(256, 256);
@@ -330,29 +303,29 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
                 lp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
                 cameraPreview.setVisibility(View.GONE);
                 mainFrame.addView(cameraPreview, lp);
-            }else {
+            } else {
                 Log.d(THIS_FILE, "NO NEED TO Create Local Renderer");
             }
-            
-            if(videoWakeLock == null) {
+
+            if (videoWakeLock == null) {
                 videoWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "com.csipsimple.videoCall");
                 videoWakeLock.setReferenceCounted(false);
             }
         }
 
-        if(videoWakeLock != null && videoWakeLock.isHeld()) {
+        if (videoWakeLock != null && videoWakeLock.isHeld()) {
             videoWakeLock.release();
         }
     }
-    
+
     private void detachVideoPreview() {
-        if(mainFrame != null && cameraPreview != null) {
+        if (mainFrame != null && cameraPreview != null) {
             mainFrame.removeView(cameraPreview);
         }
-        if(videoWakeLock != null && videoWakeLock.isHeld()) {
+        if (videoWakeLock != null && videoWakeLock.isHeld()) {
             videoWakeLock.release();
         }
-        if(cameraPreview != null) {
+        if (cameraPreview != null) {
             cameraPreview = null;
         }
     }
@@ -364,13 +337,13 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
         Log.d(THIS_FILE, "New intent is launched");
         super.onNewIntent(intent);
     }
-    
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Log.d(THIS_FILE, "Configuration changed");
-        if(cameraPreview != null && cameraPreview.getVisibility() == View.VISIBLE) {
-            
+        if (cameraPreview != null && cameraPreview.getVisibility() == View.VISIBLE) {
+
             cameraPreview.setVisibility(View.GONE);
         }
         runOnUiThread(new UpdateUIFromCallRunnable());
@@ -391,7 +364,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
                 if (resultCode == RESULT_OK && service != null) {
                     String callee = data.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
                     int callId = data.getIntExtra(CALL_ID, -1);
-                    if(callId != -1) {
+                    if (callId != -1) {
                         try {
                             service.xfer((int) callId, callee);
                         } catch (RemoteException e) {
@@ -422,8 +395,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
 
     /**
      * Get the call that is active on the view
-     * 
-     * @param excludeHold if true we do not return cals hold locally
+     *
      * @return
      */
     private SipCallSession getActiveCallInfo() {
@@ -439,6 +411,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
 
     /**
      * Get the call with the higher priority comparing two calls
+     *
      * @param call1 First call object to compare
      * @param call2 Second call object to compare
      * @return The call object with highest priority
@@ -467,27 +440,27 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
         return (call1.getCallStart() > call2.getCallStart()) ? call2 : call1;
     }
 
-    
+
     /**
      * Update the user interface from calls state.
      */
     private class UpdateUIFromCallRunnable implements Runnable {
-        
+
         @Override
         public void run() {
             // Current call is the call emphasis by the UI.
             SipCallSession mainCallInfo = null;
-    
+
             int mainsCalls = 0;
             int heldsCalls = 0;
-    
+
             synchronized (callMutex) {
                 if (callsInfo != null) {
                     for (SipCallSession callInfo : callsInfo) {
                         Log.d(THIS_FILE,
                                 "We have a call " + callInfo.getCallId() + " / " + callInfo.getCallState()
                                         + "/" + callInfo.getMediaStatus());
-        
+
                         if (!callInfo.isAfterEnded()) {
                             if (callInfo.isLocalHeld()) {
                                 heldsCalls++;
@@ -499,7 +472,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
                     }
                 }
             }
-            
+
             // Update call control visibility - must be done before call cards 
             // because badge avail size depends on that
             if ((mainsCalls + heldsCalls) >= 1) {
@@ -510,29 +483,29 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
                 inCallControls.setCallState(null);
                 inCallAnswerControls.setCallState(null);
             }
-            
-            heldCallsGrid.setVisibility((heldsCalls > 0)? View.VISIBLE : View.GONE);
-            
+
+            heldCallsGrid.setVisibility((heldsCalls > 0) ? View.VISIBLE : View.GONE);
+
             activeCallsAdapter.notifyDataSetChanged();
             heldCallsAdapter.notifyDataSetChanged();
-            
+
             //findViewById(R.id.inCallContainer).requestLayout();
-            
+
             if (mainCallInfo != null) {
                 Log.d(THIS_FILE, "Active call is " + mainCallInfo.getCallId());
                 Log.d(THIS_FILE, "Update ui from call " + mainCallInfo.getCallId() + " state "
                         + CallsUtils.getStringCallState(mainCallInfo, InCallActivity.this));
                 int state = mainCallInfo.getCallState();
-    
+
                 //int backgroundResId = R.drawable.bg_in_call_gradient_unidentified;
-    
+
                 // We manage wake lock
                 switch (state) {
                     case SipCallSession.InvState.INCOMING:
                     case SipCallSession.InvState.EARLY:
                     case SipCallSession.InvState.CALLING:
                     case SipCallSession.InvState.CONNECTING:
-    
+
                         Log.d(THIS_FILE, "Acquire wake up lock");
                         if (wakeLock != null && !wakeLock.isHeld()) {
                             wakeLock.acquire();
@@ -547,14 +520,14 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
                         onDisplayVideo(false);
                         delayedQuit();
                         return;
-    
+
                 }
-                
+
                 Log.d(THIS_FILE, "we leave the update ui function");
             }
-            
+
             proximityManager.updateProximitySensorMode();
-            
+
             if (heldsCalls + mainsCalls == 0) {
                 delayedQuit();
             }
@@ -565,7 +538,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
     public void onDisplayVideo(boolean show) {
         runOnUiThread(new UpdateVideoPreviewRunnable(show));
     }
-    
+
     /**
      * Update ui from media state.
      */
@@ -576,29 +549,31 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
             proximityManager.updateProximitySensorMode();
         }
     }
-    
+
     private class UpdateVideoPreviewRunnable implements Runnable {
         private final boolean show;
-        UpdateVideoPreviewRunnable(boolean show){
+
+        UpdateVideoPreviewRunnable(boolean show) {
             this.show = show;
         }
+
         @Override
         public void run() {
             // Update the camera preview visibility 
-            if(cameraPreview != null) {
+            if (cameraPreview != null) {
                 cameraPreview.setVisibility(show ? View.VISIBLE : View.GONE);
-                if(show) {
-                    if(videoWakeLock != null) {
+                if (show) {
+                    if (videoWakeLock != null) {
                         videoWakeLock.acquire();
                     }
                     SipService.setVideoWindow(SipCallSession.INVALID_CALL_ID, cameraPreview, true);
-                }else {
-                    if(videoWakeLock != null && videoWakeLock.isHeld()) {
+                } else {
+                    if (videoWakeLock != null && videoWakeLock.isHeld()) {
                         videoWakeLock.release();
                     }
                     SipService.setVideoWindow(SipCallSession.INVALID_CALL_ID, null, true);
                 }
-            }else {
+            } else {
                 Log.w(THIS_FILE, "No camera preview available to be shown");
             }
         }
@@ -633,16 +608,16 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
         }
     }
     */
-    
+
     private synchronized void delayedQuit() {
 
         if (wakeLock != null && wakeLock.isHeld()) {
             Log.d(THIS_FILE, "Releasing wake up lock");
             wakeLock.release();
         }
-        
+
         proximityManager.release(0);
-        
+
         activeCallsGrid.setVisibility(View.VISIBLE);
         inCallControls.setVisibility(View.GONE);
 
@@ -660,13 +635,14 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
             Log.d(THIS_FILE, "Run quit timer");
             finish();
         }
-    };
+    }
+
+    ;
 
     private void showDialpad(int callId) {
         DtmfDialogFragment newFragment = DtmfDialogFragment.newInstance(callId);
         newFragment.show(getSupportFragmentManager(), "dialog");
     }
-    
 
 
     @Override
@@ -683,7 +659,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
                 }
             }
         }
-        
+
     }
 
 
@@ -774,7 +750,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
                             if (!mediaState.equals(lastMediaState)) {
                                 lastMediaState = mediaState;
                                 runOnUiThread(new UpdateUIFromMediaRunnable());
-                            }   
+                            }
                         }
                     } catch (RemoteException e) {
                         Log.e(THIS_FILE, "Can't get the media state ", e);
@@ -827,11 +803,11 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
 
         // Sanity check for actions requiring valid call id
         if (whichAction == TAKE_CALL || whichAction == REJECT_CALL || whichAction == DONT_TAKE_CALL ||
-            whichAction == TERMINATE_CALL || whichAction == DETAILED_DISPLAY || 
-            whichAction == TOGGLE_HOLD || whichAction == START_RECORDING ||
-            whichAction == STOP_RECORDING || whichAction == DTMF_DISPLAY ||
-            whichAction == XFER_CALL || whichAction == TRANSFER_CALL ||
-            whichAction == START_VIDEO || whichAction == STOP_VIDEO ) {
+                whichAction == TERMINATE_CALL || whichAction == DETAILED_DISPLAY ||
+                whichAction == TOGGLE_HOLD || whichAction == START_RECORDING ||
+                whichAction == STOP_RECORDING || whichAction == DTMF_DISPLAY ||
+                whichAction == XFER_CALL || whichAction == TRANSFER_CALL ||
+                whichAction == START_VIDEO || whichAction == STOP_VIDEO) {
             // We check that current call is valid for any actions
             if (call == null) {
                 Log.e(THIS_FILE, "Try to do an action on a null call !!!");
@@ -845,7 +821,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
 
         // Reset proximity sensor timer
         proximityManager.restartTimer();
-        
+
         try {
             switch (whichAction) {
                 case TAKE_CALL: {
@@ -921,7 +897,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
                 }
                 case DETAILED_DISPLAY: {
                     if (service != null) {
-                        if(infoDialog != null) {
+                        if (infoDialog != null) {
                             infoDialog.dismiss();
                         }
                         String infos = service.showCallInfosDialog(call.getCallId());
@@ -930,7 +906,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
                         Builder builder = new AlertDialog.Builder(this);
 
                         buf.append(infos);
-                        if(!TextUtils.isEmpty(natType)) {
+                        if (!TextUtils.isEmpty(natType)) {
                             buf.append("\r\nLocal NAT type detected : ");
                             buf.append(natType);
                         }
@@ -972,35 +948,35 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
                 }
                 case TRANSFER_CALL: {
                     final ArrayList<SipCallSession> remoteCalls = new ArrayList<SipCallSession>();
-                    if(callsInfo != null) {
-                        for(SipCallSession remoteCall : callsInfo) {
+                    if (callsInfo != null) {
+                        for (SipCallSession remoteCall : callsInfo) {
                             // Verify not current call
-                            if(remoteCall.getCallId() != call.getCallId() && remoteCall.isOngoing()) {
+                            if (remoteCall.getCallId() != call.getCallId() && remoteCall.isOngoing()) {
                                 remoteCalls.add(remoteCall);
                             }
                         }
                     }
 
-                    if(remoteCalls.size() > 0) {
+                    if (remoteCalls.size() > 0) {
                         Builder builder = new AlertDialog.Builder(this);
                         CharSequence[] simpleAdapter = new String[remoteCalls.size()];
-                        for(int i = 0; i < remoteCalls.size(); i++) {
+                        for (int i = 0; i < remoteCalls.size(); i++) {
                             simpleAdapter[i] = remoteCalls.get(i).getRemoteContact();
                         }
-                        builder.setSingleChoiceItems(simpleAdapter , -1, new Dialog.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        if (service != null) {
-                                            try {
-                                                // 1 = PJSUA_XFER_NO_REQUIRE_REPLACES
-                                                service.xferReplace(call.getCallId(), remoteCalls.get(which).getCallId(), 1);
-                                            } catch (RemoteException e) {
-                                                Log.e(THIS_FILE, "Was not able to call service method", e);
-                                            }
-                                        }
-                                        dialog.dismiss();
+                        builder.setSingleChoiceItems(simpleAdapter, -1, new Dialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (service != null) {
+                                    try {
+                                        // 1 = PJSUA_XFER_NO_REQUIRE_REPLACES
+                                        service.xferReplace(call.getCallId(), remoteCalls.get(which).getCallId(), 1);
+                                    } catch (RemoteException e) {
+                                        Log.e(THIS_FILE, "Was not able to call service method", e);
                                     }
-                                })
+                                }
+                                dialog.dismiss();
+                            }
+                        })
                                 .setCancelable(true)
                                 .setNeutralButton(R.string.cancel, new Dialog.OnClickListener() {
                                     @Override
@@ -1010,7 +986,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
                                 })
                                 .show();
                     }
-                    
+
                     break;
                 }
                 case ADD_CALL: {
@@ -1018,37 +994,37 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
                     startActivityForResult(pickupIntent, PICKUP_SIP_URI_NEW_CALL);
                     break;
                 }
-                case START_RECORDING :{
-                    if(service != null) {
+                case START_RECORDING: {
+                    if (service != null) {
                         // TODO : add a tweaky setting for two channel recording in different files.
                         // Would just result here in two calls to start recording with different bitmask
                         service.startRecording(call.getCallId(), SipManager.BITMASK_ALL);
                     }
                     break;
                 }
-                case STOP_RECORDING : {
-                    if(service != null) {
+                case STOP_RECORDING: {
+                    if (service != null) {
                         service.stopRecording(call.getCallId());
                     }
                     break;
                 }
-                case START_VIDEO :
-                case STOP_VIDEO : {
-                    if(service != null) {
+                case START_VIDEO:
+                case STOP_VIDEO: {
+                    if (service != null) {
                         Bundle opts = new Bundle();
                         opts.putBoolean(SipCallSession.OPT_CALL_VIDEO, whichAction == START_VIDEO);
                         service.updateCallOptions(call.getCallId(), opts);
                     }
                     break;
                 }
-                case ZRTP_TRUST : {
-                    if(service != null) {
+                case ZRTP_TRUST: {
+                    if (service != null) {
                         service.zrtpSASVerified(call.getCallId());
                     }
                     break;
                 }
-                case ZRTP_REVOKE : {
-                    if(service != null) {
+                case ZRTP_REVOKE: {
+                    if (service != null) {
                         service.zrtpSASRevoke(call.getCallId());
                     }
                     break;
@@ -1058,7 +1034,6 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
             Log.e(THIS_FILE, "Was not able to call service method", e);
         }
     }
-    
 
 
     @Override
@@ -1292,7 +1267,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
         }
     }
     */
-    
+
     private class ShowZRTPInfoRunnable implements Runnable, DialogInterface.OnClickListener {
         private String sasString;
         private SipCallSession callSession;
@@ -1304,7 +1279,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            if(which == DialogInterface.BUTTON_POSITIVE) {
+            if (which == DialogInterface.BUTTON_POSITIVE) {
                 Log.d(THIS_FILE, "ZRTP confirmed");
                 if (service != null) {
                     try {
@@ -1314,10 +1289,11 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
                     }
                     dialog.dismiss();
                 }
-            }else if(which == DialogInterface.BUTTON_NEGATIVE) {
+            } else if (which == DialogInterface.BUTTON_NEGATIVE) {
                 dialog.dismiss();
             }
         }
+
         @Override
         public void run() {
             AlertDialog.Builder builder = new AlertDialog.Builder(InCallActivity.this);
@@ -1331,23 +1307,22 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
             backupDialog.show();
         }
     }
-    
 
-    
+
     @Override
     public boolean shouldActivateProximity() {
 
         // TODO : missing headset & keyboard open
-        if(lastMediaState != null) {
-            if(lastMediaState.isBluetoothScoOn) {
+        if (lastMediaState != null) {
+            if (lastMediaState.isBluetoothScoOn) {
                 return false;
             }
-            if(lastMediaState.isSpeakerphoneOn && ! useAutoDetectSpeaker) {
+            if (lastMediaState.isSpeakerphoneOn && !useAutoDetectSpeaker) {
                 // Imediate reason to not enable proximity sensor
                 return false;
             }
         }
-        
+
         if (callsInfo == null) {
             return false;
         }
@@ -1355,22 +1330,22 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
         boolean isValidCallState = true;
         int count = 0;
         for (SipCallSession callInfo : callsInfo) {
-            if(callInfo.mediaHasVideo()) {
+            if (callInfo.mediaHasVideo()) {
                 return false;
             }
-            if(!callInfo.isAfterEnded()) {
+            if (!callInfo.isAfterEnded()) {
                 int state = callInfo.getCallState();
-                
+
                 isValidCallState &= (
                         (state == SipCallSession.InvState.CONFIRMED) ||
-                        (state == SipCallSession.InvState.CONNECTING) ||
-                        (state == SipCallSession.InvState.CALLING) ||
-                        (state == SipCallSession.InvState.EARLY && !callInfo.isIncoming())
-                        );
-                count ++;
+                                (state == SipCallSession.InvState.CONNECTING) ||
+                                (state == SipCallSession.InvState.CALLING) ||
+                                (state == SipCallSession.InvState.EARLY && !callInfo.isIncoming())
+                );
+                count++;
             }
         }
-        if(count == 0) {
+        if (count == 0) {
             return false;
         }
 
@@ -1379,17 +1354,17 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
 
     @Override
     public void onProximityTrackingChanged(boolean acquired) {
-        if(useAutoDetectSpeaker && service != null) {
-            if(acquired) {
-                if(lastMediaState == null || lastMediaState.isSpeakerphoneOn) {
+        if (useAutoDetectSpeaker && service != null) {
+            if (acquired) {
+                if (lastMediaState == null || lastMediaState.isSpeakerphoneOn) {
                     try {
                         service.setSpeakerphoneOn(false);
                     } catch (RemoteException e) {
                         Log.e(THIS_FILE, "Can't run speaker change");
                     }
                 }
-            }else {
-                if(lastMediaState == null || !lastMediaState.isSpeakerphoneOn) {
+            } else {
+                if (lastMediaState == null || !lastMediaState.isSpeakerphoneOn) {
                     try {
                         service.setSpeakerphoneOn(true);
                     } catch (RemoteException e) {
@@ -1400,72 +1375,72 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
         }
     }
 
-    
+
     // Active call adapter
     private class CallsAdapter extends BaseAdapter {
-        
+
         private boolean mActiveCalls;
-        
+
         private SparseArray<Long> seenConnected = new SparseArray<Long>();
-        
+
         public CallsAdapter(boolean notOnHold) {
             mActiveCalls = notOnHold;
         }
 
         private boolean isValidCallForAdapter(SipCallSession call) {
             boolean holdStateOk = false;
-            if(mActiveCalls && !call.isLocalHeld()) {
+            if (mActiveCalls && !call.isLocalHeld()) {
                 holdStateOk = true;
             }
-            if(!mActiveCalls && call.isLocalHeld()) {
+            if (!mActiveCalls && call.isLocalHeld()) {
                 holdStateOk = true;
             }
-            if(holdStateOk) {
+            if (holdStateOk) {
                 long currentTime = System.currentTimeMillis();
-                if(call.isAfterEnded()) {
+                if (call.isAfterEnded()) {
                     // Only valid if we already seen this call in this adapter to be valid
-                    if(hasNoMoreActiveCall() && seenConnected.get(call.getCallId(), currentTime + 2 * QUIT_DELAY) < currentTime + QUIT_DELAY) {
+                    if (hasNoMoreActiveCall() && seenConnected.get(call.getCallId(), currentTime + 2 * QUIT_DELAY) < currentTime + QUIT_DELAY) {
                         return true;
-                    }else {
+                    } else {
                         seenConnected.delete(call.getCallId());
                         return false;
                     }
-                }else {
+                } else {
                     seenConnected.put(call.getCallId(), currentTime);
                     return true;
                 }
             }
             return false;
         }
-        
+
         private boolean hasNoMoreActiveCall() {
             synchronized (callMutex) {
-                if(callsInfo == null) {
+                if (callsInfo == null) {
                     return true;
                 }
-                
-                for(SipCallSession call : callsInfo) {
+
+                for (SipCallSession call : callsInfo) {
                     // As soon as we have one not after ended, we have at least active call
-                    if(!call.isAfterEnded()) {
+                    if (!call.isAfterEnded()) {
                         return false;
                     }
                 }
-                
+
             }
             return true;
         }
-        
+
         @Override
         public int getCount() {
             int count = 0;
             synchronized (callMutex) {
-                if(callsInfo == null) {
+                if (callsInfo == null) {
                     return 0;
                 }
-                
-                for(SipCallSession call : callsInfo) {
-                    if(isValidCallForAdapter(call)) {
-                        count ++;
+
+                for (SipCallSession call : callsInfo) {
+                    if (isValidCallForAdapter(call)) {
+                        count++;
                     }
                 }
             }
@@ -1475,17 +1450,17 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
         @Override
         public Object getItem(int position) {
             synchronized (callMutex) {
-                if(callsInfo == null) {
+                if (callsInfo == null) {
                     return null;
                 }
                 int count = 0;
-                for(SipCallSession call : callsInfo) {
-                    if(isValidCallForAdapter(call)) {
-                        if(count == position) {
+                for (SipCallSession call : callsInfo) {
+                    if (isValidCallForAdapter(call)) {
+                        if (count == position) {
                             return call;
                         }
-                        count ++;
-                     }
+                        count++;
+                    }
                 }
             }
             return null;
@@ -1494,7 +1469,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
         @Override
         public long getItemId(int position) {
             SipCallSession call = (SipCallSession) getItem(position);
-            if(call != null) {
+            if (call != null) {
                 return call.getCallId();
             }
             return 0;
@@ -1502,25 +1477,24 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null) {
+            if (convertView == null) {
                 convertView = new InCallCard(InCallActivity.this, null);
             }
-            
-            if(convertView instanceof InCallCard) {
+
+            if (convertView instanceof InCallCard) {
                 InCallCard vc = (InCallCard) convertView;
                 vc.setOnTriggerListener(InCallActivity.this);
                 // TODO ---
                 //badge.setOnTouchListener(new OnBadgeTouchListener(badge, call));
-                
+
                 SipCallSession session = (SipCallSession) getItem(position);
                 vc.setCallState(session);
             }
 
             return convertView;
         }
-        
-    }
 
+    }
 
 
 }

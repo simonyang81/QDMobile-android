@@ -58,6 +58,7 @@ import com.qiyue.qdmobile.api.SipUri;
 import com.qiyue.qdmobile.api.SipUri.ParsedSipContactInfos;
 import com.qiyue.qdmobile.models.CallerInfo;
 import com.qiyue.qdmobile.service.SipService;
+import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.ContactsAsyncHelper;
 import com.qiyue.qdmobile.utils.CustomDistribution;
 import com.qiyue.qdmobile.utils.ExtraPlugins;
@@ -107,7 +108,7 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
         inflater.inflate(R.layout.in_call_card, this, true);
 
         prefs = new PreferencesProviderWrapper(context);
-        canVideo = prefs.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO);
+        canVideo = Constants.USE_VIDEO || prefs.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO);
         initControllerView();
         
         incallPlugins = ExtraPlugins.getDynActivityPlugins(context, SipManager.ACTION_INCALL_PLUGIN);

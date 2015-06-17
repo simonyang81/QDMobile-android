@@ -35,6 +35,15 @@ public class pjsua_msg_data {
     }
   }
 
+  public void setTarget_uri(pj_str_t value) {
+    pjsuaJNI.pjsua_msg_data_target_uri_set(swigCPtr, this, pj_str_t.getCPtr(value), value);
+  }
+
+  public pj_str_t getTarget_uri() {
+    long cPtr = pjsuaJNI.pjsua_msg_data_target_uri_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new pj_str_t(cPtr, false);
+  }
+
   public void setHdr_list(SWIGTYPE_p_pjsip_hdr value) {
     pjsuaJNI.pjsua_msg_data_hdr_list_set(swigCPtr, this, SWIGTYPE_p_pjsip_hdr.getCPtr(value));
   }

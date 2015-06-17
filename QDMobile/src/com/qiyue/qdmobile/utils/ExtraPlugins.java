@@ -117,7 +117,7 @@ public class ExtraPlugins {
      * It will resolve for a given action available sip plugins
      * @param ctxt Context of the application
      * @param action Action of the plugin to be resolved
-     * For example {@link SipManager#ACTION_GET_EXTRA_CODECS}, {@link SipManager.ACTION_GET_VIDEO_PLUGIN}
+
      * @return a map containing plugins infos and registrered component name as key
      */
     public static Map<String, DynCodecInfos> getDynCodecPlugins(Context ctxt, String action){

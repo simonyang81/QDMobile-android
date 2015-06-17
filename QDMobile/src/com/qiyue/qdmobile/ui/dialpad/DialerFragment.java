@@ -78,10 +78,10 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
 
     //private View digitDialer;
 
-//    private AccountChooserButton accountChooserButton;
+    //    private AccountChooserButton accountChooserButton;
     private Boolean isDigit = null;
     /* , isTablet */
-    
+
     private DialingFeedback dialFeedback;
 
     /*
@@ -89,7 +89,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
             R.id.switchTextView
     };
     */
-    private final int[] buttonsToLongAttach = new int[] {
+    private final int[] buttonsToLongAttach = new int[]{
             R.id.button0, R.id.button1
     };
 
@@ -136,10 +136,10 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
 
     private TextView rewriteTextInfo;
 
-	@Override
-	public void onAutoCompleteListVisibiltyChanged() {
+    @Override
+    public void onAutoCompleteListVisibiltyChanged() {
         applyTextToAutoComplete();
-	}
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -153,7 +153,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
         if (isDigit == null) {
             isDigit = !prefsWrapper.getPreferenceBooleanValue(SipConfigManager.START_WITH_TEXT_DIALER);
         }
-        
+
         setHasOptionsMenu(true);
     }
 
@@ -173,13 +173,13 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
 
         // Store some object that could be useful later
         digits = (DigitsEditText) v.findViewById(R.id.digitsText);
-        digits.setTypeface(((SipHome)getActivity()).getRBCLightFontFace());
+        digits.setTypeface(((SipHome) getActivity()).getRBCLightFontFace());
 
         dialPad = (Dialpad) v.findViewById(R.id.dialPad);
         callBar = (DialerCallBar) v.findViewById(R.id.dialerCallBar);
         autoCompleteList = (ListView) v.findViewById(R.id.autoCompleteList);
         rewriteTextInfo = (TextView) v.findViewById(R.id.rewriteTextInfo);
-        
+
 //        accountChooserButton = (AccountChooserButton) v.findViewById(R.id.accountChooserButton);
 //
 //        accountChooserFilterItem = accountChooserButton.addExtraMenuItem(R.string.apply_rewrite);
@@ -193,19 +193,19 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
 //            }
 //        });
         setRewritingFeature(prefsWrapper.getPreferenceBooleanValue(SipConfigManager.REWRITE_RULES_DIALER));
-        
+
         dialerLayout = (DialerLayout) v.findViewById(R.id.top_digit_dialer);
         //switchTextView = (ImageButton) v.findViewById(R.id.switchTextView);
 
         // isTablet = Compatibility.isTabletScreen(getActivity());
 
         // Digits field setup
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             isDigit = savedInstanceState.getBoolean(TEXT_MODE_KEY, isDigit);
         }
-        
+
         digits.setOnEditorActionListener(keyboardActionListener);
-        
+
         // Layout 
         dialerLayout.setForceNoList(mDualPane);
         dialerLayout.setAutoCompleteListVisibiltyChangedListener(this);
@@ -224,7 +224,10 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
 
         // Bottom bar setup
         callBar.setOnDialActionListener(this);
-        callBar.setVideoEnabled(prefsWrapper.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO));
+
+//        TODO
+//        callBar.setVideoEnabled(prefsWrapper.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO));
+        callBar.setVideoEnabled(true);
 
         //switchTextView.setVisibility(Compatibility.isCompatible(11) ? View.GONE : View.VISIBLE);
 
@@ -243,12 +246,15 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
         applyTextToAutoComplete();
         return v;
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
         if (callBar != null) {
-            callBar.setVideoEnabled(prefsWrapper.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO));
+//            TODO
+//            callBar.setVideoEnabled(prefsWrapper.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO));
+
+            callBar.setVideoEnabled(true);
         }
     }
 
@@ -256,31 +262,31 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
         Theme t = Theme.getCurrentTheme(getActivity());
         if (t != null) {
 //            dialPad.applyTheme(t);
-            
+
             View subV;
             // Delete button
             subV = v.findViewById(R.id.deleteButton);
-            if(subV != null) {
+            if (subV != null) {
                 t.applyBackgroundDrawable(subV, "btn_dial_delete");
                 t.applyLayoutMargin(subV, "btn_dial_delete_margin");
                 t.applyImageDrawable((ImageView) subV, "ic_dial_action_delete");
             }
-            
+
             // Dial button
             subV = v.findViewById(R.id.dialButton);
-            if(subV != null) {
+            if (subV != null) {
                 t.applyBackgroundDrawable(subV, "btn_dial_action");
                 t.applyLayoutMargin(subV, "btn_dial_action_margin");
                 t.applyImageDrawable((ImageView) subV, "ic_dial_action_call");
             }
-            
+
             // Additional button
             subV = v.findViewById(R.id.dialVideoButton);
-            if(subV != null) {
+            if (subV != null) {
                 t.applyBackgroundDrawable(subV, "btn_add_action");
                 t.applyLayoutMargin(subV, "btn_dial_add_margin");
             }
-            
+
             // Action dividers
             subV = v.findViewById(R.id.divider1);
             if (subV != null) {
@@ -292,38 +298,38 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
                 t.applyBackgroundDrawable(subV, "btn_bar_divider");
                 t.applyLayoutSize(subV, "btn_dial_divider");
             }
-            
+
             // Dialpad background
             subV = v.findViewById(R.id.dialPad);
             if (subV != null) {
 //                t.applyBackgroundDrawable(subV, "dialpad_background");
             }
-            
+
             // Callbar background
             subV = v.findViewById(R.id.dialerCallBar);
             if (subV != null) {
                 t.applyBackgroundDrawable(subV, "dialer_callbar_background");
             }
-            
+
             // Top field background
             subV = v.findViewById(R.id.topField);
             if (subV != null) {
                 t.applyBackgroundDrawable(subV, "dialer_textfield_background");
             }
-            
+
             subV = v.findViewById(R.id.digitsText);
             if (subV != null) {
                 t.applyTextColor((TextView) subV, "textColorPrimary");
             }
-            
+
         }
-        
+
         // Fix dialer background
         if (callBar != null) {
             Theme.fixRepeatableBackground(callBar);
         }
     }
-    
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -341,7 +347,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
         }
 
         dialFeedback.resume();
-        
+
     }
 
     @Override
@@ -355,15 +361,16 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
         dialFeedback.pause();
         super.onDetach();
     }
-    
-    
+
+
     private final static String TEXT_MODE_KEY = "text_mode";
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(TEXT_MODE_KEY, isDigit);
         super.onSaveInstanceState(outState);
     }
-    
+
     private OnEditorActionListener keyboardActionListener = new OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView tv, int action, KeyEvent arg2) {
@@ -374,7 +381,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
             return false;
         }
     };
-    
+
 //    OnAccountChangeListener accountButtonChangeListener = new OnAccountChangeListener() {
 //        @Override
 //        public void onChooseAccount(SipProfile account) {
@@ -386,7 +393,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
 //            applyRewritingInfo();
 //        }
 //    };
-    
+
     private void attachButtonListener(View v, int id, boolean longAttach) {
         View button = v.findViewById(id);
         if (button == null) {
@@ -417,8 +424,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
         afterTextChanged(digits.getText());
     }
 
-    
-    
+
     private void keyPressed(int keyCode) {
         KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, keyCode);
         digits.onKeyDown(keyCode, event);
@@ -430,7 +436,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
         /**
          * Instanciate with a ContactsSearchAdapter adapter to search in when a
          * contact entry is clicked
-         * 
+         *
          * @param adapter the adapter to use
          */
         public OnAutoCompleteListItemClicked(ContactsSearchAdapter adapter) {
@@ -491,7 +497,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
         }
         applyTextToAutoComplete();
     }
-    
+
     private void applyTextToAutoComplete() {
 
         // If single pane for smartphone use autocomplete list
@@ -510,18 +516,18 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
 
     /**
      * Set the mode of the text/digit input.
-     * 
+     *
      * @param textMode True if text mode. False if digit mode
      */
     public void setTextDialing(boolean textMode) {
         Log.d(THIS_FILE, "Switch to mode " + textMode);
         setTextDialing(textMode, false);
     }
-    
+
 
     /**
      * Set the mode of the text/digit input.
-     * 
+     *
      * @param textMode True if text mode. False if digit mode
      */
     public void setTextDialing(boolean textMode, boolean forceRefresh) {
@@ -543,7 +549,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
         }
         digits.setCursorVisible(!isDigit);
         digits.setIsDigit(isDigit, true);
-        
+
         // Update views visibility
         dialPad.setVisibility(isDigit ? View.VISIBLE : View.GONE);
         autoCompleteList.setVisibility(hasAutocompleteList() ? View.VISIBLE : View.GONE);
@@ -553,7 +559,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
         // Invalidate to ask to require the text button to a digit button
 //        getSherlockActivity().supportInvalidateOptionsMenu();
     }
-    
+
     private boolean hasAutocompleteList() {
         if (!isDigit) {
             return true;
@@ -563,7 +569,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
 
     /**
      * Set the value of the text field and put caret at the end
-     * 
+     *
      * @param value the new text to see in the text field
      */
     public void setTextFieldValue(CharSequence value) {
@@ -625,9 +631,9 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
     public void placeVideoCall() {
         Bundle b = new Bundle();
         b.putBoolean(SipCallSession.OPT_CALL_VIDEO, true);
-        placeCallWithOption(b );
+        placeCallWithOption(b);
     }
-    
+
     private void placeCallWithOption(Bundle b) {
         if (service == null) {
             return;
@@ -662,7 +668,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
 //        if (accountChooserFilterItem != null && accountChooserFilterItem.isChecked()) {
 //            toCall = rewriteNumber(toCall);
 //        }
-        
+
         if (TextUtils.isEmpty(toCall)) {
             return;
         }
@@ -689,7 +695,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
             });
         }
     }
-    
+
     public void placeVMCall() {
         Long accountToUse = SipProfile.INVALID_ID;
 //        SipProfile acc = null;
@@ -698,7 +704,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
         Cursor c = getActivity().getContentResolver().query(
                 SipProfile.ACCOUNT_URI, Constants.ACC_PROJECTION,
                 SipProfile.FIELD_ACTIVE + "=?",
-                new String[] {"1"},
+                new String[]{"1"},
                 null);
 
         SipProfile acc = null;
@@ -710,11 +716,11 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
             // Maybe we could inform user nothing will happen here?
             return;
         }
-        
+
         accountToUse = acc.id;
 
         if (accountToUse >= 0) {
-            SipProfile vmAcc = SipProfile.getProfileFromDbId(getActivity(), acc.id, new String[] {
+            SipProfile vmAcc = SipProfile.getProfileFromDbId(getActivity(), acc.id, new String[]{
                     SipProfile.FIELD_VOICE_MAIL_NBR
             });
             if (!TextUtils.isEmpty(vmAcc.vm_nbr)) {
@@ -747,8 +753,8 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
 
                                             int updated = getActivity().getContentResolver()
                                                     .update(ContentUris.withAppendedId(
-                                                            SipProfile.ACCOUNT_ID_URI_BASE,
-                                                            editedAccId),
+                                                                    SipProfile.ACCOUNT_ID_URI_BASE,
+                                                                    editedAccId),
                                                             cv, null, null);
                                             Log.d(THIS_FILE, "Updated accounts " + updated);
                                         }
@@ -782,7 +788,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
             String vmNumber = tm.getVoiceMailNumber();
 
             if (!TextUtils.isEmpty(vmNumber)) {
-                if(service != null) {
+                if (service != null) {
                     try {
                         service.ignoreNextOutgoingCallFor(vmNumber);
                     } catch (RemoteException e) {
@@ -870,7 +876,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
             ft.replace(R.id.details, autoCompleteFragment, TAG_AUTOCOMPLETE_SIDE_FRAG);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commitAllowingStateLoss();
-        
+
             // }
         }
     }
@@ -878,22 +884,22 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
     @Override
     public boolean onKey(View arg0, int keyCode, KeyEvent arg2) {
         KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, keyCode);
-        
+
         return digits.onKeyDown(keyCode, event);
     }
 
     // In dialer rewriting feature
-    
+
     private void setRewritingFeature(boolean active) {
 //        accountChooserFilterItem.setChecked(active);
 
-        rewriteTextInfo.setVisibility(active?View.VISIBLE:View.GONE);
+        rewriteTextInfo.setVisibility(active ? View.VISIBLE : View.GONE);
         if (active) {
-             applyRewritingInfo();
+            applyRewritingInfo();
         }
         prefsWrapper.setPreferenceBooleanValue(SipConfigManager.REWRITE_RULES_DIALER, active);
     }
-    
+
 //    private String rewriteNumber(String number) {
 //        SipProfile acc = accountChooserButton.getSelectedAccount();
 //        if (acc == null) {
@@ -906,7 +912,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
 //        ParsedSipContactInfos finalCallee = acc.formatCalleeNumber(numberRewrite);
 //        return finalCallee.getReadableSipUri();
 //    }
-    
+
     private void applyRewritingInfo() {
         // Rewrite information textView update
 //        String newText = digits.getText().toString();

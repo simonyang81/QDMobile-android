@@ -1,24 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.ui.prefs;
 
 import android.content.Context;
@@ -33,6 +12,7 @@ import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipConfigManager;
 import com.qiyue.qdmobile.api.SipManager;
 import com.qiyue.qdmobile.utils.Compatibility;
+import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.CustomDistribution;
 import com.qiyue.qdmobile.utils.ExtraPlugins;
 import com.qiyue.qdmobile.utils.ExtraPlugins.DynCodecInfos;
@@ -66,8 +46,6 @@ public class PrefsLogic {
     private static final String NWK_TRANSPORT_KEY = "transport";
     private static final String NWK_SIP_PROTOCOL_KEY = "sip_protocol";
     private static final String NWK_PERFS_KEY = "perfs";
-    
-    
 
     public final static String EXTRA_PREFERENCE_TYPE = "preference_type";
     public final static int TYPE_MEDIA = 0;
@@ -79,14 +57,15 @@ public class PrefsLogic {
     public final static int TYPE_NETWORK_SIP_PROTOCOL = 23;
     public final static int TYPE_CALLS = 40;
     public final static int TYPE_UI = 60;
-    
+
     /**
      * Get the xml res for preference screen building.
+     *
      * @param t The preference screen type
      * @return the int res for xml
      */
     public static int getXmlResourceForType(int t) {
-        switch(t) {
+        switch (t) {
             case TYPE_MEDIA:
                 return R.xml.prefs_media;
             case TYPE_MEDIA_BAND_TYPE:
@@ -108,14 +87,15 @@ public class PrefsLogic {
         }
         return 0;
     }
-    
+
     /**
      * Get the title int resource string for the type of preference.
+     *
      * @param t The preference screen type
      * @return the int res for title
      */
     public static int getTitleResourceForType(int t) {
-        switch(t) {
+        switch (t) {
             case TYPE_MEDIA:
                 return R.string.prefs_media;
             case TYPE_MEDIA_BAND_TYPE:
@@ -137,109 +117,107 @@ public class PrefsLogic {
         }
         return 0;
     }
-    
-    
-    
+
+
     public static void afterBuildPrefsForType(Context ctxt, IPreferenceHelper pfh, int t) {
         PreferencesWrapper pfw = new PreferencesWrapper(ctxt);
-        
+
         switch (t) {
             case TYPE_MEDIA: {
-                
+
                 // Expert mode
-                if(!pfw.isAdvancedUser()) {
-                    
+                if (!pfw.isAdvancedUser()) {
+
                     pfh.hidePreference(MEDIA_AUDIO_QUALITY_KEY, SipConfigManager.SND_MEDIA_QUALITY);
                     pfh.hidePreference(MEDIA_AUDIO_QUALITY_KEY, SipConfigManager.ECHO_CANCELLATION_TAIL);
                     pfh.hidePreference(MEDIA_AUDIO_QUALITY_KEY, SipConfigManager.ECHO_MODE);
                     pfh.hidePreference(MEDIA_AUDIO_QUALITY_KEY, SipConfigManager.ENABLE_NOISE_SUPPRESSION);
                     pfh.hidePreference(MEDIA_AUDIO_QUALITY_KEY, SipConfigManager.SND_PTIME);
-                    
-                    
-                    
+
+
                     pfh.hidePreference(MEDIA_AUDIO_VOLUME_KEY, SipConfigManager.SND_MIC_LEVEL);
                     pfh.hidePreference(MEDIA_AUDIO_VOLUME_KEY, SipConfigManager.SND_SPEAKER_LEVEL);
-                    
+
                     pfh.hidePreference(MEDIA_AUDIO_VOLUME_KEY, SipConfigManager.SND_BT_MIC_LEVEL);
                     pfh.hidePreference(MEDIA_AUDIO_VOLUME_KEY, SipConfigManager.SND_BT_SPEAKER_LEVEL);
-                    
+
                     pfh.hidePreference(MEDIA_AUDIO_VOLUME_KEY, SipConfigManager.USE_SOFT_VOLUME);
-                    
+
                     pfh.hidePreference(MEDIA_MISC_KEY, SipConfigManager.AUTO_CONNECT_SPEAKER);
                     pfh.hidePreference(MEDIA_AUDIO_QUALITY_KEY, SipConfigManager.MEDIA_THREAD_COUNT);
                     pfh.hidePreference(MEDIA_AUDIO_QUALITY_KEY, SipConfigManager.HAS_IO_QUEUE);
-                    
+
                     pfh.hidePreference(null, MEDIA_BAND_TYPE_KEY);
                     pfh.hidePreference(null, MEDIA_AUDIO_TROUBLESHOOT_KEY);
-                }else {
+                } else {
                     // Bind only if not removed
                     pfh.setPreferenceScreenType(MEDIA_AUDIO_TROUBLESHOOT_KEY, TYPE_MEDIA_TROUBLESHOOT);
                     pfh.setPreferenceScreenType(MEDIA_BAND_TYPE_KEY, TYPE_MEDIA_BAND_TYPE);
                 }
-                
+
                 // Sub activity intent for codecs
                 Preference pf = pfh.findPreference(MEDIA_CODEC_LIST_KEY);
                 Intent it = new Intent(ctxt, Codecs.class);
                 pf.setIntent(it);
-                
-                if(pfw.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO)) {
+
+                if (Constants.USE_VIDEO || pfw.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO)) {
                     VideoUtilsWrapper vuw = VideoUtilsWrapper.getInstance();
                     List<VideoCaptureDeviceInfo> capt = vuw.getVideoCaptureDevices(ctxt);
-                    if(capt.size() == 0) {
+                    if (capt.size() == 0) {
                         pfh.hidePreference(null, MEDIA_VIDEO_CATEGORY);
                     } else {
                         int size = capt.get(capt.size() - 1).capabilities.size();
-    //                    for(VideoCaptureDeviceInfo vcdi : capt) {
-    //                        size += vcdi.capabilities.size();
-    //                    }
-                        CharSequence[] entries = new CharSequence[size+1];
-                        CharSequence[] values = new CharSequence[size+1];
+                        //                    for(VideoCaptureDeviceInfo vcdi : capt) {
+                        //                        size += vcdi.capabilities.size();
+                        //                    }
+                        CharSequence[] entries = new CharSequence[size + 1];
+                        CharSequence[] values = new CharSequence[size + 1];
                         ListPreference lp = (ListPreference) pfh.findPreference(SipConfigManager.VIDEO_CAPTURE_SIZE);
                         int i = 0;
                         entries[0] = ctxt.getText(R.string.auto);
                         values[0] = "";
-                        i ++;
+                        i++;
                         //for(VideoCaptureDeviceInfo vcdi : capt) {
                         VideoCaptureDeviceInfo vcdi = capt.get(capt.size() - 1);
-                        for( VideoCaptureCapability cap : vcdi.capabilities ) {
+                        for (VideoCaptureCapability cap : vcdi.capabilities) {
                             entries[i] = cap.toPreferenceDisplay();
                             values[i] = cap.toPreferenceValue();
                             i++;
                         }
-                        if(vcdi.bestCapability != null) {
+                        if (vcdi.bestCapability != null) {
                             lp.setDefaultValue(vcdi.bestCapability.toPreferenceValue());
                         }
-                            
+
                         //}
                         lp.setEntries(entries);
                         lp.setEntryValues(values);
                     }
-                }else {
+                } else {
                     pfh.hidePreference(null, MEDIA_VIDEO_CATEGORY);
                 }
                 break;
             }
-            
-            case TYPE_MEDIA_TROUBLESHOOT : {
+
+            case TYPE_MEDIA_TROUBLESHOOT: {
 
                 break;
             }
             case TYPE_NETWORK: {
                 TelephonyManager telephonyManager = (TelephonyManager) ctxt.getSystemService(Context.TELEPHONY_SERVICE);
-                
+
                 if (telephonyManager.getPhoneType() == 2 /*TelephonyManager.PHONE_TYPE_CDMA*/) {
                     pfh.hidePreference("for_incoming", SipConfigManager.USE_GPRS_IN);
                     pfh.hidePreference("for_outgoing", SipConfigManager.USE_GPRS_OUT);
                     pfh.hidePreference("for_incoming", SipConfigManager.USE_EDGE_IN);
                     pfh.hidePreference("for_outgoing", SipConfigManager.USE_EDGE_OUT);
                 }
-                
 
-                if(!Compatibility.isCompatible(9)) {
+
+                if (!Compatibility.isCompatible(9)) {
                     pfh.hidePreference(NWK_PERFS_KEY, SipConfigManager.LOCK_WIFI_PERFS);
                 }
-                
-                if(!pfw.isAdvancedUser()) {
+
+                if (!pfw.isAdvancedUser()) {
 
                     pfh.hidePreference(NWK_NAT_TRAVERSAL_KEY, SipConfigManager.ICE_AGGRESSIVE);
                     pfh.hidePreference(NWK_NAT_TRAVERSAL_KEY, SipConfigManager.ENABLE_TURN);
@@ -247,7 +225,7 @@ public class PrefsLogic {
                     pfh.hidePreference(NWK_NAT_TRAVERSAL_KEY, SipConfigManager.TURN_USERNAME);
                     pfh.hidePreference(NWK_NAT_TRAVERSAL_KEY, SipConfigManager.TURN_PASSWORD);
                     pfh.hidePreference(NWK_NAT_TRAVERSAL_KEY, SipConfigManager.TURN_TRANSPORT);
-                    
+
                     pfh.hidePreference(NWK_TRANSPORT_KEY, SipConfigManager.ENABLE_TCP);
                     pfh.hidePreference(NWK_TRANSPORT_KEY, SipConfigManager.ENABLE_UDP);
                     pfh.hidePreference(NWK_TRANSPORT_KEY, SipConfigManager.DISABLE_TCP_SWITCH);
@@ -257,33 +235,33 @@ public class PrefsLogic {
                     pfh.hidePreference(NWK_TRANSPORT_KEY, SipConfigManager.USE_IPV6);
                     pfh.hidePreference(NWK_TRANSPORT_KEY, SipConfigManager.OVERRIDE_NAMESERVER);
                     pfh.hidePreference(NWK_TRANSPORT_KEY, SipConfigManager.FORCE_NO_UPDATE);
-                    
+
                     pfh.hidePreference(NWK_TRANSPORT_KEY, SipConfigManager.ENABLE_QOS);
                     pfh.hidePreference(NWK_TRANSPORT_KEY, SipConfigManager.DSCP_VAL);
                     pfh.hidePreference(NWK_TRANSPORT_KEY, SipConfigManager.USER_AGENT);
                     pfh.hidePreference(NWK_TRANSPORT_KEY, SipConfigManager.NETWORK_ROUTES_POLLING);
-                    
+
                     pfh.hidePreference(NWK_NAT_TRAVERSAL_KEY, SipConfigManager.ENABLE_STUN2);
 
                     pfh.hidePreference("for_incoming", SipConfigManager.USE_ANYWAY_IN);
                     pfh.hidePreference("for_outgoing", SipConfigManager.USE_ANYWAY_OUT);
-                    
+
                     pfh.hidePreference(null, NWK_SIP_PROTOCOL_KEY);
                     pfh.hidePreference(null, NWK_PERFS_KEY);
-                }else {
+                } else {
                     // Bind only if not removed
                     pfh.setPreferenceScreenType(NWK_SIP_PROTOCOL_KEY, TYPE_NETWORK_SIP_PROTOCOL);
                 }
-                
+
                 // Bind preference screen
                 pfh.setPreferenceScreenType(NWK_KEEP_ALIVE_KEY, TYPE_NETWORK_KEEP_ALIVE);
                 pfh.setPreferenceScreenType(NWK_SECURE_TRANSPORT_KEY, TYPE_NETWORK_SECURE);
-                
+
                 break;
             }
-            case TYPE_NETWORK_SECURE:{
+            case TYPE_NETWORK_SECURE: {
 
-                if(!pfw.isAdvancedUser()) {
+                if (!pfw.isAdvancedUser()) {
                     pfh.hidePreference(NWK_TLS_KEY, SipConfigManager.CA_LIST_FILE);
                     pfh.hidePreference(NWK_TLS_KEY, SipConfigManager.TLS_VERIFY_CLIENT);
                     pfh.hidePreference(NWK_TLS_KEY, SipConfigManager.TLS_VERIFY_SERVER);
@@ -293,9 +271,9 @@ public class PrefsLogic {
                     pfh.hidePreference(NWK_TLS_KEY, SipConfigManager.CERT_FILE);
                     pfh.hidePreference(NWK_TLS_KEY, SipConfigManager.PRIVKEY_FILE);
                 }
-                
+
                 boolean canTls = pfw.getLibCapability(PreferencesProviderWrapper.LIB_CAP_TLS);
-                if(!canTls) {
+                if (!canTls) {
                     pfh.hidePreference(null, NWK_TLS_KEY);
                     pfh.hidePreference("secure_media", SipConfigManager.USE_ZRTP);
                 }
@@ -303,44 +281,44 @@ public class PrefsLogic {
             }
             case TYPE_UI: {
 
-                if(!pfw.isAdvancedUser()) {
+                if (!pfw.isAdvancedUser()) {
                     pfh.hidePreference(null, "advanced_ui");
                     //pfh.hidePreference("android_integration", SipConfigManager.GSM_INTEGRATION_TYPE);
                     pfh.hidePreference("android_integration", SipConfigManager.INTEGRATE_TEL_PRIVILEGED);
-                    
+
                 }
-                
+
                 ListPreference lp = (ListPreference) pfh.findPreference(SipConfigManager.THEME);
                 HashMap<String, String> themes = Theme.getAvailableThemes(ctxt);
-                
+
                 CharSequence[] entries = new CharSequence[themes.size()];
                 CharSequence[] values = new CharSequence[themes.size()];
                 int i = 0;
-                for( Entry<String, String> theme : themes.entrySet() ) {
+                for (Entry<String, String> theme : themes.entrySet()) {
                     entries[i] = theme.getValue();
                     values[i] = theme.getKey();
                     i++;
                 }
-                
+
                 lp.setEntries(entries);
                 lp.setEntryValues(values);
-                
+
                 break;
             }
-            case TYPE_CALLS : {
+            case TYPE_CALLS: {
 
-                if(CustomDistribution.forceNoMultipleCalls()) {
+                if (CustomDistribution.forceNoMultipleCalls()) {
                     pfh.hidePreference(null, SipConfigManager.SUPPORT_MULTIPLE_CALLS);
                 }
-                if(!CustomDistribution.supportCallRecord()) {
+                if (!CustomDistribution.supportCallRecord()) {
                     pfh.hidePreference(null, SipConfigManager.AUTO_RECORD_CALLS);
                 }
                 Map<String, DynCodecInfos> videoPlugins = ExtraPlugins.getDynCodecPlugins(ctxt, SipManager.ACTION_GET_VIDEO_PLUGIN);
-                if(videoPlugins.size() == 0) {
+                if (videoPlugins.size() == 0) {
                     pfh.hidePreference(null, SipConfigManager.USE_VIDEO);
                 }
 
-                if(!pfw.isAdvancedUser()) {
+                if (!pfw.isAdvancedUser()) {
                     pfh.hidePreference(MEDIA_MISC_KEY, SipConfigManager.DTMF_PAUSE_TIME);
                     pfh.hidePreference(MEDIA_MISC_KEY, SipConfigManager.DTMF_WAIT_TIME);
                 }
@@ -348,12 +326,12 @@ public class PrefsLogic {
             default:
                 break;
         }
-        
+
     }
-    
+
 
     public static void updateDescriptionForType(Context ctxt, IPreferenceHelper pfh, int t) {
-        
+
         switch (t) {
             case TYPE_MEDIA:
                 break;
@@ -362,8 +340,8 @@ public class PrefsLogic {
                 break;
         }
     }
-    
-    
+
+
     public static boolean onMainActivityOptionsItemSelected(MenuItem item, Context ctxt, PreferencesWrapper prefsWrapper) {
         int id = item.getItemId();
         if (id == R.id.audio_test) {
@@ -382,7 +360,7 @@ public class PrefsLogic {
 
     public static void onMainActivityPrepareOptionMenu(Menu menu, Context ctxt, PreferencesWrapper prefsWrapper) {
 
-        menu.findItem(R.id.expert).setTitle(prefsWrapper.isAdvancedUser()? R.string.normal_preferences: R.string.expert_preferences);
+        menu.findItem(R.id.expert).setTitle(prefsWrapper.isAdvancedUser() ? R.string.normal_preferences : R.string.expert_preferences);
         //menu.findItem(R.id.audio_test).setVisible(prefsWrapper.isAdvancedUser());
     }
 }

@@ -71,7 +71,7 @@ import java.util.regex.Pattern;
 public class SipService extends Service {
 
 	// static boolean creating = false;
-	private static final String THIS_FILE = "SIP SRV";
+	private static final String THIS_FILE = SipService.class.getSimpleName();
 
 	private SipWakeLock sipWakeLock;
 	private boolean autoAcceptCurrent = false;
@@ -216,6 +216,9 @@ public class SipService extends Service {
         @Override
         public void makeCallWithOptions(final String callee, final int accountId, final Bundle options)
                 throws RemoteException {
+
+			Log.d(THIS_FILE, "makeCallWithOptions()...");
+
             SipService.this.enforceCallingOrSelfPermission(SipManager.PERMISSION_USE_SIP, null);
             //We have to ensure service is properly started and not just binded
             SipService.this.startService(new Intent(SipService.this, SipService.class));
@@ -1005,11 +1008,11 @@ public class SipService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		singleton = this;
+		Log.setLogLevel(4);
 
 		Log.i(THIS_FILE, "Create SIP Service");
 		prefsWrapper = new PreferencesProviderWrapper(this);
-		Log.setLogLevel(prefsWrapper.getLogLevel());
-		
+
 		telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 //		connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		notificationManager = new SipNotifications(this);

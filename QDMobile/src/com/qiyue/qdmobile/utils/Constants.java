@@ -30,6 +30,8 @@ public class Constants {
 
     public static final String EXTRA_ACCOUNT_JSON = "EXTRA_ACCOUNT_JSON";
 
+    public static final boolean USE_VIDEO = true;
+
 
 }
 

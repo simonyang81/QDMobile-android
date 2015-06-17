@@ -89,6 +89,14 @@ public class pjmedia_tone_desc {
     return pjsuaJNI.pjmedia_tone_desc_volume_get(swigCPtr, this);
   }
 
+  public void setFlags(short value) {
+    pjsuaJNI.pjmedia_tone_desc_flags_set(swigCPtr, this, value);
+  }
+
+  public short getFlags() {
+    return pjsuaJNI.pjmedia_tone_desc_flags_get(swigCPtr, this);
+  }
+
   public pjmedia_tone_desc() {
     this(pjsuaJNI.new_pjmedia_tone_desc(), true);
   }

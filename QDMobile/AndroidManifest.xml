@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.qiyue.qdmobile"
     android:installLocation="auto"
-    android:versionCode="1"
-    android:versionName="1" >
+    android:versionCode="3000"
+    android:versionName="3.0" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -104,6 +104,7 @@
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
+
 
     <application
         android:allowBackup="true"
@@ -592,6 +593,67 @@
             android:stateNotNeeded="true"
             android:theme="@style/Holo.Light"
             android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <!-- Receiver for standard video -->
+        <receiver android:name=".plugins.video.PluginReceiver" >
+            <intent-filter>
+                <action android:name="com.csipsimple.plugins.action.REGISTER_VIDEO" />
+            </intent-filter>
+
+            <meta-data
+                android:name="lib_name"
+                android:value="libpj_video_android.so" />
+            <!-- For now it does not matter in the future we should have one per device, codec, and converter (if needed) -->
+            <meta-data
+                android:name="init_factory"
+                android:value="pjmedia_webrtc_vid_render_factory" />
+        </receiver>
+
+        <!--
+        Receiver for video capture
+        <receiver android:name=".CaptureReceiver" >
+            <intent-filter>
+                <action android:name="com.csipsimple.plugins.action.REGISTER_CAPTURE_VIDEO" />
+            </intent-filter>
+
+            <meta-data
+                android:name="lib_name"
+                android:value="libpj_screen_capture_android.so" />
+            <meta-data
+                android:name="init_factory"
+                android:value="pjmedia_webrtc_vid_capture_factory" />
+        </receiver>
+        -->
+        <receiver android:name=".plugins.video.PluginReceiverFfmpeg" >
+            <intent-filter>
+                <action android:name="com.csipsimple.codecs.action.REGISTER_VIDEO_CODEC" />
+            </intent-filter>
+
+            <meta-data
+                android:name="lib_name"
+                android:value="libpj_video_android.so" />
+            <meta-data
+                android:name="init_factory"
+                android:value="pjmedia_codec_ffmpeg_vid_init" />
+            <meta-data
+                android:name="deinit_factory"
+                android:value="pjmedia_codec_ffmpeg_vid_deinit" />
+        </receiver>
+        <receiver android:name=".plugins.video.PluginReceiverVpx" >
+            <intent-filter>
+                <action android:name="com.csipsimple.codecs.action.REGISTER_VIDEO_CODEC" />
+            </intent-filter>
+
+            <meta-data
+                android:name="lib_name"
+                android:value="libpj_vpx.so" />
+            <meta-data
+                android:name="init_factory"
+                android:value="pjmedia_codec_vpx_init" />
+            <meta-data
+                android:name="deinit_factory"
+                android:value="pjmedia_codec_vpx_deinit" />
+        </receiver>
 
     </application>
 

@@ -59,6 +59,14 @@ public class pjsua_vid_preview_param {
     return pjsuaJNI.pjsua_vid_preview_param_wnd_flags_get(swigCPtr, this);
   }
 
+  public void setFormat(SWIGTYPE_p_pjmedia_format value) {
+    pjsuaJNI.pjsua_vid_preview_param_format_set(swigCPtr, this, SWIGTYPE_p_pjmedia_format.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_pjmedia_format getFormat() {
+    return new SWIGTYPE_p_pjmedia_format(pjsuaJNI.pjsua_vid_preview_param_format_get(swigCPtr, this), true);
+  }
+
   public pjsua_vid_preview_param() {
     this(pjsuaJNI.new_pjsua_vid_preview_param(), true);
   }

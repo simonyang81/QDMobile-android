@@ -44,6 +44,15 @@ public class pjsip_tls_setting {
     return (cPtr == 0) ? null : new pj_str_t(cPtr, false);
   }
 
+  public void setCa_list_path(pj_str_t value) {
+    pjsuaJNI.pjsip_tls_setting_ca_list_path_set(swigCPtr, this, pj_str_t.getCPtr(value), value);
+  }
+
+  public pj_str_t getCa_list_path() {
+    long cPtr = pjsuaJNI.pjsip_tls_setting_ca_list_path_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new pj_str_t(cPtr, false);
+  }
+
   public void setCert_file(pj_str_t value) {
     pjsuaJNI.pjsip_tls_setting_cert_file_set(swigCPtr, this, pj_str_t.getCPtr(value), value);
   }
@@ -71,12 +80,20 @@ public class pjsip_tls_setting {
     return (cPtr == 0) ? null : new pj_str_t(cPtr, false);
   }
 
-  public void setMethod(int value) {
-    pjsuaJNI.pjsip_tls_setting_method_set(swigCPtr, this, value);
+  public void setMethod(pjsip_ssl_method value) {
+    pjsuaJNI.pjsip_tls_setting_method_set(swigCPtr, this, value.swigValue());
   }
 
-  public int getMethod() {
-    return pjsuaJNI.pjsip_tls_setting_method_get(swigCPtr, this);
+  public pjsip_ssl_method getMethod() {
+    return pjsip_ssl_method.swigToEnum(pjsuaJNI.pjsip_tls_setting_method_get(swigCPtr, this));
+  }
+
+  public void setProto(long value) {
+    pjsuaJNI.pjsip_tls_setting_proto_set(swigCPtr, this, value);
+  }
+
+  public long getProto() {
+    return pjsuaJNI.pjsip_tls_setting_proto_get(swigCPtr, this);
   }
 
   public void setCiphers_num(long value) {
@@ -129,6 +146,14 @@ public class pjsip_tls_setting {
     return (cPtr == 0) ? null : new pj_time_val(cPtr, false);
   }
 
+  public void setReuse_addr(int value) {
+    pjsuaJNI.pjsip_tls_setting_reuse_addr_set(swigCPtr, this, value);
+  }
+
+  public int getReuse_addr() {
+    return pjsuaJNI.pjsip_tls_setting_reuse_addr_get(swigCPtr, this);
+  }
+
   public void setQos_type(pj_qos_type value) {
     pjsuaJNI.pjsip_tls_setting_qos_type_set(swigCPtr, this, value.swigValue());
   }
@@ -152,6 +177,22 @@ public class pjsip_tls_setting {
 
   public int getQos_ignore_error() {
     return pjsuaJNI.pjsip_tls_setting_qos_ignore_error_get(swigCPtr, this);
+  }
+
+  public void setSockopt_params(SWIGTYPE_p_pj_sockopt_params value) {
+    pjsuaJNI.pjsip_tls_setting_sockopt_params_set(swigCPtr, this, SWIGTYPE_p_pj_sockopt_params.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_pj_sockopt_params getSockopt_params() {
+    return new SWIGTYPE_p_pj_sockopt_params(pjsuaJNI.pjsip_tls_setting_sockopt_params_get(swigCPtr, this), true);
+  }
+
+  public void setSockopt_ignore_error(int value) {
+    pjsuaJNI.pjsip_tls_setting_sockopt_ignore_error_set(swigCPtr, this, value);
+  }
+
+  public int getSockopt_ignore_error() {
+    return pjsuaJNI.pjsip_tls_setting_sockopt_ignore_error_get(swigCPtr, this);
   }
 
   public pjsip_tls_setting() {

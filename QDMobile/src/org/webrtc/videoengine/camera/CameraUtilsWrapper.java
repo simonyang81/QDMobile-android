@@ -1,16 +1,7 @@
-/**
- * Copyright (C) 2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * 
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree. An additional intellectual property rights grant can be found
- *  in the file PATENTS.  All contributing project authors may
- *  be found in the AUTHORS file in the root of the source tree.
- */
-
 package org.webrtc.videoengine.camera;
 
 import android.hardware.Camera;
+
 
 import com.qiyue.qdmobile.utils.Compatibility;
 
@@ -27,15 +18,15 @@ public abstract class CameraUtilsWrapper {
     public static CameraUtilsWrapper getInstance() {
         if (instance == null) {
             if (Compatibility.isCompatible(11)) {
-                instance = new org.webrtc.videoengine.camera.CameraUtils11();
+                instance = new CameraUtils11();
             } else if (Compatibility.isCompatible(9)) {
-                instance = new org.webrtc.videoengine.camera.CameraUtils9();
+                instance = new CameraUtils9();
             } else if (Compatibility.isCompatible(8)) {
-                instance = new org.webrtc.videoengine.camera.CameraUtils8();
+                instance = new CameraUtils8();
             } else if (Compatibility.isCompatible(5)){
-                instance = new org.webrtc.videoengine.camera.CameraUtils5();
+                instance = new CameraUtils5();
             }else {
-                instance = new org.webrtc.videoengine.camera.CameraUtils3();
+                instance = new CameraUtils3();
             }
         }
 

@@ -95,6 +95,14 @@ public class pjsua_transport_config {
     return (cPtr == 0) ? null : new pj_qos_params(cPtr, false);
   }
 
+  public void setSockopt_params(SWIGTYPE_p_pj_sockopt_params value) {
+    pjsuaJNI.pjsua_transport_config_sockopt_params_set(swigCPtr, this, SWIGTYPE_p_pj_sockopt_params.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_pj_sockopt_params getSockopt_params() {
+    return new SWIGTYPE_p_pj_sockopt_params(pjsuaJNI.pjsua_transport_config_sockopt_params_get(swigCPtr, this), true);
+  }
+
   public pjsua_transport_config() {
     this(pjsuaJNI.new_pjsua_transport_config(), true);
   }

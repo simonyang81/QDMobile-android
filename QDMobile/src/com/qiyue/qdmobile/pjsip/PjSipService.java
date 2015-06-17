@@ -1,25 +1,3 @@
-/**
- * Copyright (C) 2010-2013 Regis Montoya (aka r3gis - www.r3gis.fr)
- * Copyright (C) 2012-2013 Dennis Guse (http://dennisguse.de)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.pjsip;
 
 import android.content.ContentUris;
@@ -58,6 +36,7 @@ import com.qiyue.qdmobile.service.SipService;
 import com.qiyue.qdmobile.service.SipService.SameThreadException;
 import com.qiyue.qdmobile.service.SipService.SipRunnable;
 import com.qiyue.qdmobile.service.SipService.ToCall;
+import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.ExtraPlugins;
 import com.qiyue.qdmobile.utils.ExtraPlugins.DynCodecInfos;
 import com.qiyue.qdmobile.utils.Log;
@@ -78,6 +57,7 @@ import org.pjsip.pjsua.pj_qos_params;
 import org.pjsip.pjsua.pj_str_t;
 import org.pjsip.pjsua.pj_turn_tp_type;
 import org.pjsip.pjsua.pjmedia_srtp_use;
+import org.pjsip.pjsua.pjsip_ssl_method;
 import org.pjsip.pjsua.pjsip_timer_setting;
 import org.pjsip.pjsua.pjsip_tls_setting;
 import org.pjsip.pjsua.pjsip_transport_type_e;
@@ -105,7 +85,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class PjSipService {
-    private static final String THIS_FILE = "PjService";
+
+    private static final String THIS_FILE = PjSipService.class.getSimpleName();
+
     private static int DTMF_TONE_PAUSE_LENGTH = 300;
     private static int DTMF_TONE_WAIT_LENGTH = 2000;
     public SipService service;
@@ -133,12 +115,7 @@ public class PjSipService {
     private SparseArray<PjStreamDialtoneGenerator> waittoneGenerators = new SparseArray<PjStreamDialtoneGenerator>(5);
     private String mNatDetected = "";
 
-    // -------
-    // Locks
-    // -------
-
     public PjSipService() {
-
     }
 
     public void setService(SipService aService) {
@@ -167,6 +144,7 @@ public class PjSipService {
                 // System.loadLibrary("ssl");
                 System.loadLibrary(NativeLibManager.STD_LIB_NAME);
                 System.loadLibrary(NativeLibManager.STACK_NAME);
+
                 hasSipStack = true;
                 return true;
             } catch (UnsatisfiedLinkError e) {
@@ -193,7 +171,7 @@ public class PjSipService {
      */
     public boolean sipStart() throws SameThreadException {
 
-        Log.setLogLevel(prefsWrapper.getLogLevel());
+        Log.setLogLevel(4);
 
         if (!hasSipStack) {
             Log.e(THIS_FILE, "We have no sip stack, we can't start");
@@ -251,6 +229,45 @@ public class PjSipService {
 
                 // CSS CONFIG
                 pjsua.csipsimple_config_default(cssCfg);
+
+                // TODO ================
+                String videoLibraryPath = NativeLibManager.getLibraryPath(service, "libpj_video_android.so");
+                if (TextUtils.isEmpty(videoLibraryPath) == false) {
+
+                    pj_str_t pjVideoFile = pjsua.pj_str_copy(videoLibraryPath);
+                    dynamic_factory videoRenderFactory = cssCfg.getVideo_render_implementation();
+                    videoRenderFactory.setInit_factory_name(pjsua.pj_str_copy("pjmedia_webrtc_vid_render_factory"));
+                    videoRenderFactory.setShared_lib_path(pjVideoFile);
+
+                    dynamic_factory videoCaptureFactory = cssCfg.getVideo_capture_implementation();
+                    videoCaptureFactory.setInit_factory_name(pjsua.pj_str_copy("pjmedia_webrtc_vid_capture_factory"));
+                    videoCaptureFactory.setShared_lib_path(pjVideoFile);
+
+                    dynamic_factory[] cssCodecs = cssCfg.getExtra_vid_codecs();
+                    dynamic_factory[] cssCodecsDestroy = cssCfg.getExtra_vid_codecs_destroy();
+
+                    cssCodecs[0].setShared_lib_path(pjsua.pj_str_copy("libpj_video_android.so"));
+                    cssCodecs[0].setInit_factory_name(pjsua.pj_str_copy("pjmedia_codec_ffmpeg_vid_init"));
+
+                    cssCodecsDestroy[0].setShared_lib_path(pjsua.pj_str_copy("libpj_video_android.so"));
+                    cssCodecsDestroy[0].setInit_factory_name(pjsua.pj_str_copy("pjmedia_codec_ffmpeg_vid_deinit"));
+
+                    cssCodecs[1].setShared_lib_path(pjsua.pj_str_copy("libpj_vpx.so"));
+                    cssCodecs[1].setInit_factory_name(pjsua.pj_str_copy("pjmedia_codec_vpx_init"));
+
+                    cssCodecsDestroy[1].setShared_lib_path(pjsua.pj_str_copy("libpj_vpx.so"));
+                    cssCodecsDestroy[1].setInit_factory_name(pjsua.pj_str_copy("pjmedia_codec_vpx_deinit"));
+
+                    cssCfg.setExtra_vid_codecs_cnt(2);
+
+                    dynamic_factory convertImpl = cssCfg.getVid_converter();
+                    convertImpl.setShared_lib_path(pjVideoFile);
+                    convertImpl.setInit_factory_name(pjsua.pj_str_copy("pjmedia_libswscale_converter_init"));
+
+                }
+                // TODO ================
+
+
                 cssCfg.setUse_compact_form_headers(prefsWrapper
                         .getPreferenceBooleanValue(SipConfigManager.USE_COMPACT_FORM) ? pjsua.PJ_TRUE
                         : pjsua.PJ_FALSE);
@@ -336,7 +353,7 @@ public class PjSipService {
                 }
 
                 // Video implementation
-                if (prefsWrapper.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO)) {
+                if (Constants.USE_VIDEO || prefsWrapper.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO)) {
                     // TODO :: Have plugins per capture / render / video codec /
                     // converter
                     Map<String, DynCodecInfos> videoPlugins = ExtraPlugins.getDynCodecPlugins(
@@ -766,7 +783,8 @@ public class PjSipService {
                     .getPreferenceBooleanValue(SipConfigManager.TLS_VERIFY_CLIENT);
             tlsSetting.setVerify_client(checkClient ? 1 : 0);
 
-            tlsSetting.setMethod(prefsWrapper.getTLSMethod());
+            tlsSetting.setMethod(pjsip_ssl_method.swigToEnum(prefsWrapper.getTLSMethod()));
+//            tlsSetting.setMethod(prefsWrapper.getTLSMethod());
             boolean checkServer = prefsWrapper
                     .getPreferenceBooleanValue(SipConfigManager.TLS_VERIFY_SERVER);
             tlsSetting.setVerify_server(checkServer ? 1 : 0);
@@ -1173,8 +1191,7 @@ public class PjSipService {
             pjsua_call_setting cs = new pjsua_call_setting();
             pjsua.call_setting_default(cs);
             cs.setAud_cnt(1);
-            cs.setVid_cnt(prefsWrapper.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO) ? 1
-                    : 0);
+            cs.setVid_cnt(Constants.USE_VIDEO || prefsWrapper.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO) ? 1 : 0);
             cs.setFlag(0);
             return pjsua.call_answer2(callId, cs, code, null, null);
             // return pjsua.call_answer(callId, code, null, null);
@@ -1217,6 +1234,9 @@ public class PjSipService {
      *            domain name of the default account
      */
     public int makeCall(String callee, int accountId, Bundle b) throws SameThreadException {
+
+        Log.d(THIS_FILE, "makeCall()...");
+
         if (!created) {
             return -1;
         }
@@ -1237,6 +1257,7 @@ public class PjSipService {
             cs.setAud_cnt(1);
             cs.setVid_cnt(0);
             if (b != null && b.getBoolean(SipCallSession.OPT_CALL_VIDEO, false)) {
+                Log.d(THIS_FILE, "=== setVid_cnt to 1 ===");
                 cs.setVid_cnt(1);
             }
             cs.setFlag(0);
@@ -1275,8 +1296,7 @@ public class PjSipService {
             pjsua.pj_pool_release(pool);
             return status;
         } else {
-            service.notifyUserOfMessage(service.getString(R.string.invalid_sip_uri) + " : "
-                    + callee);
+            service.notifyUserOfMessage(service.getString(R.string.invalid_sip_uri) + " : " + callee);
         }
         return -1;
     }
@@ -2304,13 +2324,11 @@ public class PjSipService {
     
     /**
      * Stop connection between mic source to speaker output.
-     * @see startLoopbackTest
      */
     public void stopLoopbackTest() {
         pjsua.conf_disconnect(0, 0);
     }
-    
-    
+
     private Map<String, PjsipModule> pjsipModules = new HashMap<String, PjsipModule>();
 
     private void initModules() {

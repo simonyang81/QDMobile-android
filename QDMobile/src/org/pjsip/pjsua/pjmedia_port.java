@@ -45,6 +45,15 @@ public class pjmedia_port {
     return (cPtr == 0) ? null : new pjmedia_port_info(cPtr, false);
   }
 
+  public void setGet_clock_src(SWIGTYPE_p_f_p_pjmedia_port_enum_pjmedia_dir__p_pjmedia_clock_src value) {
+    pjsuaJNI.pjmedia_port_get_clock_src_set(swigCPtr, this, SWIGTYPE_p_f_p_pjmedia_port_enum_pjmedia_dir__p_pjmedia_clock_src.getCPtr(value));
+  }
+
+  public SWIGTYPE_p_f_p_pjmedia_port_enum_pjmedia_dir__p_pjmedia_clock_src getGet_clock_src() {
+    long cPtr = pjsuaJNI.pjmedia_port_get_clock_src_get(swigCPtr, this);
+    return (cPtr == 0) ? null : new SWIGTYPE_p_f_p_pjmedia_port_enum_pjmedia_dir__p_pjmedia_clock_src(cPtr, false);
+  }
+
   public void setPut_frame(SWIGTYPE_p_f_p_pjmedia_port_p_pjmedia_frame__int value) {
     pjsuaJNI.pjmedia_port_put_frame_set(swigCPtr, this, SWIGTYPE_p_f_p_pjmedia_port_p_pjmedia_frame__int.getCPtr(value));
   }

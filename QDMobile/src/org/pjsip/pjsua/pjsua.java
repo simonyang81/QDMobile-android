@@ -115,10 +115,6 @@ public class pjsua implements pjsuaConstants {
     return pjsuaJNI.handle_events(msec_timeout);
   }
 
-  public synchronized static int register_worker_thread(String name) {
-    return pjsuaJNI.register_worker_thread(name);
-  }
-
   public synchronized static void stop_worker_threads() {
     pjsuaJNI.stop_worker_threads();
   }

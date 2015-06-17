@@ -10,6 +10,7 @@ package org.pjsip.pjsua;
 
 public enum pjsip_redirect_op {
   PJSIP_REDIRECT_REJECT,
+  PJSIP_REDIRECT_ACCEPT_REPLACE,
   PJSIP_REDIRECT_ACCEPT,
   PJSIP_REDIRECT_PENDING,
   PJSIP_REDIRECT_STOP;

@@ -284,6 +284,14 @@ public class pjsua_acc_config {
     return pjsuaJNI.pjsua_acc_config_contact_rewrite_method_get(swigCPtr, this);
   }
 
+  public void setContact_use_src_port(int value) {
+    pjsuaJNI.pjsua_acc_config_contact_use_src_port_set(swigCPtr, this, value);
+  }
+
+  public int getContact_use_src_port() {
+    return pjsuaJNI.pjsua_acc_config_contact_use_src_port_get(swigCPtr, this);
+  }
+
   public void setAllow_via_rewrite(int value) {
     pjsuaJNI.pjsua_acc_config_allow_via_rewrite_set(swigCPtr, this, value);
   }
@@ -496,6 +504,14 @@ public class pjsua_acc_config {
 
   public long getReg_first_retry_interval() {
     return pjsuaJNI.pjsua_acc_config_reg_first_retry_interval_get(swigCPtr, this);
+  }
+
+  public void setReg_retry_random_interval(long value) {
+    pjsuaJNI.pjsua_acc_config_reg_retry_random_interval_set(swigCPtr, this, value);
+  }
+
+  public long getReg_retry_random_interval() {
+    return pjsuaJNI.pjsua_acc_config_reg_retry_random_interval_get(swigCPtr, this);
   }
 
   public void setDrop_calls_on_reg_fail(int value) {

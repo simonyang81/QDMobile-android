@@ -11,7 +11,8 @@ package org.pjsip.pjsua;
 public enum pjsua_call_flag {
   PJSUA_CALL_UNHOLD(pjsuaJNI.PJSUA_CALL_UNHOLD_get()),
   PJSUA_CALL_UPDATE_CONTACT(pjsuaJNI.PJSUA_CALL_UPDATE_CONTACT_get()),
-  PJSUA_CALL_INCLUDE_DISABLED_MEDIA(pjsuaJNI.PJSUA_CALL_INCLUDE_DISABLED_MEDIA_get());
+  PJSUA_CALL_INCLUDE_DISABLED_MEDIA(pjsuaJNI.PJSUA_CALL_INCLUDE_DISABLED_MEDIA_get()),
+  PJSUA_CALL_NO_SDP_OFFER(pjsuaJNI.PJSUA_CALL_NO_SDP_OFFER_get());
 
   public final int swigValue() {
     return swigValue;

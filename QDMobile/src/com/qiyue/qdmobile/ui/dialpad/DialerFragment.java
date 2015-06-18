@@ -227,7 +227,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
 
 //        TODO
 //        callBar.setVideoEnabled(prefsWrapper.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO));
-        callBar.setVideoEnabled(true);
+//        callBar.setVideoEnabled(true);
 
         //switchTextView.setVisibility(Compatibility.isCompatible(11) ? View.GONE : View.VISIBLE);
 
@@ -254,7 +254,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
 //            TODO
 //            callBar.setVideoEnabled(prefsWrapper.getPreferenceBooleanValue(SipConfigManager.USE_VIDEO));
 
-            callBar.setVideoEnabled(true);
+//            callBar.setVideoEnabled(true);
         }
     }
 
@@ -288,16 +288,16 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
             }
 
             // Action dividers
-            subV = v.findViewById(R.id.divider1);
-            if (subV != null) {
-                t.applyBackgroundDrawable(subV, "btn_bar_divider");
-                t.applyLayoutSize(subV, "btn_dial_divider");
-            }
-            subV = v.findViewById(R.id.divider2);
-            if (subV != null) {
-                t.applyBackgroundDrawable(subV, "btn_bar_divider");
-                t.applyLayoutSize(subV, "btn_dial_divider");
-            }
+//            subV = v.findViewById(R.id.divider1);
+//            if (subV != null) {
+//                t.applyBackgroundDrawable(subV, "btn_bar_divider");
+//                t.applyLayoutSize(subV, "btn_dial_divider");
+//            }
+//            subV = v.findViewById(R.id.divider2);
+//            if (subV != null) {
+//                t.applyBackgroundDrawable(subV, "btn_bar_divider");
+//                t.applyLayoutSize(subV, "btn_dial_divider");
+//            }
 
             // Dialpad background
             subV = v.findViewById(R.id.dialPad);

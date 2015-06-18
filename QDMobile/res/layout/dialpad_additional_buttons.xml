@@ -1,50 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
-    <ImageButton
+    <ImageView
         android:id="@+id/dialVideoButton"
-        android:layout_width="0px"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
-        android:layout_weight="0.30"
-        android:src="@drawable/ic_prefs_media_video"
-        android:state_enabled="false" />
+        android:src="@drawable/video_call_btn"
+        android:state_enabled="false"
+        android:layout_toLeftOf="@+id/dialButton"
+        android:padding="10dp"
+        android:layout_marginRight="30dp"
 
-    <View
-        android:id="@+id/divider1"
-        android:layout_width="1dip"
-        android:layout_height="24dip"
-        android:layout_gravity="center_vertical"
-        android:background="@drawable/abs__list_divider_holo_dark" />
+        />
 
-    <ImageButton
+    <!--<View-->
+        <!--android:id="@+id/divider1"-->
+        <!--android:layout_width="1dip"-->
+        <!--android:layout_height="24dip"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:background="@drawable/abs__list_divider_holo_dark" />-->
+
+    <ImageView
         android:id="@+id/dialButton"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.30"
         android:layout_gravity="center_vertical"
-        android:contentDescription="@string/description_dial_button"
-        android:src="@drawable/_ics_dial_btn_call_btn"
-        android:background="@null"
-        android:state_enabled="false" />
+        android:src="@drawable/phone_btn"
+        android:state_enabled="false"
+        android:layout_centerInParent="true"
+        android:padding="10dp"
+        />
 
-    <View
-        android:id="@+id/divider2"
-        android:layout_width="1dip"
-        android:layout_height="24dip"
-        android:layout_gravity="center_vertical"
-        android:background="@drawable/abs__list_divider_holo_dark" />
+    <!--<View-->
+        <!--android:id="@+id/divider2"-->
+        <!--android:layout_width="1dip"-->
+        <!--android:layout_height="24dip"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:background="@drawable/abs__list_divider_holo_dark" />-->
 
-    <ImageButton
+    <ImageView
         android:id="@+id/deleteButton"
-        android:layout_width="0px"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="0.30"
-        android:background="@drawable/draw_btn_base"
         android:contentDescription="@string/description_delete_button"
-        android:src="@drawable/ic_dial_action_delete"
-        android:state_enabled="false" />
+        android:src="@drawable/dial_action_delete_btn"
+        android:layout_toRightOf="@+id/dialButton"
+        android:padding="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_centerVertical="true"
+
+        />
 
 </merge>

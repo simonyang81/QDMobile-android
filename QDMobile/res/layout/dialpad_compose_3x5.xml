@@ -13,11 +13,6 @@
         android:paddingTop="10dip"
             />
 
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/dialpad_vertical_margin"-->
-        <!--android:background="#66000000" />-->
-
     <com.qiyue.qdmobile.widgets.DialerCallBar
         android:id="@+id/dialerCallBar"
         android:layout_width="match_parent"

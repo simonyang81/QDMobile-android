@@ -25,8 +25,6 @@ public abstract class BaseImplementation implements WizardIface {
         parent = aParent;
     }
 
-
-    //Utilities functions
     protected boolean isEmpty(EditTextPreference edt) {
         if (edt.getText() == null) {
             return true;

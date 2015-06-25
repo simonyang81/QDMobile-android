@@ -34,12 +34,7 @@ public class ContactsSearchAdapter extends CursorAdapter implements SectionIndex
     private CharacterStyle highlightStyle = new ForegroundColorSpan(0xFF33B5E5);
 
     public ContactsSearchAdapter(Context context) {
-        // Note that the RecipientsAdapter doesn't support auto-requeries. If we
-        // want to respond to changes in the contacts we're displaying in the drop-down,
-        // code using this adapter would have to add a line such as:
-        //   mRecipientsAdapter.setOnDataSetChangedListener(mDataSetChangedListener);
-        // See MessageFragment for an example.
-        super(context, null, false /* no auto-requery */);
+        super(context, null, false);
         mContext = context;
 
     }

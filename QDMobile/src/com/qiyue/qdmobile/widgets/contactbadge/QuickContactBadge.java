@@ -16,9 +16,9 @@ import java.lang.reflect.Constructor;
 
 public class QuickContactBadge extends FrameLayout {
 
-    private static final String THIS_FILE = "QuickContactBadgeCompat";
-    private ContactBadgeContract badge;
+    private static final String THIS_FILE = QuickContactBadge.class.getSimpleName();
 
+    private ContactBadgeContract badge;
 
     public QuickContactBadge(Context context) {
         this(context, null, 0);

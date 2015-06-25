@@ -24,7 +24,7 @@ import com.qiyue.qdmobile.wizards.WizardUtils;
 
 public class AccountWidgetProvider extends AppWidgetProvider {
 
-    private static final String THIS_FILE = "Widget provider";
+    private static final String THIS_FILE = AccountWidgetProvider.class.getSimpleName();
 
     static ComponentName THIS_APPWIDGET = null;
 

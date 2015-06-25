@@ -22,8 +22,9 @@ import java.util.Map;
 
 public class ShortcutWidgetConfigure extends SherlockListActivity {
 
+    private static final String THIS_FILE = ShortcutWidgetConfigure.class.getSimpleName();
+
     private static final String WIDGET_PREFS = "widget_shortcut_prefs";
-    private static final String THIS_FILE = "ShortcutWidgetConfigure";
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     private static String KEY_TITLE = "title";

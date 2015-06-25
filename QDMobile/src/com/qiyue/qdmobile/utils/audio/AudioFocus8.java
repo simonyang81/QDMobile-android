@@ -10,7 +10,6 @@ import com.qiyue.qdmobile.service.HeadsetButtonReceiver;
 import com.qiyue.qdmobile.service.SipService;
 import com.qiyue.qdmobile.utils.Compatibility;
 
-
 @TargetApi(8)
 public class AudioFocus8 extends AudioFocusWrapper {
 

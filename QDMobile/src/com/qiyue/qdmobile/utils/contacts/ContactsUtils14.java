@@ -27,10 +27,10 @@ public class ContactsUtils14 extends ContactsUtils5 {
 
     @Override
     public Bitmap getContactPhoto(Context ctxt, Uri uri, boolean hiRes, Integer defaultResource) {
-        Bitmap img = null;
+
         InputStream s = ContactsContract.Contacts.openContactPhotoInputStream(
                 ctxt.getContentResolver(), uri, hiRes);
-        img = BitmapFactory.decodeStream(s);
+        Bitmap img = BitmapFactory.decodeStream(s);
 
         if (img == null && defaultResource != null) {
             BitmapDrawable drawableBitmap = ((BitmapDrawable) ctxt.getResources().getDrawable(
@@ -44,7 +44,6 @@ public class ContactsUtils14 extends ContactsUtils5 {
 
     @Override
     public CallerInfo findSelfInfo(Context ctxt) {
-
 
         CallerInfo callerInfo = new CallerInfo();
 

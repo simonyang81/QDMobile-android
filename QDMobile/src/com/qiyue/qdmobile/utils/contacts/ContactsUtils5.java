@@ -47,31 +47,32 @@ import java.util.List;
 @TargetApi(5)
 public class ContactsUtils5 extends ContactsWrapper {
 
-    public static final int CONTACT_ID_INDEX = 1;
-    public static final int TYPE_INDEX = 2;
-    public static final int NUMBER_INDEX = 3;
-    public static final int LABEL_INDEX = 4;
-    public static final int NAME_INDEX = 5;
-
-    private static final String[] PROJECTION_PHONE = {
-            CommonDataKinds.Phone._ID, // 0
-            CommonDataKinds.Phone.CONTACT_ID, // 1
-            CommonDataKinds.Phone.TYPE, // 2
-            CommonDataKinds.Phone.NUMBER, // 3
-            CommonDataKinds.Phone.LABEL, // 4
-            CommonDataKinds.Phone.DISPLAY_NAME, // 5
-    };
-
-    private static final String DISPLAY_NAME_ORDER = Contacts.DISPLAY_NAME + " COLLATE LOCALIZED";
-    private static final String SORT_ORDER = Contacts.TIMES_CONTACTED + " DESC,"
-            + DISPLAY_NAME_ORDER + "," + CommonDataKinds.Phone.TYPE;
     private static final String THIS_FILE = "ContactsUtils5";
 
+//    public static final int CONTACT_ID_INDEX = 1;
+//    public static final int TYPE_INDEX = 2;
+//    public static final int NUMBER_INDEX = 3;
+//    public static final int LABEL_INDEX = 4;
+//    public static final int NAME_INDEX = 5;
+
+//    private static final String[] PROJECTION_PHONE = {
+//            CommonDataKinds.Phone._ID, // 0
+//            CommonDataKinds.Phone.CONTACT_ID, // 1
+//            CommonDataKinds.Phone.TYPE, // 2
+//            CommonDataKinds.Phone.NUMBER, // 3
+//            CommonDataKinds.Phone.LABEL, // 4
+//            CommonDataKinds.Phone.DISPLAY_NAME, // 5
+//    };
+
+//    private static final String DISPLAY_NAME_ORDER = Contacts.DISPLAY_NAME + " COLLATE LOCALIZED";
+//    private static final String SORT_ORDER = Contacts.TIMES_CONTACTED + " DESC,"
+//            + DISPLAY_NAME_ORDER + "," + CommonDataKinds.Phone.TYPE;
+
     public Bitmap getContactPhoto(Context ctxt, Uri uri, boolean hiRes, Integer defaultResource) {
-        Bitmap img = null;
+
         InputStream s = ContactsContract.Contacts.openContactPhotoInputStream(
                 ctxt.getContentResolver(), uri);
-        img = BitmapFactory.decodeStream(s);
+        Bitmap img = BitmapFactory.decodeStream(s);
 
         if (img == null && defaultResource != null) {
             BitmapDrawable drawableBitmap = ((BitmapDrawable) ctxt.getResources().getDrawable(
@@ -93,13 +94,11 @@ public class ContactsUtils5 extends ContactsWrapper {
                     CommonDataKinds.Phone.CONTENT_URI,
                     null,
                     CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                    new String[]{
-                            id
-                    }, null);
+                    new String[] {id},
+                    null);
             while (pCur.moveToNext()) {
                 phones.add(new Phone(
-                        pCur.getString(pCur
-                                .getColumnIndex(CommonDataKinds.Phone.NUMBER)),
+                        pCur.getString(pCur.getColumnIndex(CommonDataKinds.Phone.NUMBER)),
                         pCur.getString(pCur.getColumnIndex(CommonDataKinds.Phone.TYPE))
                 ));
 
@@ -112,20 +111,16 @@ public class ContactsUtils5 extends ContactsWrapper {
             pCur = ctxt.getContentResolver().query(
                     Data.CONTENT_URI,
                     null,
-                    Data.CONTACT_ID + " = ? AND " + Data.MIMETYPE
-                            + " = ?",
-                    new String[]{
-                            id, CommonDataKinds.Im.CONTENT_ITEM_TYPE
-                    }, null);
+                    Data.CONTACT_ID + " = ? AND " + Data.MIMETYPE + " = ?",
+                    new String[]{id, CommonDataKinds.Im.CONTENT_ITEM_TYPE},
+                    null);
             while (pCur.moveToNext()) {
                 // Could also use some other IM type but may be confusing. Are there
                 // phones with no 'custom' IM type?
                 if (pCur.getInt(pCur.getColumnIndex(CommonDataKinds.Im.PROTOCOL)) == CommonDataKinds.Im.PROTOCOL_CUSTOM) {
-                    String proto = pCur.getString(pCur
-                            .getColumnIndex(CommonDataKinds.Im.CUSTOM_PROTOCOL));
+                    String proto = pCur.getString(pCur.getColumnIndex(CommonDataKinds.Im.CUSTOM_PROTOCOL));
                     if (SipManager.PROTOCOL_SIP.equalsIgnoreCase(proto) || SipManager.PROTOCOL_CSIP.equalsIgnoreCase(proto)) {
-                        phones.add(new Phone(pCur.getString(pCur
-                                .getColumnIndex(CommonDataKinds.Im.DATA)), SipManager.PROTOCOL_SIP));
+                        phones.add(new Phone(pCur.getString(pCur.getColumnIndex(CommonDataKinds.Im.DATA)), SipManager.PROTOCOL_SIP));
                     }
                 }
 
@@ -138,14 +133,10 @@ public class ContactsUtils5 extends ContactsWrapper {
             pCur = ctxt.getContentResolver().query(
                     Data.CONTENT_URI,
                     null,
-                    Data.CONTACT_ID + " = ? AND " + Data.MIMETYPE
-                            + " = ?",
-                    new String[]{
-                            id, CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE
-                    }, null);
+                    Data.CONTACT_ID + " = ? AND " + Data.MIMETYPE + " = ?",
+                    new String[]{id, CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE},
+                    null);
             while (pCur.moveToNext()) {
-                // Could also use some other IM type but may be confusing. Are
-                // there phones with no 'custom' IM type?
                 phones.add(new Phone(pCur.getString(pCur
                         .getColumnIndex(ContactsContract.Data.DATA1)), SipManager.PROTOCOL_SIP));
             }
@@ -206,11 +197,10 @@ public class ContactsUtils5 extends ContactsWrapper {
                     callerInfo.phoneNumber = cv.getAsString(PhoneLookup.NUMBER);
 
                     if (cv.containsKey(PhoneLookup.TYPE) && cv.containsKey(PhoneLookup.LABEL)) {
-                        callerInfo.numberType = cv.getAsInteger(PhoneLookup.TYPE);
-                        callerInfo.numberLabel = cv.getAsString(PhoneLookup.LABEL);
+                        callerInfo.numberType   = cv.getAsInteger(PhoneLookup.TYPE);
+                        callerInfo.numberLabel  = cv.getAsString(PhoneLookup.LABEL);
                         callerInfo.phoneLabel = (String) android.provider.ContactsContract.CommonDataKinds.Phone
-                                .getTypeLabel(ctxt.getResources(), callerInfo.numberType,
-                                        callerInfo.numberLabel);
+                                .getTypeLabel(ctxt.getResources(), callerInfo.numberType, callerInfo.numberLabel);
                     }
 
                     if (cv.containsKey(PhoneLookup._ID)) {
@@ -310,12 +300,10 @@ public class ContactsUtils5 extends ContactsWrapper {
         String query = Contacts.DISPLAY_NAME + " IS NOT NULL "
                 + " AND (" + whereSipUriClause + ") AND " + Data.DATA1 + "=?";
 
-
         Cursor cursor = ctxt.getContentResolver().query(uri,
                 projection, query,
                 new String[]{sipUri},
                 Data.DISPLAY_NAME + " ASC");
-
 
         if (cursor != null) {
             try {
@@ -370,7 +358,6 @@ public class ContactsUtils5 extends ContactsWrapper {
                 cursor.close();
             }
         }
-
 
         return callerInfo;
     }
@@ -724,12 +711,7 @@ public class ContactsUtils5 extends ContactsWrapper {
             builder.withValue(StatusUpdates.STATUS_ICON, R.drawable.ic_launcher_phone);
             builder.withValue(StatusUpdates.STATUS_TIMESTAMP, System.currentTimeMillis());
             operationList.add(builder.build());
-            /*
-             * builder = ContentProviderOperation.newUpdate(Data.CONTENT_URI);
-             * builder.withSelection(Data._ID + " = '" + dataId + "'", null);
-             * builder.withValue(CommonDataKinds.Im.PRESENCE, presence);
-             * operationList.add(builder.build());
-             */
+
             try {
                 ctxt.getContentResolver().applyBatch(ContactsContract.AUTHORITY, operationList);
             } catch (RemoteException e) {
@@ -738,23 +720,6 @@ public class ContactsUtils5 extends ContactsWrapper {
                 Log.e(THIS_FILE, "Can't update status", e);
             }
 
-            // }
-
-            /*
-             * Uri dataUri = Data.CONTENT_URI; String dataQuery = Data.MIMETYPE
-             * + "='" + CommonDataKinds.Im.CONTENT_ITEM_TYPE + "' " + " AND " +
-             * CommonDataKinds.Im.PROTOCOL + "=" +
-             * CommonDataKinds.Im.PROTOCOL_CUSTOM + " AND " +
-             * CommonDataKinds.Im.CUSTOM_PROTOCOL + "='csip'" + " AND " +
-             * CommonDataKinds.Im.DATA + "=?"; ContentValues presenceValues =
-             * new ContentValues(); int val = CommonDataKinds.Im.OFFLINE; switch
-             * (presStatus) { case ONLINE: val = CommonDataKinds.Im.AVAILABLE;
-             * break; case OFFLINE: // TODO -- is that good? val =
-             * CommonDataKinds.Im.AWAY; break; default: break; }
-             * presenceValues.put(CommonDataKinds.Im.PRESENCE_STATUS, val);
-             * ctxt.getContentResolver().update(dataUri, presenceValues,
-             * dataQuery, new String[] {buddyUri});
-             */
         }
     }
 

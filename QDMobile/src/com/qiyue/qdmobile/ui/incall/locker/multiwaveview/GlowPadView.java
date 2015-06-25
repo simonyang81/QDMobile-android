@@ -47,7 +47,6 @@ import android.os.Vibrator;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -55,6 +54,7 @@ import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.LinearLayout.LayoutParams;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.ui.incall.locker.IOnLeftRightChoice;
 import com.qiyue.qdmobile.ui.incall.locker.IOnLeftRightChoice.IOnLeftRightProvider;

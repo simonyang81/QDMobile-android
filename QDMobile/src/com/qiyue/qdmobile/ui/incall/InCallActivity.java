@@ -32,6 +32,7 @@ import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.ISipService;
 import com.qiyue.qdmobile.api.MediaState;
@@ -50,7 +51,6 @@ import com.qiyue.qdmobile.ui.incall.locker.ScreenLocker;
 import com.qiyue.qdmobile.utils.CallsUtils;
 import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.DialingFeedback;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.PreferencesProviderWrapper;
 import com.qiyue.qdmobile.utils.Theme;
 import com.qiyue.qdmobile.utils.keyguard.KeyguardWrapper;

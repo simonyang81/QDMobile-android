@@ -14,8 +14,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import android.widget.ImageView;
+
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.Theme;
 
 import java.util.HashMap;
@@ -141,7 +142,7 @@ public class Dialpad extends FrameLayout implements OnClickListener {
 			
 			// Src of button
 			Drawable src = t.getDrawableResource("dial_num_"+DIGITS_NAMES.get(buttonId));
-			if(src != null) {
+			if (src != null) {
 				b.setImageDrawable(src);
 			}
 			

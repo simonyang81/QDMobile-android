@@ -13,10 +13,10 @@ import android.support.v4.view.ViewPager;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipConfigManager;
 import com.qiyue.qdmobile.utils.Constants;
-import com.qiyue.qdmobile.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,8 +146,7 @@ public class Codecs extends SherlockFragmentActivity {
             mActionBar.setSelectedNavigationItem(position);
 
             if (mCurrentPosition == position) {
-                Log.w(THIS_FILE, "Previous position and next position became same (" + position
-                        + ")");
+                Log.w(THIS_FILE, "Previous position and next position became same (" + position + ")");
             }
 
             mNextPosition = position;

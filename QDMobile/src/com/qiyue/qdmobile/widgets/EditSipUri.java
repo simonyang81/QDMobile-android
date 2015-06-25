@@ -37,10 +37,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.models.Filter;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.contacts.ContactsSearchAdapter;
 import com.qiyue.qdmobile.widgets.AccountChooserButton.OnAccountChangeListener;
 

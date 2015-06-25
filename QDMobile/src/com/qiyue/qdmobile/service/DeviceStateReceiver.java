@@ -1,24 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.service;
 
 import android.content.BroadcastReceiver;
@@ -28,11 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.api.SipManager;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.utils.CallHandlerPlugin;
 import com.qiyue.qdmobile.utils.ExtraPlugins;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.NightlyUpdater;
 import com.qiyue.qdmobile.utils.PhoneCapabilityTester;
 import com.qiyue.qdmobile.utils.PreferencesProviderWrapper;
@@ -40,8 +19,8 @@ import com.qiyue.qdmobile.utils.RewriterPlugin;
 
 public class DeviceStateReceiver extends BroadcastReceiver {
 
-    //private static final String ACTION_DATA_STATE_CHANGED = "android.intent.action.ANY_DATA_STATE";
-    private static final String THIS_FILE = "Device State";
+    private static final String THIS_FILE = DeviceStateReceiver.class.getSimpleName();
+
     public static final String APPLY_NIGHTLY_UPLOAD = "com.csipsimple.action.APPLY_NIGHTLY";
 
     @Override

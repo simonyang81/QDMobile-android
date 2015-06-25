@@ -4,8 +4,8 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
+import com.github.snowdream.android.util.Log;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.ResultPointCallback;
@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 final class DecodeThread extends Thread {
+
+    private static final String TAG = DecodeThread.class.getSimpleName();
 
     public static final String BARCODE_BITMAP = "barcode_bitmap";
     public static final String BARCODE_SCALED_FACTOR = "barcode_scaled_factor";
@@ -69,7 +71,7 @@ final class DecodeThread extends Thread {
             hints.put(DecodeHintType.CHARACTER_SET, characterSet);
         }
         hints.put(DecodeHintType.NEED_RESULT_POINT_CALLBACK, resultPointCallback);
-        Log.i("DecodeThread", "Hints: " + hints);
+        Log.i(TAG, "Hints: " + hints);
     }
 
     Handler getHandler() {

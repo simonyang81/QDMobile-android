@@ -1,24 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.utils;
 
 import android.content.Context;
@@ -26,6 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+
+import com.github.snowdream.android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -112,8 +93,7 @@ public class CollectLogs {
                 log.append(LINE_SEPARATOR); 
             }
             
-        } 
-        catch (IOException e){
+        } catch (IOException e){
             Log.e(THIS_FILE, "Collect logs failed : ", e);//$NON-NLS-1$
             log.append("Unable to get logs : " + e.toString());
         }
@@ -160,7 +140,7 @@ public class CollectLogs {
         result += " version : ";
 		
 		PackageInfo pinfo = PreferencesProviderWrapper.getCurrentPackageInfos(ctx);
-		if(pinfo != null) {
+		if (pinfo != null) {
 			result += pinfo.versionName + " r" + pinfo.versionCode;
 		}
 		return result;
@@ -170,13 +150,10 @@ public class CollectLogs {
 	
 	public static Intent getLogReportIntent(String userComment, Context ctx) {
 		LogResult logs = getLogs(ctx);
-		
-		
+
 		Intent sendIntent = new Intent(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_SUBJECT, "CSipSimple Error-Log report");
         sendIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { CustomDistribution.getSupportEmail() });
-        
-        
         
         StringBuilder log = new StringBuilder();
         log.append(userComment);
@@ -189,27 +166,10 @@ public class CollectLogs {
         log.append(logs.head);
         
 
-        if(logs.file != null) {
+        if (logs.file != null) {
         	sendIntent.putExtra( Intent.EXTRA_STREAM, Uri.fromFile(logs.file) );
-        	/*
-        	BufferedReader buf;
-			String line;
-			try {
-				buf = new BufferedReader(new FileReader(logs.second));
-			
-				while( (line = buf.readLine()) != null ) {
-					 log.append(line);
-				}
-			
-			} catch (FileNotFoundException e) {
-				Log.e(THIS_FILE, "Impossible to open log file", e);
-			} catch (IOException e) {
-				Log.e(THIS_FILE, "Impossible to read log file", e);
-			}
-			*/
         }
         
-
         log.append(LINE_SEPARATOR);
         log.append(LINE_SEPARATOR);
         log.append(userComment);

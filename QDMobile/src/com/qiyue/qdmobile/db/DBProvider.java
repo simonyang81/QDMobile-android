@@ -1,23 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
 package com.qiyue.qdmobile.db;
 
 import android.content.ContentProvider;
@@ -36,13 +16,13 @@ import android.provider.CallLog;
 import android.support.v4.database.DatabaseUtilsCompat;
 import android.text.TextUtils;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.api.SipManager;
 import com.qiyue.qdmobile.api.SipMessage;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.api.SipProfileState;
 import com.qiyue.qdmobile.db.DBAdapter.DatabaseHelper;
 import com.qiyue.qdmobile.models.Filter;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.backup.BackupWrapper;
 
 import java.util.ArrayList;
@@ -357,12 +337,12 @@ public class DBProvider extends ContentProvider {
 
         getContext().getContentResolver().notifyChange(regUri, null);
 
-        if(matched == ACCOUNTS_ID || matched == ACCOUNTS_STATUS_ID) {
+        if (matched == ACCOUNTS_ID || matched == ACCOUNTS_STATUS_ID) {
         	long rowId = ContentUris.parseId(uri);
-        	if(rowId >= 0) {
-        	    if(matched == ACCOUNTS_ID) {
+        	if (rowId >= 0) {
+        	    if (matched == ACCOUNTS_ID) {
         	        broadcastAccountDelete(rowId);
-        	    }else if(matched == ACCOUNTS_STATUS_ID) {
+        	    } else if (matched == ACCOUNTS_STATUS_ID) {
         	        broadcastRegistrationChange(rowId);
         	    }
         	}
@@ -370,9 +350,9 @@ public class DBProvider extends ContentProvider {
         if (matched == FILTERS || matched == FILTERS_ID) {
             Filter.resetCache();
         }
-        if(matched == ACCOUNTS_STATUS && oldRegistrationsAccounts != null) {
-            for(Long accId : oldRegistrationsAccounts) {
-                if(accId != null) {
+        if (matched == ACCOUNTS_STATUS && oldRegistrationsAccounts != null) {
+            for (Long accId : oldRegistrationsAccounts) {
+                if (accId != null) {
                     broadcastRegistrationChange(accId);
                 }
             }
@@ -421,7 +401,7 @@ public class DBProvider extends ContentProvider {
 				ContentValues cv = ps.getAsContentValue();
 				cv.put(SipProfileState.ACCOUNT_ID, id);
 				profilesStatus.put(id, cv);
-				Log.d(THIS_FILE, "Added "+cv);
+				Log.d(THIS_FILE, "Added " + cv);
 			}
             getContext().getContentResolver().notifyChange(uri, null);
 			return uri;
@@ -452,15 +432,15 @@ public class DBProvider extends ContentProvider {
             Uri retUri = ContentUris.withAppendedId(baseInsertedUri, rowId);
             getContext().getContentResolver().notifyChange(retUri, null);
             
-            if(matched == ACCOUNTS || matched == ACCOUNTS_ID) {
+            if (matched == ACCOUNTS || matched == ACCOUNTS_ID) {
             	broadcastAccountChange(rowId);
             }
-            if(matched == CALLLOGS || matched == CALLLOGS_ID) {
+            if (matched == CALLLOGS || matched == CALLLOGS_ID) {
             	db.delete(SipManager.CALLLOGS_TABLE_NAME, CallLog.Calls._ID + " IN " +
             			"(SELECT "+CallLog.Calls._ID+" FROM "+SipManager.CALLLOGS_TABLE_NAME+" ORDER BY " + 
             				CallLog.Calls.DEFAULT_SORT_ORDER + " LIMIT -1 OFFSET 500)", null);
             }
-            if(matched == ACCOUNTS_STATUS || matched == ACCOUNTS_STATUS_ID) {
+            if (matched == ACCOUNTS_STATUS || matched == ACCOUNTS_STATUS_ID) {
                 broadcastRegistrationChange(rowId);
             }
             if (matched == FILTERS || matched == FILTERS_ID) {
@@ -491,10 +471,10 @@ public class DBProvider extends ContentProvider {
         // Security check to avoid data retrieval from outside
         int remoteUid = Binder.getCallingUid();
         int selfUid = android.os.Process.myUid();
-        if(remoteUid != selfUid) {
+        if (remoteUid != selfUid) {
 	        if (type == ACCOUNTS || type == ACCOUNTS_ID) {
-				for(String proj : projection) {
-	        		if(proj.toLowerCase().contains(SipProfile.FIELD_DATA) || proj.toLowerCase().contains("*")) {
+				for (String proj : projection) {
+	        		if (proj.toLowerCase().contains(SipProfile.FIELD_DATA) || proj.toLowerCase().contains("*")) {
 	        			throw new SecurityException("Password not readable from external apps");
 	        		}
 	        	}
@@ -502,7 +482,7 @@ public class DBProvider extends ContentProvider {
         }
         // Security check to avoid project of invalid fields or lazy projection
         List<String> possibles = getPossibleFieldsForType(type);
-        if(possibles == null) {
+        if (possibles == null) {
             throw new SecurityException("You are asking wrong values " + type);
         }
         checkProjection(possibles, projection);
@@ -513,7 +493,7 @@ public class DBProvider extends ContentProvider {
         switch (type) {
             case ACCOUNTS:
                 qb.setTables(SipProfile.ACCOUNTS_TABLE_NAME);
-                if(sortOrder == null) {
+                if (sortOrder == null) {
                 	finalSortOrder = SipProfile.FIELD_PRIORITY + " ASC";
                 }
                 break;
@@ -524,7 +504,7 @@ public class DBProvider extends ContentProvider {
                 break;
             case CALLLOGS:
                 qb.setTables(SipManager.CALLLOGS_TABLE_NAME);
-                if(sortOrder == null) {
+                if (sortOrder == null) {
                 	finalSortOrder = CallLog.Calls.DATE + " DESC";
                 }
                 break;
@@ -546,7 +526,7 @@ public class DBProvider extends ContentProvider {
                 break;
             case MESSAGES:
                 qb.setTables(SipMessage.MESSAGES_TABLE_NAME);
-                if(sortOrder == null) {
+                if (sortOrder == null) {
                     finalSortOrder = SipMessage.FIELD_DATE + " DESC";
                 }
                 break;
@@ -557,7 +537,7 @@ public class DBProvider extends ContentProvider {
                 break;
             case THREADS:
                 qb.setTables(SipMessage.MESSAGES_TABLE_NAME);
-                if(sortOrder == null) {
+                if (sortOrder == null) {
                     finalSortOrder = SipMessage.FIELD_DATE + " DESC";
                 }
                 projection = new String[]{
@@ -584,7 +564,7 @@ public class DBProvider extends ContentProvider {
                 break;
             case THREADS_ID:
                 qb.setTables(SipMessage.MESSAGES_TABLE_NAME);
-                if(sortOrder == null) {
+                if (sortOrder == null) {
                     finalSortOrder = SipMessage.FIELD_DATE + " DESC";
                 }
                 projection = new String[]{
@@ -607,13 +587,13 @@ public class DBProvider extends ContentProvider {
             	synchronized (profilesStatus) {
             		ContentValues[] cvs = new ContentValues[profilesStatus.size()];
             		int i = 0;
-            		for(ContentValues  ps : profilesStatus.values()) {
+            		for (ContentValues  ps : profilesStatus.values()) {
             			cvs[i] = ps;
             			i++;
             		}
             		c = getCursor(cvs);
 				}
-            	if(c != null) {
+            	if (c != null) {
             		c.setNotificationUri(getContext().getContentResolver(), uri);
             	}
                 return c;
@@ -621,7 +601,7 @@ public class DBProvider extends ContentProvider {
             	id = ContentUris.parseId(uri);
             	synchronized (profilesStatus) {
             		ContentValues cv = profilesStatus.get(id);
-            		if(cv == null) {
+            		if (cv == null) {
             			return null;
             		}
             		c = getCursor(new ContentValues[] {cv});
@@ -682,9 +662,9 @@ public class DBProvider extends ContentProvider {
                 break;
             case ACCOUNTS_STATUS_ID:
     			long id = ContentUris.parseId(uri);
-    			synchronized (profilesStatus){
+    			synchronized (profilesStatus) {
     				SipProfileState ps = new SipProfileState();
-    				if(profilesStatus.containsKey(id)) {
+    				if (profilesStatus.containsKey(id)) {
     					ContentValues currentValues = profilesStatus.get(id);
     					ps.createFromContentValue(currentValues);
     				}
@@ -692,7 +672,7 @@ public class DBProvider extends ContentProvider {
     				ContentValues cv = ps.getAsContentValue();
     				cv.put(SipProfileState.ACCOUNT_ID, id);
     				profilesStatus.put(id, cv);
-    				Log.d(THIS_FILE, "Updated "+cv);
+    				Log.d(THIS_FILE, "Updated " + cv);
     			}
     			count = 1;
     			break;
@@ -717,7 +697,7 @@ public class DBProvider extends ContentProvider {
                         doBroadcast = false;
                     }
                 }
-                if(doBroadcast) {
+                if (doBroadcast) {
                     broadcastAccountChange(rowId);
                 }
             } else if (matched == ACCOUNTS_STATUS_ID) {
@@ -731,15 +711,13 @@ public class DBProvider extends ContentProvider {
         return count;
 	}
 	
-	
-	
-	
+
 	/**
 	 * Build a {@link Cursor} with a single row that contains all values
 	 * provided through the given {@link ContentValues}.
 	 */
 	private Cursor getCursor(ContentValues[] contentValues) {
-		if(contentValues.length > 0) {
+		if (contentValues.length > 0) {
 	        final Set<Entry<String, Object>> valueSet = contentValues[0].valueSet();
 	        int colSize = valueSet.size();
 	        final String[] keys = new String[colSize];
@@ -830,9 +808,9 @@ public class DBProvider extends ContentProvider {
 	}
 	
 	private static void checkSelection(List<String> possibles, String selection) {
-        if(selection != null) {
+        if (selection != null) {
             String cleanSelection = selection.toLowerCase();
-            for(String field : possibles) {
+            for (String field : possibles) {
                 cleanSelection = cleanSelection.replace(field, "");
             }
             cleanSelection = cleanSelection.replaceAll(" in \\([0-9 ,]+\\)", "");
@@ -840,18 +818,18 @@ public class DBProvider extends ContentProvider {
             cleanSelection = cleanSelection.replaceAll(" or ", "");
             cleanSelection = cleanSelection.replaceAll("[0-9]+", "");
             cleanSelection = cleanSelection.replaceAll("[=? ]", "");
-            if(cleanSelection.length() > 0) {
+            if (cleanSelection.length() > 0) {
                 throw new SecurityException("You are selecting wrong thing " + cleanSelection);
             }
         }
 	}
 	
 	private static void checkProjection(List<String> possibles, String[] projection) {
-        if(projection != null) {
+        if (projection != null) {
             // Ensure projection is valid
-            for(String proj : projection) {
+            for (String proj : projection) {
                 proj = proj.replaceAll(" AS [a-zA-Z0-9_]+$", "");
-                if(!possibles.contains(proj)) {
+                if (!possibles.contains(proj)) {
                     throw new SecurityException("You are asking wrong values " + proj);
                 }
             }

@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.*;
+
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.ISipService;
 import com.qiyue.qdmobile.api.SipMessage;
@@ -29,7 +31,6 @@ import com.qiyue.qdmobile.service.SipNotifications;
 import com.qiyue.qdmobile.service.SipService;
 import com.qiyue.qdmobile.ui.PickupSipUri;
 import com.qiyue.qdmobile.utils.Constants;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.SmileyParser;
 import com.qiyue.qdmobile.utils.clipboard.ClipboardWrapper;
 
@@ -297,26 +298,6 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
         mAdapter.swapCursor(null);
     }
 
-
-//    // Options
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//
-//        int actionRoom = getResources().getBoolean(R.bool.menu_in_bar) ? MenuItem.SHOW_AS_ACTION_IF_ROOM : MenuItem.SHOW_AS_ACTION_NEVER;
-//        MenuItem addContactMenu = menu.add(R.string.menu_add_to_contacts);
-//        addContactMenu.setIcon(R.drawable.ic_add_contact_holo_dark).setShowAsAction(actionRoom);
-//        addContactMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                Intent it = ContactsWrapper.getInstance().getAddContactIntent(null, remoteFrom);
-//                startActivity(it);
-//                return true;
-//            }
-//        });
-//    }
-
-    // Context menu
     public static final int MENU_COPY = ContextMenu.FIRST;
 
     public void onCreateContextMenu(ContextMenu menu, View v,

@@ -8,17 +8,16 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.format.DateUtils;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.snowdream.android.util.Log;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipMessage;
 import com.qiyue.qdmobile.api.SipUri;
 import com.qiyue.qdmobile.models.CallerInfo;
-import com.qiyue.qdmobile.utils.ContactsAsyncHelper;
 
 public class ConversationsAdapter extends SimpleCursorAdapter {
 

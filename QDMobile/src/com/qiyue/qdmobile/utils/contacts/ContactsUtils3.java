@@ -39,10 +39,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipManager;
 import com.qiyue.qdmobile.models.CallerInfo;
-import com.qiyue.qdmobile.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +78,8 @@ public class ContactsUtils3 extends ContactsWrapper {
     public Bitmap getContactPhoto(Context ctxt, Uri uri, boolean hiRes, Integer defaultResource) {
         Bitmap img = null;
         try {
-            img = People.loadContactPhoto(ctxt, uri, defaultResource != null ? defaultResource : R.drawable.ic_contact_picture_holo_dark, null);
+            img = People.loadContactPhoto(ctxt, uri, defaultResource != null ?
+                    defaultResource : R.drawable.ic_contact_picture_holo_dark, null);
         } catch (IllegalArgumentException e) {
             Log.w("Contact3", "Failed to find contact photo");
         }

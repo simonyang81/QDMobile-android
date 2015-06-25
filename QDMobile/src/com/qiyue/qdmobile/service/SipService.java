@@ -31,6 +31,9 @@ import android.text.TextUtils;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
+import com.baidu.location.LocationClient;
+import com.github.snowdream.android.util.Log;
+import com.qiyue.qdmobile.QDMobileApplication;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.ISipConfiguration;
 import com.qiyue.qdmobile.api.ISipService;
@@ -55,7 +58,6 @@ import com.qiyue.qdmobile.utils.Compatibility;
 import com.qiyue.qdmobile.utils.CustomDistribution;
 import com.qiyue.qdmobile.utils.ExtraPlugins;
 import com.qiyue.qdmobile.utils.ExtraPlugins.DynActivityPlugin;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.PreferencesProviderWrapper;
 import com.qiyue.qdmobile.utils.PreferencesWrapper;
 
@@ -70,7 +72,6 @@ import java.util.regex.Pattern;
 
 public class SipService extends Service {
 
-	// static boolean creating = false;
 	private static final String THIS_FILE = SipService.class.getSimpleName();
 
 	private SipWakeLock sipWakeLock;
@@ -79,7 +80,8 @@ public class SipService extends Service {
 	
 	// For video testing -- TODO : remove
 	private static SipService singleton = null;
-	
+
+	private LocationClient mLocationClient;
 
 	// Implement public interface for the service
 	private final ISipService.Stub binder = new ISipService.Stub() {
@@ -91,6 +93,7 @@ public class SipService extends Service {
 			SipService.this.enforceCallingOrSelfPermission(SipManager.PERMISSION_USE_SIP, null);
 			Log.d(THIS_FILE, "Start required from third party app/serv");
 			getExecutor().execute(new StartRunnable());
+
 		}
 
         /**
@@ -1008,9 +1011,14 @@ public class SipService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		singleton = this;
-		Log.setLogLevel(4);
 
 		Log.i(THIS_FILE, "Create SIP Service");
+
+		mLocationClient = ((QDMobileApplication) getApplication()).mLocationClient;
+		if (mLocationClient != null && mLocationClient.isStarted() == false) {
+			mLocationClient.start();
+		}
+
 		prefsWrapper = new PreferencesProviderWrapper(this);
 
 		telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -1036,6 +1044,11 @@ public class SipService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 		Log.i(THIS_FILE, "Destroying SIP Service");
+
+		if (mLocationClient != null) {
+			mLocationClient.stop();
+		}
+
 		unregisterBroadcasts();
 		unregisterServiceBroadcasts();
 		notificationManager.onServiceDestroy();

@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.actionbarsherlock.view.Menu;
+import com.github.snowdream.android.util.Log;
 import com.google.gson.Gson;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipManager;
@@ -20,7 +21,6 @@ import com.qiyue.qdmobile.models.Filter;
 import com.qiyue.qdmobile.models.ZXingAccountJSON;
 import com.qiyue.qdmobile.ui.prefs.GenericPrefs;
 import com.qiyue.qdmobile.utils.Constants;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.PreferencesWrapper;
 import com.qiyue.qdmobile.wizards.WizardUtils.WizardInfo;
 
@@ -29,12 +29,12 @@ import java.util.UUID;
 
 public class BasePrefsWizard extends GenericPrefs {
 	
-	public static final int SAVE_MENU = Menu.FIRST + 1;
-	public static final int TRANSFORM_MENU = Menu.FIRST + 2;
-	public static final int FILTERS_MENU = Menu.FIRST + 3;
-	public static final int DELETE_MENU = Menu.FIRST + 4;
+	public static final int SAVE_MENU 		= Menu.FIRST + 1;
+	public static final int TRANSFORM_MENU 	= Menu.FIRST + 2;
+	public static final int FILTERS_MENU 	= Menu.FIRST + 3;
+	public static final int DELETE_MENU 	= Menu.FIRST + 4;
 
-	private static final String THIS_FILE = "Base Prefs wizard";
+	private static final String THIS_FILE = BasePrefsWizard.class.getSimpleName();
 
 	protected SipProfile account = null;
 	private Button saveButton;
@@ -162,24 +162,12 @@ public class BasePrefsWizard extends GenericPrefs {
 		saveButton.setEnabled(wizard.canSave());
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		menu.add(Menu.NONE, SAVE_MENU, Menu.NONE, R.string.save).setIcon(android.R.drawable.ic_menu_save);
-//		if (account.id != SipProfile.INVALID_ID) {
-//			menu.add(Menu.NONE, TRANSFORM_MENU, Menu.NONE, R.string.choose_wizard).setIcon(android.R.drawable.ic_menu_edit);
-//			menu.add(Menu.NONE, FILTERS_MENU, Menu.NONE, R.string.filters).setIcon(R.drawable.ic_menu_filter);
-//			menu.add(Menu.NONE, DELETE_MENU, Menu.NONE, R.string.delete_account).setIcon(android.R.drawable.ic_menu_delete);
-//		}
-//		return super.onCreateOptionsMenu(menu);
-//	}
-
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.findItem(SAVE_MENU).setVisible(wizard.canSave());
 
 		return super.onPrepareOptionsMenu(menu);
 	}
-
 
     private static final int CHOOSE_WIZARD = 0;
     private static final int MODIFY_FILTERS = CHOOSE_WIZARD + 1;
@@ -192,39 +180,6 @@ public class BasePrefsWizard extends GenericPrefs {
         return currentActivityCode;
     }
 	
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		switch (item.getItemId()) {
-//		case SAVE_MENU:
-//			saveAndFinish();
-//			return true;
-//		case TRANSFORM_MENU:
-//			startActivityForResult(new Intent(this, WizardChooser.class), CHOOSE_WIZARD);
-//			return true;
-//		case DELETE_MENU:
-//			if (account.id != SipProfile.INVALID_ID) {
-//				getContentResolver().delete(ContentUris.withAppendedId(SipProfile.ACCOUNT_ID_URI_BASE, account.id), null, null);
-//				setResult(RESULT_OK, getIntent());
-//				finish();
-//			}
-//			return true;
-//		case FILTERS_MENU:
-//			if (account.id != SipProfile.INVALID_ID) {
-//				Intent it = new Intent(this, AccountFilters.class);
-//				it.putExtra(SipProfile.FIELD_ID, account.id);
-//				it.putExtra(SipProfile.FIELD_DISPLAY_NAME, account.display_name);
-//				it.putExtra(SipProfile.FIELD_WIZARD, account.wizard);
-//				startActivityForResult(it, MODIFY_FILTERS);
-//				return true;
-//			}
-//			break;
-//		default:
-//			break;
-//		}
-//		return super.onOptionsItemSelected(item);
-//	}
-
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);

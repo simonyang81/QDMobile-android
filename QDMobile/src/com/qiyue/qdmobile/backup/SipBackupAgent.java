@@ -5,7 +5,7 @@ import android.app.backup.BackupAgentHelper;
 import android.app.backup.BackupDataInput;
 import android.os.ParcelFileDescriptor;
 
-import com.qiyue.qdmobile.utils.Log;
+import com.github.snowdream.android.util.Log;
 
 import java.io.IOException;
 

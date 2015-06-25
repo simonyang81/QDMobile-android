@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.qiyue.qdmobile.utils.Log;
+import com.github.snowdream.android.util.Log;
 
 public class Columns {
 

@@ -6,11 +6,11 @@ import android.preference.Preference;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.models.Filter;
 import com.qiyue.qdmobile.ui.prefs.GenericPrefs;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.PreferencesWrapper;
 import com.qiyue.qdmobile.wizards.BasePrefsWizard;
 import com.qiyue.qdmobile.wizards.WizardIface;

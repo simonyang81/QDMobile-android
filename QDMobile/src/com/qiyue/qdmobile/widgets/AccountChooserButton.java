@@ -22,6 +22,7 @@ import com.actionbarsherlock.internal.view.menu.MenuBuilder;
 import com.actionbarsherlock.internal.view.menu.MenuPopupHelper;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.utils.AccountListUtils;
@@ -29,7 +30,6 @@ import com.qiyue.qdmobile.utils.AccountListUtils.AccountStatusDisplay;
 import com.qiyue.qdmobile.utils.CallHandlerPlugin;
 import com.qiyue.qdmobile.utils.CallHandlerPlugin.OnLoadListener;
 import com.qiyue.qdmobile.utils.Compatibility;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.wizards.WizardUtils;
 
 import java.util.HashSet;

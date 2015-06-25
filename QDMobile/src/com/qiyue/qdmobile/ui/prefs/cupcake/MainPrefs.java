@@ -1,24 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.ui.prefs.cupcake;
 
 import android.content.Context;
@@ -36,11 +15,11 @@ import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipManager;
 import com.qiyue.qdmobile.ui.prefs.PrefsFilters;
 import com.qiyue.qdmobile.ui.prefs.PrefsLogic;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.PreferencesWrapper;
 
 import java.util.ArrayList;
@@ -48,7 +27,7 @@ import java.util.List;
 
 public class MainPrefs extends SherlockListActivity {
 	
-	private static final String THIS_FILE = "Main prefs";
+	private static final String THIS_FILE = MainPrefs.class.getSimpleName();
 	private PrefGroupAdapter adapter;
 	
 	private PreferencesWrapper prefsWrapper;
@@ -90,7 +69,7 @@ public class MainPrefs extends SherlockListActivity {
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Log.w(THIS_FILE, "Click at index "+position+" id "+id);
+		Log.w(THIS_FILE, "Click at index " + position + " id " + id);
 		super.onListItemClick(l, v, position, id);
 		
 		PrefGroup pref_gp = adapter.getItem(position);
@@ -169,7 +148,7 @@ public class MainPrefs extends SherlockListActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(PrefsLogic.onMainActivityOptionsItemSelected(item, this, prefsWrapper)) {
+        if (PrefsLogic.onMainActivityOptionsItemSelected(item, this, prefsWrapper)) {
             return true;
         }
         return super.onOptionsItemSelected(item);

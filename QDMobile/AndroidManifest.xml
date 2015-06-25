@@ -53,6 +53,10 @@
     <uses-permission android:name="android.permission.RAISED_THREAD_PRIORITY" />
     -->
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <!-- COMMENT THIS if you plan to use in library mode -->
     <permission
@@ -107,11 +111,13 @@
 
 
     <application
+        android:name=".QDMobileApplication"
         android:allowBackup="true"
         android:backupAgent=".backup.SipBackupAgent"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher_v2ip"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        >
         <meta-data
             android:name="app_type"
             android:value="nightly" />
@@ -121,13 +127,10 @@
         <meta-data
             android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAIL5x8Klvg-Y8nV4j4PNSy2JH6yQZ49yKbrqKJAw" />
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="6r9ZdUACRqUpU1tFGqQGyVLQ" />
 
-        <!--
-        Samsung multiview support
-        <uses-library
-            android:name="com.sec.android.app.multiwindow"
-            android:required="false" />
-        -->
         <meta-data
             android:name="com.sec.android.support.multiwindow"
             android:value="true" />
@@ -138,7 +141,8 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Holo.Light"
-            android:uiOptions="splitActionBarWhenNarrow" >
+            android:uiOptions="splitActionBarWhenNarrow"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -654,6 +658,8 @@
                 android:name="deinit_factory"
                 android:value="pjmedia_codec_vpx_deinit" />
         </receiver>
+
+        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":lbsStack" />
 
     </application>
 

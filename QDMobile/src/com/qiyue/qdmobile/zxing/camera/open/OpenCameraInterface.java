@@ -1,7 +1,8 @@
 package com.qiyue.qdmobile.zxing.camera.open;
 
 import android.hardware.Camera;
-import android.util.Log;
+
+import com.github.snowdream.android.util.Log;
 
 public final class OpenCameraInterface {
 

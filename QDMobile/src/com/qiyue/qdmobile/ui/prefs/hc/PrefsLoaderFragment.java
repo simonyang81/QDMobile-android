@@ -9,10 +9,10 @@ import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.text.TextUtils;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.ui.prefs.IPreferenceHelper;
 import com.qiyue.qdmobile.ui.prefs.PrefsLogic;
-import com.qiyue.qdmobile.utils.Log;
 
 @TargetApi(11)
 public class PrefsLoaderFragment extends PreferenceFragment implements IPreferenceHelper {

@@ -5,7 +5,8 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Build;
-import android.util.Log;
+
+import com.github.snowdream.android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
 public final class CameraConfigurationUtils {
 
-    private static final String TAG = "CameraConfiguration";
+    private static final String TAG = CameraConfigurationUtils.class.getSimpleName();
 
     private static final Pattern SEMICOLON = Pattern.compile(";");
 
@@ -281,14 +282,12 @@ public final class CameraConfigurationUtils {
             }
         });
 
-        if (Log.isLoggable(TAG, Log.INFO)) {
-            StringBuilder previewSizesString = new StringBuilder();
-            for (Camera.Size supportedPreviewSize : supportedPreviewSizes) {
-                previewSizesString.append(supportedPreviewSize.width).append('x')
-                        .append(supportedPreviewSize.height).append(' ');
-            }
-            Log.i(TAG, "Supported preview sizes: " + previewSizesString);
+        StringBuilder previewSizesString = new StringBuilder();
+        for (Camera.Size supportedPreviewSize : supportedPreviewSizes) {
+            previewSizesString.append(supportedPreviewSize.width).append('x')
+                    .append(supportedPreviewSize.height).append(' ');
         }
+        Log.i(TAG, "Supported preview sizes: " + previewSizesString);
 
         double screenAspectRatio = (double) screenResolution.x / (double) screenResolution.y;
 

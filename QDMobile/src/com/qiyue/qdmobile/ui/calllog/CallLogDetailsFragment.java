@@ -42,13 +42,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipManager;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.api.SipUri;
 import com.qiyue.qdmobile.models.CallerInfo;
 import com.qiyue.qdmobile.utils.ContactsAsyncHelper;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.contacts.ContactsWrapper;
 import com.qiyue.qdmobile.widgets.AccountChooserButton;
 
@@ -173,7 +173,7 @@ public class CallLogDetailsFragment extends SherlockFragment {
     private void updateData(final Uri... callUris) {
 
         final int numCalls = callUris.length;
-        if(numCalls == 0) {
+        if (numCalls == 0) {
             Log.w(THIS_FILE, "No calls logs as parameters");
             return;
         }

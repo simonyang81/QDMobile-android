@@ -1,24 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.ui.prefs;
 
 import android.app.AlertDialog;
@@ -44,9 +23,9 @@ import android.widget.SimpleAdapter.ViewBinder;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipConfigManager;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.PreferencesWrapper;
 import com.qiyue.qdmobile.widgets.DragnDropListView;
 import com.qiyue.qdmobile.widgets.DragnDropListView.DropListener;
@@ -98,8 +77,6 @@ public class CodecsFragment extends SherlockListFragment implements OnCheckedCha
         initDatas();
         setHasOptionsMenu(true);
 
-        
-        
         // Adapter
         mAdapter = new SimpleAdapter(getActivity(), codecsList, R.layout.codecs_list_item, new String[] {
                 CODEC_NAME,
@@ -130,7 +107,7 @@ public class CodecsFragment extends SherlockListFragment implements OnCheckedCha
                         checker.setChecked(true);
                     }
                     return true;
-                }else if(view.getId() == R.id.AccCheckBoxActive) {
+                } else if (view.getId() == R.id.AccCheckBoxActive) {
                     view.setTag(data);
                     return true;
                 }
@@ -147,33 +124,32 @@ public class CodecsFragment extends SherlockListFragment implements OnCheckedCha
      * Initialize datas list
      */
     private void initDatas() {
-        if(codecsList == null) {
+        if (codecsList == null) {
             codecsList = new ArrayList<Map<String, Object>>();
-        }else {
+        } else {
             codecsList.clear();
         }
-        
 
         bandtype = (String) getArguments().get(BAND_TYPE);
         mediatype = (Integer) getArguments().get(MEDIA_TYPE);
         
         String[] codecNames;
-        if(mediatype == MEDIA_AUDIO) {
+        if (mediatype == MEDIA_AUDIO) {
             codecNames = prefsWrapper.getCodecList();
-        }else {
+        } else {
             codecNames = prefsWrapper.getVideoCodecList();
         }
         
         int current_prio = 130;
-        for(String codecName : codecNames) {
+        for (String codecName : codecNames) {
             Log.d(THIS_FILE, "Fill codec "+codecName+" for "+bandtype);
             String[] codecParts = codecName.split("/");
-            if(codecParts.length >=2 ) {
+            if (codecParts.length >=2 ) {
                 HashMap<String, Object> codecInfo = new HashMap<String, Object>();
                 codecInfo.put(CODEC_ID, codecName);
-                if(mediatype == MEDIA_AUDIO) {
+                if (mediatype == MEDIA_AUDIO) {
                     codecInfo.put(CODEC_NAME, codecParts[0]+" "+codecParts[1].substring(0, codecParts[1].length()-3)+" kHz");
-                }else if(mediatype == MEDIA_VIDEO) {
+                } else if (mediatype == MEDIA_VIDEO) {
                     codecInfo.put(CODEC_NAME, codecParts[0]);
                 }
                 codecInfo.put(CODEC_PRIORITY, prefsWrapper.getCodecPriority(codecName, bandtype, Integer.toString(current_prio)));
@@ -199,7 +175,7 @@ public class CodecsFragment extends SherlockListFragment implements OnCheckedCha
                 @SuppressWarnings("unchecked")
                 HashMap<String, Object> item = (HashMap<String, Object>) getListAdapter().getItem(from);
                 
-                Log.d(THIS_FILE, "Dropped "+item.get(CODEC_NAME)+" -> "+to);
+                Log.d(THIS_FILE, "Dropped " + item.get(CODEC_NAME) + " -> " + to);
                 
                 //Prevent disabled codecsList to be reordered
                 if((Short) item.get(CODEC_PRIORITY) <= 0 ) {
@@ -211,9 +187,9 @@ public class CodecsFragment extends SherlockListFragment implements OnCheckedCha
                 
                 //Update priorities
                 short currentPriority = 130;
-                for(Map<String, Object> codec : codecsList) {
-                    if((Short) codec.get(CODEC_PRIORITY) > 0) {
-                        if(currentPriority != (Short) codec.get(CODEC_PRIORITY)) {
+                for (Map<String, Object> codec : codecsList) {
+                    if ((Short) codec.get(CODEC_PRIORITY) > 0) {
+                        if (currentPriority != (Short) codec.get(CODEC_PRIORITY)) {
                             setCodecPriority((String)codec.get(CODEC_ID), currentPriority);
                             codec.put(CODEC_PRIORITY, currentPriority);
                         }
@@ -233,9 +209,9 @@ public class CodecsFragment extends SherlockListFragment implements OnCheckedCha
     }
     
     private void setCodecPriority(String codecName, short priority) {
-        if(useCodecsPerSpeed) {
+        if (useCodecsPerSpeed) {
             prefsWrapper.setCodecPriority(codecName, bandtype, Short.toString(priority));
-        }else {
+        } else {
             prefsWrapper.setCodecPriority(codecName, SipConfigManager.CODEC_NB, Short.toString(priority));
             prefsWrapper.setCodecPriority(codecName, SipConfigManager.CODEC_WB, Short.toString(priority));
         }
@@ -279,7 +255,6 @@ public class CodecsFragment extends SherlockListFragment implements OnCheckedCha
         codec = (HashMap<String, Object>) mAdapter.getItem(info.position);
         
         if (codec == null) {
-            // If for some reason the requested item isn't available, do nothing
             return false;
         }
         int selId = item.getItemId();
@@ -297,12 +272,11 @@ public class CodecsFragment extends SherlockListFragment implements OnCheckedCha
         final short newPrio = activate ? (short) 1 : (short) 0;
 
         boolean isDisabled = ((Short) codec.get(CODEC_PRIORITY) == 0);
-        if(isDisabled == !activate) {
-            // Nothing to do, this codec is already enabled
+        if (isDisabled == !activate) {
             return;
         }
         
-        if(NON_FREE_CODECS.containsKey(codecName) && activate) {
+        if (NON_FREE_CODECS.containsKey(codecName) && activate) {
 
             final TextView message = new TextView(getActivity());
             final SpannableString s = new SpannableString(getString(R.string.this_codec_is_not_free) + NON_FREE_CODECS.get(codecName));
@@ -323,7 +297,7 @@ public class CodecsFragment extends SherlockListFragment implements OnCheckedCha
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
-        }else {
+        } else {
             setCodecActivated(codec, newPrio);
         }
     }
@@ -366,9 +340,9 @@ public class CodecsFragment extends SherlockListFragment implements OnCheckedCha
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         String codecName = (String) buttonView.getTag();
-        if(codecName != null) {
+        if (codecName != null) {
             HashMap<String, Object> codec = null;
-            for( int i = 0; i < mAdapter.getCount(); i++) {
+            for (int i = 0; i < mAdapter.getCount(); i++) {
                 @SuppressWarnings("unchecked")
                 HashMap<String, Object> tCodec = (HashMap<String, Object>) mAdapter.getItem(i);
                 if(codecName.equalsIgnoreCase( (String) tCodec.get(CODEC_NAME))) {
@@ -376,7 +350,7 @@ public class CodecsFragment extends SherlockListFragment implements OnCheckedCha
                     break;
                 }
             }
-            if(codec != null) {
+            if (codec != null) {
                 userActivateCodec(codec, isChecked);
             }
         }

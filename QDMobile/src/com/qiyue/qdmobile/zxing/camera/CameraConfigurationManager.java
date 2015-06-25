@@ -5,10 +5,10 @@ import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.zxing.PreferencesActivity;
 
 
@@ -18,7 +18,7 @@ import com.qiyue.qdmobile.zxing.PreferencesActivity;
  */
 final class CameraConfigurationManager {
 
-    private static final String TAG = "CameraConfiguration";
+    private static final String TAG = CameraConfigurationManager.class.getSimpleName();
 
     private final Context context;
     private Point screenResolution;

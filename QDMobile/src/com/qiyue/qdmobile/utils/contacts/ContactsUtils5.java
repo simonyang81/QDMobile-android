@@ -1,24 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.utils.contacts;
 
 import android.annotation.TargetApi;
@@ -53,12 +32,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipManager;
 import com.qiyue.qdmobile.api.SipUri;
 import com.qiyue.qdmobile.models.CallerInfo;
 import com.qiyue.qdmobile.utils.Compatibility;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.PreferencesProviderWrapper;
 
 import java.io.InputStream;
@@ -85,7 +64,7 @@ public class ContactsUtils5 extends ContactsWrapper {
 
     private static final String DISPLAY_NAME_ORDER = Contacts.DISPLAY_NAME + " COLLATE LOCALIZED";
     private static final String SORT_ORDER = Contacts.TIMES_CONTACTED + " DESC,"
-            +  DISPLAY_NAME_ORDER + "," + CommonDataKinds.Phone.TYPE;
+            + DISPLAY_NAME_ORDER + "," + CommonDataKinds.Phone.TYPE;
     private static final String THIS_FILE = "ContactsUtils5";
 
     public Bitmap getContactPhoto(Context ctxt, Uri uri, boolean hiRes, Integer defaultResource) {
@@ -108,22 +87,22 @@ public class ContactsUtils5 extends ContactsWrapper {
         String id = Long.toString(contactId);
         ArrayList<Phone> phones = new ArrayList<Phone>();
         Cursor pCur;
-        
+
         if ((flag & ContactsWrapper.URI_NBR) > 0) {
             pCur = ctxt.getContentResolver().query(
                     CommonDataKinds.Phone.CONTENT_URI,
                     null,
                     CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                    new String[] {
-                        id
+                    new String[]{
+                            id
                     }, null);
             while (pCur.moveToNext()) {
                 phones.add(new Phone(
                         pCur.getString(pCur
                                 .getColumnIndex(CommonDataKinds.Phone.NUMBER)),
                         pCur.getString(pCur.getColumnIndex(CommonDataKinds.Phone.TYPE))
-                        ));
-    
+                ));
+
             }
             pCur.close();
         }
@@ -135,7 +114,7 @@ public class ContactsUtils5 extends ContactsWrapper {
                     null,
                     Data.CONTACT_ID + " = ? AND " + Data.MIMETYPE
                             + " = ?",
-                    new String[] {
+                    new String[]{
                             id, CommonDataKinds.Im.CONTENT_ITEM_TYPE
                     }, null);
             while (pCur.moveToNext()) {
@@ -149,11 +128,11 @@ public class ContactsUtils5 extends ContactsWrapper {
                                 .getColumnIndex(CommonDataKinds.Im.DATA)), SipManager.PROTOCOL_SIP));
                     }
                 }
-    
+
             }
             pCur.close();
         }
-        
+
         // Add any SIP uri if android 9
         if (Compatibility.isCompatible(9) && ((flag & ContactsWrapper.URI_SIP) > 0)) {
             pCur = ctxt.getContentResolver().query(
@@ -161,7 +140,7 @@ public class ContactsUtils5 extends ContactsWrapper {
                     null,
                     Data.CONTACT_ID + " = ? AND " + Data.MIMETYPE
                             + " = ?",
-                    new String[] {
+                    new String[]{
                             id, CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE
                     }, null);
             while (pCur.moveToNext()) {
@@ -184,7 +163,7 @@ public class ContactsUtils5 extends ContactsWrapper {
 
         String[] projection;
         if (Compatibility.isCompatible(11)) {
-            projection = new String[] {
+            projection = new String[]{
                     PhoneLookup._ID,
                     PhoneLookup.DISPLAY_NAME,
                     PhoneLookup.TYPE,
@@ -196,7 +175,7 @@ public class ContactsUtils5 extends ContactsWrapper {
                     PhoneLookup.PHOTO_URI
             };
         } else {
-            projection = new String[] {
+            projection = new String[]{
                     PhoneLookup._ID,
                     PhoneLookup.DISPLAY_NAME,
                     PhoneLookup.TYPE,
@@ -209,7 +188,7 @@ public class ContactsUtils5 extends ContactsWrapper {
         Cursor cursor = null;
         try {
             cursor = ctxt.getContentResolver().query(searchUri, projection, null, null, null);
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             Log.e(THIS_FILE, "Stock contact app is not able to resolve contacts", e);
         }
         if (cursor != null) {
@@ -242,7 +221,7 @@ public class ContactsUtils5 extends ContactsWrapper {
 
                     if (cv.containsKey(PhoneLookup.CUSTOM_RINGTONE)) {
                         String cRt = cv.getAsString(PhoneLookup.CUSTOM_RINGTONE);
-                        if(!TextUtils.isEmpty(cRt)) {
+                        if (!TextUtils.isEmpty(cRt)) {
                             callerInfo.contactRingtoneUri = Uri.parse(cRt);
                         }
                     }
@@ -253,7 +232,7 @@ public class ContactsUtils5 extends ContactsWrapper {
 
                     if (cv.containsKey(PhoneLookup.PHOTO_URI)) {
                         String cPu = cv.getAsString(PhoneLookup.PHOTO_URI);
-                        if(!TextUtils.isEmpty(cPu)) {
+                        if (!TextUtils.isEmpty(cPu)) {
                             callerInfo.photoUri = Uri.parse(cPu);
                         }
                     }
@@ -279,7 +258,7 @@ public class ContactsUtils5 extends ContactsWrapper {
 
         return callerInfo;
     }
-    
+
     private String getContactDataCustomProtocolFilter(String protocol) {
         return String.format(" %s='%s' AND %s=%s AND LOWER(%s)='%s'",
                 Data.MIMETYPE, CommonDataKinds.Im.CONTENT_ITEM_TYPE,
@@ -292,7 +271,7 @@ public class ContactsUtils5 extends ContactsWrapper {
         CallerInfo callerInfo = new CallerInfo();
         String[] projection;
         if (Compatibility.isCompatible(11)) {
-            projection = new String[] {
+            projection = new String[]{
                     Data._ID,
                     Data.CONTACT_ID,
                     Data.DATA1,
@@ -303,7 +282,7 @@ public class ContactsUtils5 extends ContactsWrapper {
                     Data.PHOTO_URI
             };
         } else {
-            projection = new String[] {
+            projection = new String[]{
                     Data._ID,
                     Data.CONTACT_ID,
                     Data.DATA1,
@@ -313,7 +292,7 @@ public class ContactsUtils5 extends ContactsWrapper {
                     Data.LOOKUP_KEY
             };
         }
-        
+
 
         Uri uri = Data.CONTENT_URI;
 
@@ -327,17 +306,17 @@ public class ContactsUtils5 extends ContactsWrapper {
             whereSipUriClause += " OR " + Data.MIMETYPE + "='"
                     + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE + "'";
         }
-        
+
         String query = Contacts.DISPLAY_NAME + " IS NOT NULL "
                 + " AND (" + whereSipUriClause + ") AND " + Data.DATA1 + "=?";
-        
+
 
         Cursor cursor = ctxt.getContentResolver().query(uri,
                 projection, query,
-                new String[] {sipUri}, 
+                new String[]{sipUri},
                 Data.DISPLAY_NAME + " ASC");
-        
-        
+
+
         if (cursor != null) {
             try {
                 if (cursor.getCount() > 0) {
@@ -357,14 +336,14 @@ public class ContactsUtils5 extends ContactsWrapper {
 
                     if (cv.containsKey(Data.CONTACT_ID)) {
                         callerInfo.personId = cv.getAsLong(Data.CONTACT_ID);
-                        
+
                         callerInfo.contactContentUri = ContentUris.withAppendedId(
                                 Contacts.CONTENT_URI, callerInfo.personId);
                     }
 
                     if (cv.containsKey(Data.CUSTOM_RINGTONE)) {
                         String cRt = cv.getAsString(Data.CUSTOM_RINGTONE);
-                        if(!TextUtils.isEmpty(cRt)) {
+                        if (!TextUtils.isEmpty(cRt)) {
                             callerInfo.contactRingtoneUri = Uri.parse(cRt);
                         }
                     }
@@ -375,7 +354,7 @@ public class ContactsUtils5 extends ContactsWrapper {
 
                     if (cv.containsKey(Data.PHOTO_URI)) {
                         String cPu = cv.getAsString(Data.PHOTO_URI);
-                        if(!TextUtils.isEmpty(cPu)) {
+                        if (!TextUtils.isEmpty(cPu)) {
                             callerInfo.photoUri = Uri.parse(cPu);
                         }
                     }
@@ -391,8 +370,8 @@ public class ContactsUtils5 extends ContactsWrapper {
                 cursor.close();
             }
         }
-        
-        
+
+
         return callerInfo;
     }
 
@@ -416,7 +395,7 @@ public class ContactsUtils5 extends ContactsWrapper {
             isPhoneType += " OR (" + Data.MIMETYPE + "='"
                     + CommonDataKinds.SipAddress.CONTENT_ITEM_TYPE + "')";
         }
-        
+
         // Sip: IM custo (sip, csip, sips)
         isPhoneType += String.format(" OR ( %s)", getContactDataCustomProtocolFilter(SipManager.PROTOCOL_SIP));
         isPhoneType += String.format(" OR ( %s)", getContactDataCustomProtocolFilter(SipManager.PROTOCOL_SIPS));
@@ -427,7 +406,7 @@ public class ContactsUtils5 extends ContactsWrapper {
 
         String[] projection;
         if (Compatibility.isCompatible(11)) {
-            projection = new String[] {
+            projection = new String[]{
                     Data._ID,
                     Data.CONTACT_ID,
                     Data.DATA1,
@@ -442,7 +421,7 @@ public class ContactsUtils5 extends ContactsWrapper {
                     Data.DATA6
             };
         } else {
-            projection = new String[] {
+            projection = new String[]{
                     Data._ID,
                     Data.CONTACT_ID,
                     Data.DATA1,
@@ -467,39 +446,39 @@ public class ContactsUtils5 extends ContactsWrapper {
                     phoneConstraint = phoneConstraint.trim();
                 }
             }
-            
+
             // Start filter condition
             ArrayList<String> selectionArgsArray = new ArrayList<String>();
             query += " AND (";
             // Filter the data (aka phone number or sip uri)
             query += String.format("%s LIKE ?", Data.DATA1);
             selectionArgsArray.add(constraint + "%");
-            if(isDigitOnly) {
+            if (isDigitOnly) {
                 query += String.format(" OR replace(replace(replace(replace(%s, ' ', ''), '-', ''), '(', ''), ')', '') LIKE ?", Data.DATA1);
                 String cleanNumber = constraint.toString().replaceAll("[ \\-()]", "");
                 selectionArgsArray.add(cleanNumber + "%");
             }
-            if(!TextUtils.isEmpty(phoneConstraint) && !phoneConstraint.equals(constraint)) {
+            if (!TextUtils.isEmpty(phoneConstraint) && !phoneConstraint.equals(constraint)) {
                 query += String.format(" OR %s LIKE ?", Data.DATA1);
                 selectionArgsArray.add(phoneConstraint + "%");
             }
             // Filter the contact based on other data such as name
-            if(!TextUtils.isEmpty(constraint) && !isDigitOnly) {
+            if (!TextUtils.isEmpty(constraint) && !isDigitOnly) {
                 query += " OR " + Data.RAW_CONTACT_ID + " IN " +
-                    "(SELECT name_data." + Data.RAW_CONTACT_ID +
-                        " FROM view_data AS name_data"+
-                        " WHERE name_data." + Data.MIMETYPE + "='" + CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE + "'" + 
-                        " AND (" + 
-                              "name_data."+CommonDataKinds.StructuredName.FAMILY_NAME + " LIKE ? OR " +
-                              "name_data."+CommonDataKinds.StructuredName.GIVEN_NAME + " LIKE ?" +
-                        ")"+
-                    ")";
+                        "(SELECT name_data." + Data.RAW_CONTACT_ID +
+                        " FROM view_data AS name_data" +
+                        " WHERE name_data." + Data.MIMETYPE + "='" + CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE + "'" +
+                        " AND (" +
+                        "name_data." + CommonDataKinds.StructuredName.FAMILY_NAME + " LIKE ? OR " +
+                        "name_data." + CommonDataKinds.StructuredName.GIVEN_NAME + " LIKE ?" +
+                        ")" +
+                        ")";
                 selectionArgsArray.add(constraint + "%");
                 selectionArgsArray.add(constraint + "%");
             }
             query += ")";
             selectionArgs = selectionArgsArray.toArray(new String[selectionArgsArray.size()]);
-            
+
         }
 
         Cursor resCursor = ctxt.getContentResolver().query(uri,
@@ -507,7 +486,7 @@ public class ContactsUtils5 extends ContactsWrapper {
 
         return resCursor;
     }
-    
+
     @Override
     public CharSequence transformToSipUri(Context ctxt, Cursor cursor) {
         String value = cursor.getString(cursor.getColumnIndex(Data.DATA1));
@@ -517,6 +496,7 @@ public class ContactsUtils5 extends ContactsWrapper {
         value = value.trim();
         return value;
     }
+
     /* (non-Javadoc)
      * @see com.qiyue.qdmobile.utils.contacts.ContactsWrapper#isExternalPhoneNumber(android.content.Context, android.database.Cursor)
      */
@@ -539,30 +519,30 @@ public class ContactsUtils5 extends ContactsWrapper {
         Bitmap bitmap = getContactPhoto(context, uri, false, R.drawable.ic_contact_picture_holo_dark);
         CharSequence labelName = "";
         String mimeType = cursor.getString(cursor.getColumnIndex(Data.MIMETYPE));
-        if(CommonDataKinds.Phone.CONTENT_ITEM_TYPE.equalsIgnoreCase(mimeType)) {
+        if (CommonDataKinds.Phone.CONTENT_ITEM_TYPE.equalsIgnoreCase(mimeType)) {
             int typeColumnIdx = cursor.getColumnIndex(CommonDataKinds.Phone.TYPE);
             int labelColumnIdx = cursor.getColumnIndex(CommonDataKinds.Phone.LABEL);
-            if(labelColumnIdx != -1 && typeColumnIdx != -1) {
+            if (labelColumnIdx != -1 && typeColumnIdx != -1) {
                 String labelField = cursor.getString(labelColumnIdx);
                 int typeField = cursor.getInt(typeColumnIdx);
                 labelName = ContactsContract.CommonDataKinds.Phone.getTypeLabel(context.getResources(), typeField, labelField);
             }
-        }else if(CommonDataKinds.Im.CONTENT_ITEM_TYPE.equalsIgnoreCase(mimeType)) {
+        } else if (CommonDataKinds.Im.CONTENT_ITEM_TYPE.equalsIgnoreCase(mimeType)) {
             int typeColumnIdx = cursor.getColumnIndex(CommonDataKinds.Im.PROTOCOL);
             int labelColumnIdx = cursor.getColumnIndex(CommonDataKinds.Im.CUSTOM_PROTOCOL);
-            if(typeColumnIdx != -1 && labelColumnIdx != -1) {
+            if (typeColumnIdx != -1 && labelColumnIdx != -1) {
                 String labelField = cursor.getString(labelColumnIdx);
                 int typeField = cursor.getInt(typeColumnIdx);
                 labelName = ContactsContract.CommonDataKinds.Im.getProtocolLabel(context.getResources(), typeField, labelField);
             }
         }
-        
+
         // Get views
         TextView tv = (TextView) view.findViewById(R.id.name);
         TextView label = (TextView) view.findViewById(R.id.label);
         TextView sub = (TextView) view.findViewById(R.id.number);
         ImageView imageView = (ImageView) view.findViewById(R.id.contact_photo);
-        
+
 
         // Bind
         view.setTag(value);
@@ -576,7 +556,7 @@ public class ContactsUtils5 extends ContactsWrapper {
             label.setText(labelName);
             label.setVisibility(View.VISIBLE);
         }
-        if(imageView != null) {
+        if (imageView != null) {
             imageView.setImageBitmap(bitmap);
         }
 //        Uri uri = ContentUris.withAppendedId(Contacts.CONTENT_URI, cursor.getLong(CONTACT_ID_INDEX));
@@ -597,7 +577,7 @@ public class ContactsUtils5 extends ContactsWrapper {
 
         String[] projection;
         if (Compatibility.isCompatible(11)) {
-            projection = new String[] {
+            projection = new String[]{
                     Contacts._ID,
                     Contacts.DISPLAY_NAME,
                     Contacts.PHOTO_ID,
@@ -607,7 +587,7 @@ public class ContactsUtils5 extends ContactsWrapper {
                     Contacts.PHOTO_URI
             };
         } else {
-            projection = new String[] {
+            projection = new String[]{
                     Contacts._ID,
                     Contacts.DISPLAY_NAME,
                     Contacts.PHOTO_ID,
@@ -617,13 +597,13 @@ public class ContactsUtils5 extends ContactsWrapper {
         }
 
         Uri searchUri = Uri.withAppendedPath(Contacts.CONTENT_GROUP_URI, Uri.encode(groupName));
-        
-        
+
+
         Cursor c = null;
         try {
             c = ctxt.getContentResolver().query(searchUri, projection, null, null,
                     Contacts.DISPLAY_NAME + " ASC");
-        } catch(Exception e) {
+        } catch (Exception e) {
             Log.e(THIS_FILE, "Error while retrieving group", e);
         }
         return c;
@@ -658,17 +638,17 @@ public class ContactsUtils5 extends ContactsWrapper {
                 + " AND "
                 + CommonDataKinds.Im.PROTOCOL + "=" + CommonDataKinds.Im.PROTOCOL_CUSTOM
                 + " AND "
-                + " LOWER(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ")='"+SipManager.PROTOCOL_CSIP+"'";
+                + " LOWER(" + CommonDataKinds.Im.CUSTOM_PROTOCOL + ")='" + SipManager.PROTOCOL_CSIP + "'";
         // get csip data
         Cursor dataCursor = ctxt.getContentResolver()
                 .query(dataUri,
-                        new String[] {
+                        new String[]{
                                 CommonDataKinds.Im._ID,
                                 CommonDataKinds.Im.DATA,
                         },
                         dataQuery + " AND " + CommonDataKinds.Im.CONTACT_ID + "=?",
-                        new String[] {
-                            Long.toString(contactId)
+                        new String[]{
+                                Long.toString(contactId)
                         }, null);
 
         try {
@@ -685,14 +665,14 @@ public class ContactsUtils5 extends ContactsWrapper {
         } finally {
             dataCursor.close();
         }
-        
+
         return results;
     }
 
     @TargetApi(Build.VERSION_CODES.FROYO)
     @Override
     public void updateCSipPresence(Context ctxt, String buddyUri,
-            SipManager.PresenceStatus presStatus, String statusText) {
+                                   SipManager.PresenceStatus presStatus, String statusText) {
 
         if (Compatibility.isCompatible(8)) {
             // if(csipDatasId.containsKey(buddyUri)) {
@@ -719,7 +699,7 @@ public class ContactsUtils5 extends ContactsWrapper {
                 default:
                     break;
             }
-            if(TextUtils.isEmpty(statusText)) {
+            if (TextUtils.isEmpty(statusText)) {
                 statusText = correspondingPresence;
             }
 
@@ -799,7 +779,7 @@ public class ContactsUtils5 extends ContactsWrapper {
         ci.hasPresence = !TextUtils.isEmpty(ci.status);
         return ci;
     }
-    
+
     public int getPresenceIconResourceId(int presence) {
         return StatusUpdates.getPresenceIconResourceId(presence);
     }
@@ -827,7 +807,7 @@ public class ContactsUtils5 extends ContactsWrapper {
 
         return intent;
     }
-    
+
     @Override
     public Intent getViewContactIntent(Long contactId) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -838,11 +818,11 @@ public class ContactsUtils5 extends ContactsWrapper {
     @Override
     public Cursor getGroups(Context context) {
         Uri searchUri = Groups.CONTENT_URI;
-        String[] projection = new String[] {
+        String[] projection = new String[]{
                 Groups._ID,
                 Groups.TITLE /* No need of as title, since already title */
         };
-        
+
         return context.getContentResolver().query(searchUri, projection, null, null,
                 Groups.TITLE + " ASC");
     }
@@ -857,7 +837,7 @@ public class ContactsUtils5 extends ContactsWrapper {
                 RawContacts.CONTACT_ID + "=?",
                 new String[]{String.valueOf(contactId)}, null);
         try {
-            if(c.moveToNext()) {
+            if (c.moveToNext()) {
                 rawContactId = c.getLong(c.getColumnIndex(RawContacts._ID));
             }
         } catch (Exception e) {
@@ -865,57 +845,56 @@ public class ContactsUtils5 extends ContactsWrapper {
         } finally {
             c.close();
         }
-        
-        if(rawContactId != -1) {
+
+        if (rawContactId != -1) {
             String csipUri = SipUri.getCanonicalSipContact(uri, false);
             // First try update
             ContentValues cv = new ContentValues();
             cv.put(CommonDataKinds.Im.DATA, csipUri);
-            Cursor cs = cr.query(Data.CONTENT_URI, new String[] {CommonDataKinds.Im._ID},
+            Cursor cs = cr.query(Data.CONTENT_URI, new String[]{CommonDataKinds.Im._ID},
                     CommonDataKinds.Im.MIMETYPE + "=?"
-                    + " AND " + CommonDataKinds.Im.PROTOCOL + "=?" 
-                    + " AND " + CommonDataKinds.Im.CUSTOM_PROTOCOL + "=?" 
-                    + " AND " + CommonDataKinds.Im.RAW_CONTACT_ID + "=?", new String [] {
-                CommonDataKinds.Im.CONTENT_ITEM_TYPE,
-                Integer.toString(CommonDataKinds.Im.PROTOCOL_CUSTOM),
-                SipManager.PROTOCOL_CSIP,
-                Long.toString(rawContactId)
-            }, null);
-            if(cs != null) {
+                            + " AND " + CommonDataKinds.Im.PROTOCOL + "=?"
+                            + " AND " + CommonDataKinds.Im.CUSTOM_PROTOCOL + "=?"
+                            + " AND " + CommonDataKinds.Im.RAW_CONTACT_ID + "=?", new String[]{
+                            CommonDataKinds.Im.CONTENT_ITEM_TYPE,
+                            Integer.toString(CommonDataKinds.Im.PROTOCOL_CUSTOM),
+                            SipManager.PROTOCOL_CSIP,
+                            Long.toString(rawContactId)
+                    }, null);
+            if (cs != null) {
                 int count = cs.getCount();
                 cs.close();
-                
-                
-                if(count > 0) {
-                    int updated = cr.update(Data.CONTENT_URI, cv, 
-                        CommonDataKinds.Im.MIMETYPE + "=?"
-                        + " AND " + CommonDataKinds.Im.PROTOCOL + "=?" 
-                        + " AND " + CommonDataKinds.Im.CUSTOM_PROTOCOL + "=?" 
-                        + " AND " + CommonDataKinds.Im.RAW_CONTACT_ID + "=?", new String [] {
-                    CommonDataKinds.Im.CONTENT_ITEM_TYPE,
-                    Integer.toString(CommonDataKinds.Im.PROTOCOL_CUSTOM),
-                    SipManager.PROTOCOL_CSIP,
-                    Long.toString(rawContactId)
-                    });
+
+
+                if (count > 0) {
+                    int updated = cr.update(Data.CONTENT_URI, cv,
+                            CommonDataKinds.Im.MIMETYPE + "=?"
+                                    + " AND " + CommonDataKinds.Im.PROTOCOL + "=?"
+                                    + " AND " + CommonDataKinds.Im.CUSTOM_PROTOCOL + "=?"
+                                    + " AND " + CommonDataKinds.Im.RAW_CONTACT_ID + "=?", new String[]{
+                                    CommonDataKinds.Im.CONTENT_ITEM_TYPE,
+                                    Integer.toString(CommonDataKinds.Im.PROTOCOL_CUSTOM),
+                                    SipManager.PROTOCOL_CSIP,
+                                    Long.toString(rawContactId)
+                            });
                     Log.d(THIS_FILE, "Updated : " + updated);
-                }else {
+                } else {
                     cv.put(CommonDataKinds.Im.MIMETYPE, CommonDataKinds.Im.CONTENT_ITEM_TYPE);
                     cv.put(CommonDataKinds.Im.PROTOCOL, CommonDataKinds.Im.PROTOCOL_CUSTOM);
                     cv.put(CommonDataKinds.Im.CUSTOM_PROTOCOL, SipManager.PROTOCOL_CSIP);
                     cv.put(CommonDataKinds.Im.RAW_CONTACT_ID, rawContactId);
                     Uri insertedUri = cr.insert(Data.CONTENT_URI, cv);
-                    if(insertedUri == null) {
+                    if (insertedUri == null) {
                         return false;
                     }
                     Log.d(THIS_FILE, "Inserted : " + insertedUri.toString());
                 }
-                
+
                 return true;
             }
         }
         return false;
     }
-
 
 
 }

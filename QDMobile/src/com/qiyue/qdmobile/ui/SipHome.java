@@ -1,6 +1,9 @@
 package com.qiyue.qdmobile.ui;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
@@ -8,13 +11,17 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import android.view.*;
 import android.widget.TextView;
 
+import com.baidu.location.LocationClient;
+import com.github.snowdream.android.util.Log;
 import com.nineoldandroids.animation.ValueAnimator;
+import com.qiyue.qdmobile.QDMobileApplication;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipConfigManager;
 import com.qiyue.qdmobile.api.SipManager;
@@ -25,12 +32,12 @@ import com.qiyue.qdmobile.ui.dialpad.DialerFragment;
 import com.qiyue.qdmobile.ui.messages.ConversationsListFragment;
 import com.qiyue.qdmobile.ui.prefs.SettingsFragment;
 import com.qiyue.qdmobile.utils.*;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.NightlyUpdater.UpdaterPopupLauncher;
 import com.qiyue.qdmobile.utils.backup.BackupWrapper;
 import com.qiyue.qdmobile.wizards.BasePrefsWizard;
 import com.qiyue.qdmobile.wizards.WizardUtils.WizardInfo;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class SipHome extends FragmentActivity {
@@ -46,7 +53,6 @@ public class SipHome extends FragmentActivity {
     private DialerFragment mDialpadFragment;
     private CallLogListFragment mCallLogFragment;
     private SettingsFragment mSettingsFragment;
-//    private WarningFragment mWarningFragment;
 
     private TextView mDialpadBtn, mRecentsBtn, mContactsBtn, mMessagesBtn, mSettingsBtn;
 
@@ -55,6 +61,8 @@ public class SipHome extends FragmentActivity {
     private ViewGroup mHeaderGroup;
 
     private int mMenuHeight;
+
+    public LocationClient mLocationClient;
 
 
     /**
@@ -69,10 +77,11 @@ public class SipHome extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //prefWrapper = new PreferencesWrapper(this);
         prefProviderWrapper = new PreferencesProviderWrapper(this);
 
         super.onCreate(savedInstanceState);
+
+        Log.i(THIS_FILE, "onCreate()...");
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.sip_home_one_pane);
@@ -163,8 +172,6 @@ public class SipHome extends FragmentActivity {
                 ft.replace(R.id.content_frame, mMessagesFragment, Constants.FRAGMENT_TAG_CONVERSATIONS_LIST);
                 ft.commit();
 
-//                mMessagesFragment.onVisibilityChanged(true);
-
             }
         });
 
@@ -187,9 +194,6 @@ public class SipHome extends FragmentActivity {
 
                 ft.commit();
 
-                // TODO,
-//                startActivityForResult(new Intent(SipManager.ACTION_UI_PREFS_GLOBAL), CHANGE_PREFS);
-
             }
         });
 
@@ -200,8 +204,6 @@ public class SipHome extends FragmentActivity {
         if (!prefProviderWrapper.getPreferenceBooleanValue(SipConfigManager.PREVENT_SCREEN_ROTATION)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         }
-
-        Log.setLogLevel(5);
 
         // Async check
         asyncSanityChecker = new Thread() {
@@ -326,10 +328,6 @@ public class SipHome extends FragmentActivity {
             }
         }
 
-//        applyWarning(WarningUtils.WARNING_PRIVILEGED_INTENT, WarningUtils.shouldWarnPrivilegedIntent(this, prefProviderWrapper));
-//        applyWarning(WarningUtils.WARNING_NO_STUN, WarningUtils.shouldWarnNoStun(prefProviderWrapper));
-//        applyWarning(WarningUtils.WARNING_VPN_ICS, WarningUtils.shouldWarnVpnIcs(prefProviderWrapper));
-//        applyWarning(WarningUtils.WARNING_SDCARD, WarningUtils.shouldWarnSDCard(this, prefProviderWrapper));
     }
 
     // Service monitoring stuff
@@ -545,4 +543,79 @@ public class SipHome extends FragmentActivity {
         }
     }
 
+    public void showLogsDialog() {
+        showDialog(DIALOG_SHOW_LOGS);
+    }
+
+    private boolean[] mLogFileChecked;
+    private static final int DIALOG_SHOW_LOGS       = 1;
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+
+        switch (id) {
+
+            case DIALOG_SHOW_LOGS:
+
+                final String logPath = FileUtil.getQDMobileLogsFilePath(QDMobileApplication.getContextQD());
+                final String[] logs = new File(logPath).list();
+                mLogFileChecked = new boolean[logs.length];
+
+                return new AlertDialog.Builder(SipHome.this)
+                        .setTitle("QDMobile Logs")
+                        .setMultiChoiceItems(logs, new boolean[logs.length],
+                                new DialogInterface.OnMultiChoiceClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                                        if (which < mLogFileChecked.length) {
+                                            mLogFileChecked[which] = isChecked;
+                                        }
+                                    }
+                                })
+                        .setPositiveButton("Send Email", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+
+                                if (mLogFileChecked == null || mLogFileChecked.length > logs.length) {
+                                    return;
+                                }
+
+                                ArrayList<String> attachments = new ArrayList<String>();
+                                for (int i = 0; i < mLogFileChecked.length; i++) {
+                                    boolean isCheck = mLogFileChecked[i];
+                                    if (isCheck) {
+                                        attachments.add(FileUtil.getQDMobileLogsFilePath(QDMobileApplication.getContextQD())
+                                                + File.separator + logs[i]);
+                                    }
+                                }
+
+                                if (attachments == null || attachments.isEmpty()) {
+                                    return;
+                                }
+
+                                String emailBody = "";
+                                if (attachments.size() == 1) {
+                                    emailBody = "The attached is QDMobile log";
+                                } else {
+                                    emailBody = "The attached are QDMobile logs";
+                                }
+
+                                emailBody += "\n\n"
+                                        + Build.BRAND + " " + android.os.Build.MODEL
+                                        + " Android " + android.os.Build.VERSION.SDK_INT;
+
+                                new EmailSender(SipHome.this).sendEmail(new String[]{},
+                                        "QDMobile Log", emailBody, attachments.toArray(new String[]{}));
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                            }
+                        }).create();
+
+
+        }
+
+        return null;
+
+    }
 }

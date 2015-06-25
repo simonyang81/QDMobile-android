@@ -7,8 +7,8 @@ import android.app.backup.BackupHelper;
 import android.content.Context;
 import android.os.ParcelFileDescriptor;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.api.SipManager;
-import com.qiyue.qdmobile.utils.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;

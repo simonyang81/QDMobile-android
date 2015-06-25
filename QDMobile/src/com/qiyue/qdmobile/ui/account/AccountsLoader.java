@@ -1,24 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.ui.account;
 
 import android.content.Context;
@@ -30,13 +9,13 @@ import android.provider.BaseColumns;
 import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.models.Filter;
 import com.qiyue.qdmobile.utils.AccountListUtils;
 import com.qiyue.qdmobile.utils.AccountListUtils.AccountStatusDisplay;
 import com.qiyue.qdmobile.utils.CallHandlerPlugin;
 import com.qiyue.qdmobile.utils.CallHandlerPlugin.OnLoadListener;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.PreferencesProviderWrapper;
 
 import java.util.ArrayList;
@@ -52,7 +31,6 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
     public static final String FIELD_NBR_TO_CALL = "nbr_to_call";
     public static final String FIELD_STATUS_OUTGOING = "status_for_outgoing";
     public static final String FIELD_STATUS_COLOR = "status_color";
-    
 
     private static final String THIS_FILE = "OutgoingAccountsLoader";
 
@@ -63,8 +41,7 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
     private final boolean loadStatus;
     private final boolean onlyActive;
     private final boolean loadCallHandlerPlugins;
-    
-    
+
     /**
      * Constructor for loader for outgoing call context. <br/>
      * This one will care of rewriting number and keep track of accounts status.
@@ -81,7 +58,6 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
         loadCallHandlerPlugins = true;
         initHandlers();
     }
-    
 
     public AccountsLoader(Context context, boolean onlyActiveAccounts, boolean withCallHandlerPlugins) {
         super(context);
@@ -92,7 +68,7 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
         loadCallHandlerPlugins = withCallHandlerPlugins;
         initHandlers();
     }
-    
+
     private void initHandlers() {
         CallHandlerPlugin.initHandler();
         loaderObserver = new ForceLoadContentObserver();
@@ -100,25 +76,25 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
 
     private ContentObserver loaderObserver;
     private ArrayList<FilteredProfile> finalAccounts;
-    
-    
+
+
     @Override
     public Cursor loadInBackground() {
         // First register for status updates
-        if(loadStatus) {
+        if (loadStatus) {
             getContext().getContentResolver().registerContentObserver(SipProfile.ACCOUNT_STATUS_URI,
-                true, loaderObserver);
+                    true, loaderObserver);
         }
         ArrayList<FilteredProfile> prefinalAccounts = new ArrayList<FilteredProfile>();
-        
+
         // Get all sip profiles
         ArrayList<SipProfile> accounts;
         PreferencesProviderWrapper prefsWrapper = new PreferencesProviderWrapper(getContext());
-        if(onlyActive && !prefsWrapper.isValidConnectionForOutgoing() ) {
+        if (onlyActive && !prefsWrapper.isValidConnectionForOutgoing()) {
             accounts = new ArrayList<SipProfile>();
-        }else {
+        } else {
             accounts = SipProfile.getAllProfiles(getContext(), onlyActive,
-                    new String[] {
+                    new String[]{
                             SipProfile.FIELD_ID,
                             SipProfile.FIELD_ACC_ID,
                             SipProfile.FIELD_ACTIVE,
@@ -128,44 +104,44 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
         }
         // And all external call handlers
         Map<String, String> externalHandlers;
-        if(loadCallHandlerPlugins) {
+        if (loadCallHandlerPlugins) {
             externalHandlers = CallHandlerPlugin.getAvailableCallHandlers(getContext());
-        }else {
+        } else {
             externalHandlers = new HashMap<String, String>();
         }
-        if(TextUtils.isEmpty(numberToCall)) {
+        if (TextUtils.isEmpty(numberToCall)) {
             // In case of empty number to call, just add everything without any other question
-            for(SipProfile acc : accounts) {
+            for (SipProfile acc : accounts) {
                 prefinalAccounts.add(new FilteredProfile(acc, false));
             }
-            for(Entry<String, String> extEnt : externalHandlers.entrySet() ) {
+            for (Entry<String, String> extEnt : externalHandlers.entrySet()) {
                 prefinalAccounts.add(new FilteredProfile(extEnt.getKey(), false));
-                
+
             }
-        }else {
+        } else {
             // If there is a number to call, add only those callable, and flag must call entries
             // Note that we keep processing all call handlers voluntarily cause we may encounter a sip account that doesn't register
             // But is in force call mode
-            for(SipProfile acc : accounts) {
-                if(Filter.isCallableNumber(getContext(), acc.id, numberToCall)) {
+            for (SipProfile acc : accounts) {
+                if (Filter.isCallableNumber(getContext(), acc.id, numberToCall)) {
                     boolean forceCall = Filter.isMustCallNumber(getContext(), acc.id, numberToCall);
                     prefinalAccounts.add(new FilteredProfile(acc, forceCall));
                 }
             }
-            for(Entry<String, String> extEnt : externalHandlers.entrySet() ) {
+            for (Entry<String, String> extEnt : externalHandlers.entrySet()) {
                 long accId = CallHandlerPlugin.getAccountIdForCallHandler(getContext(), extEnt.getKey());
-                if(Filter.isCallableNumber(getContext(), accId, numberToCall)) {
+                if (Filter.isCallableNumber(getContext(), accId, numberToCall)) {
                     boolean forceCall = Filter.isMustCallNumber(getContext(), accId, numberToCall);
                     prefinalAccounts.add(new FilteredProfile(extEnt.getKey(), forceCall));
-                    if(forceCall) {
+                    if (forceCall) {
                         break;
                     }
                 }
             }
-            
+
         }
-        
-        
+
+
         // Build final cursor based on final filtered accounts
         Cursor[] cursorsToMerge = new Cursor[prefinalAccounts.size()];
         int i = 0;
@@ -173,18 +149,18 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
             cursorsToMerge[i++] = createCursorForAccount(acc);
         }
 
-        
-        if(cursorsToMerge.length > 0) {
+
+        if (cursorsToMerge.length > 0) {
             MergeCursor mg = new MergeCursor(cursorsToMerge);
             mg.registerContentObserver(loaderObserver);
             finalAccounts = prefinalAccounts;
             return mg;
-        }else {
+        } else {
             finalAccounts = prefinalAccounts;
             return null;
         }
     }
-    
+
 
     /**
      * Class to hold information about a possible call handler entry.
@@ -205,7 +181,7 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
             statusForOutgoing = displayState.availableForCalls;
             callHandlerPlugin = null;
         }
-        
+
         /**
          * Call handler plugin constructor.
          * To use when input is a call handler plugin.
@@ -219,9 +195,9 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
             account.wizard = "EXPERT";
             CallHandlerPlugin ch = new CallHandlerPlugin(getContext());
             final Semaphore semaphore = new Semaphore(0);
-            
+
             String toCall = numberToCall;
-            if(!ignoreRewritting) {
+            if (!ignoreRewritting) {
                 toCall = Filter.rewritePhoneNumber(getContext(), accId, numberToCall);
             }
             ch.loadFrom(accId, toCall, new OnLoadListener() {
@@ -237,37 +213,37 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
             } catch (InterruptedException e) {
                 Log.e(THIS_FILE, "Not possible to bind callhandler plugin");
             }
-            if(!succeedInLoading) {
+            if (!succeedInLoading) {
                 Log.e(THIS_FILE, "Unreachable callhandler plugin " + componentName);
             }
             account.display_name = ch.getLabel();
             account.icon = ch.getIcon();
-            
+
             isForceCall = forceCall;
             statusColor = getContext().getResources().getColor(android.R.color.white);
             statusForOutgoing = true;
             callHandlerPlugin = ch;
         }
-        
+
         final SipProfile account;
         final boolean isForceCall;
         final private boolean statusForOutgoing;
         final private int statusColor;
         final CallHandlerPlugin callHandlerPlugin;
-        
+
         /**
          * Rewrite a number for this calling entry
          * @param number The number to rewrite
          * @return Rewritten number.
          */
         public String rewriteNumber(String number) {
-            if(ignoreRewritting) {
+            if (ignoreRewritting) {
                 return number;
-            }else {
+            } else {
                 return Filter.rewritePhoneNumber(getContext(), account.id, number);
             }
         }
-        
+
         /**
          * Is the account available for outgoing calls
          * @return True if a call can be made using this calling entry
@@ -275,28 +251,28 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
         public boolean getStatusForOutgoing() {
             return statusForOutgoing;
         }
-        
+
         /**
          * The color representing the calling entry status. green for registered
          * sip accounts, red for invalid sip accounts, orange for sip accounts
          * with ongoing registration, white for call handler plugins
-         * 
+         *
          * @return the color for this entry status.
          */
         public int getStatusColor() {
             return statusColor;
         }
-        
+
         /**
          * Get the eventual associated call handler plugin object.
-         * 
+         *
          * @return The call handler plugin object if any associated to this
          *         calling entry. Null if representing a sip account.
          */
         public CallHandlerPlugin getCallHandlerPlugin() {
             return callHandlerPlugin;
         }
-        
+
     }
 
     /**
@@ -313,7 +289,7 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
                 onReleaseResources(currentResult);
             }
         }
-        
+
         currentResult = c;
 
         if (isStarted()) {
@@ -332,7 +308,7 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
             // If we currently have a result available, deliver it
             // immediately.
             deliverResult(currentResult);
-        }else {
+        } else {
             forceLoad();
         }
     }
@@ -356,7 +332,7 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
         // At this point we can release the resources associated with 'apps'
         // if needed.
         onReleaseResources(c);
-        
+
     }
 
     /**
@@ -382,17 +358,16 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
      * actively loaded data set.
      */
     protected void onReleaseResources(Cursor c) {
-        if(c != null) {
+        if (c != null) {
             c.unregisterContentObserver(loaderObserver);
             c.close();
         }
-        if(loadStatus) {
+        if (loadStatus) {
             getContext().getContentResolver().unregisterContentObserver(loaderObserver);
         }
     }
 
-    
-    private static String[] COLUMN_HEADERS = new String[] {
+    private static String[] COLUMN_HEADERS = new String[]{
             BaseColumns._ID,
             SipProfile.FIELD_ID,
             SipProfile.FIELD_DISPLAY_NAME,
@@ -409,9 +384,8 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
      */
     private Cursor createCursorForAccount(FilteredProfile fa) {
         MatrixCursor matrixCursor = new MatrixCursor(COLUMN_HEADERS);
-        
-        
-        matrixCursor.addRow(new Object[] {
+
+        matrixCursor.addRow(new Object[]{
                 fa.account.id,
                 fa.account.id,
                 fa.account.display_name,
@@ -423,16 +397,15 @@ public class AccountsLoader extends AsyncTaskLoader<Cursor> {
         });
         return matrixCursor;
     }
-    
+
     /**
      * Get the cached call handler plugin loaded for a given position
-     * @param position The position to search at
      * @return The call handler plugin if any for this position
      */
     public CallHandlerPlugin getCallHandlerWithAccountId(long accId) {
-        for(FilteredProfile filteredAcc :finalAccounts) {
-            if(filteredAcc.account.id == accId)
-            return filteredAcc.getCallHandlerPlugin();
+        for (FilteredProfile filteredAcc : finalAccounts) {
+            if (filteredAcc.account.id == accId)
+                return filteredAcc.getCallHandlerPlugin();
         }
         return null;
     }

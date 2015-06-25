@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.zxing.PreferencesActivity;
 
 import java.util.ArrayList;
@@ -106,7 +106,7 @@ final class AutoFocusManager implements Camera.AutoFocusCallback {
             try {
                 Thread.sleep(AUTO_FOCUS_INTERVAL_MS);
             } catch (InterruptedException e) {
-                // continue
+                Log.e(TAG, "AutoFocusTask, " + e.toString());
             }
             start();
             return null;

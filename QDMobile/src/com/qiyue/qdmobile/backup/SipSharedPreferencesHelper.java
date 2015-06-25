@@ -8,7 +8,7 @@ import android.app.backup.BackupHelper;
 import android.content.Context;
 import android.os.ParcelFileDescriptor;
 
-import com.qiyue.qdmobile.utils.Log;
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.utils.PreferencesProviderWrapper;
 import com.qiyue.qdmobile.utils.PreferencesWrapper;
 

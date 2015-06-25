@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipCallSession;
 import com.qiyue.qdmobile.api.SipManager;
@@ -28,7 +29,6 @@ import com.qiyue.qdmobile.api.SipUri;
 import com.qiyue.qdmobile.models.CallerInfo;
 import com.qiyue.qdmobile.utils.Compatibility;
 import com.qiyue.qdmobile.utils.CustomDistribution;
-import com.qiyue.qdmobile.utils.Log;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

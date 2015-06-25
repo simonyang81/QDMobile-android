@@ -33,6 +33,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.api.SipCallSession;
 import com.qiyue.qdmobile.api.SipConfigManager;
 import com.qiyue.qdmobile.ui.incall.IOnCallActionTrigger;
@@ -40,7 +41,6 @@ import com.qiyue.qdmobile.ui.incall.locker.buttons.AlternateUnlocker;
 import com.qiyue.qdmobile.ui.incall.locker.multiwaveview.GlowPadView;
 import com.qiyue.qdmobile.ui.incall.locker.slidingtab.SlidingTab;
 import com.qiyue.qdmobile.utils.Compatibility;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.Theme;
 import com.qiyue.qdmobile.utils.accessibility.AccessibilityWrapper;
 

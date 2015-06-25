@@ -24,7 +24,7 @@ import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.Message;
 
-import com.qiyue.qdmobile.utils.Log;
+import com.github.snowdream.android.util.Log;
 
 import java.lang.ref.WeakReference;
 

@@ -36,6 +36,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Vibrator;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.models.CallerInfo;
 
 /**

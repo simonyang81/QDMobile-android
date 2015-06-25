@@ -1,24 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.ui.incall;
 
 import android.content.Context;
@@ -32,11 +11,11 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.api.SipConfigManager;
 import com.qiyue.qdmobile.ui.incall.AccelerometerListener.OrientationListener;
 import com.qiyue.qdmobile.ui.incall.locker.ScreenLocker;
 import com.qiyue.qdmobile.utils.Compatibility;
-import com.qiyue.qdmobile.utils.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -50,15 +29,15 @@ public class CallProximityManager implements SensorEventListener, OrientationLis
 
 
     private Context mContext;
-    
+
 
     private SensorManager sensorManager;
     private PowerManager powerManager;
-    
+
     // Timeout management of screen locker ui
     private ScreenLocker mScreenLocker;
     private Boolean useTimeoutOverlay = null;
-    
+
     // Self management of proximity sensor
     private Sensor proximitySensor;
     private static final float PROXIMITY_THRESHOLD = 5.0f;
@@ -66,35 +45,36 @@ public class CallProximityManager implements SensorEventListener, OrientationLis
     private boolean proximitySensorTracked = false;
     private boolean isFirstRun = true;
     private ProximityDirector mDirector = null;
-    
+
     // The hidden api that uses a wake lock
     private WakeLock proximityWakeLock;
-    
+
     // The accelerometer
     private AccelerometerListener accelerometerManager;
     private int mOrientation;
     private boolean accelerometerEnabled = false;
-    
+
     private int WAIT_FOR_PROXIMITY_NEGATIVE = 1;
     private final static int SCREEN_LOCKER_ACQUIRE_DELAY = "google_sdk".equals(Build.PRODUCT) ? ScreenLocker.WAIT_BEFORE_LOCK_LONG
             : ScreenLocker.WAIT_BEFORE_LOCK_SHORT;
 
     private static Method powerLockReleaseIntMethod;
-    
+
     public interface ProximityDirector {
         public boolean shouldActivateProximity();
+
         public void onProximityTrackingChanged(boolean acquired);
     }
-    
-    CallProximityManager(Context context, ProximityDirector director, ScreenLocker screenLocker){
+
+    CallProximityManager(Context context, ProximityDirector director, ScreenLocker screenLocker) {
         mContext = context;
         mDirector = director;
         mScreenLocker = screenLocker;
-        
+
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         accelerometerManager = new AccelerometerListener(context, this);
-        
+
         // Try to detect the hidden api
         if (powerManager != null) {
             WifiManager wman = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
@@ -106,12 +86,12 @@ public class CallProximityManager implements SensorEventListener, OrientationLis
                     boolean supportProximity = false;
                     Field f = PowerManager.class.getDeclaredField("PROXIMITY_SCREEN_OFF_WAKE_LOCK");
                     int proximityScreenOffWakeLock = (Integer) f.get(null);
-                    if(Compatibility.isCompatible(17)) {
+                    if (Compatibility.isCompatible(17)) {
                         // Changes of the private API on android 4.2
                         Method method = powerManager.getClass().getDeclaredMethod("isWakeLockLevelSupported", int.class);
                         supportProximity = (Boolean) method.invoke(powerManager, proximityScreenOffWakeLock);
                         Log.d(THIS_FILE, "Use 4.2 detection way for proximity sensor detection. Result is " + supportProximity);
-                    }else {
+                    } else {
                         Method method = powerManager.getClass().getDeclaredMethod("getSupportedWakeLockFlags");
                         int supportedFlags = (Integer) method.invoke(powerManager);
                         Log.d(THIS_FILE, "Proxmity flags supported : " + supportedFlags);
@@ -123,16 +103,16 @@ public class CallProximityManager implements SensorEventListener, OrientationLis
                                 "com.csipsimple.CallProximity");
                         proximityWakeLock.setReferenceCounted(false);
                     }
-                    
+
                 } catch (Exception e) {
                     Log.d(THIS_FILE, "Impossible to get power manager supported wake lock flags ");
                 }
-                if(powerLockReleaseIntMethod == null) {
+                if (powerLockReleaseIntMethod == null) {
                     try {
                         powerLockReleaseIntMethod = proximityWakeLock.getClass().getDeclaredMethod(
                                 "release", int.class);
-                        
-                    }catch (Exception e) {
+
+                    } catch (Exception e) {
                         Log.d(THIS_FILE, "Impossible to get power manager release with it");
                     }
                 }
@@ -140,11 +120,11 @@ public class CallProximityManager implements SensorEventListener, OrientationLis
         }
 
         // Try to detect a proximity sensor as fallback
-        if(proximityWakeLock == null) {
+        if (proximityWakeLock == null) {
             proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
             invertProximitySensor = SipConfigManager.getPreferenceBooleanValue(context, SipConfigManager.INVERT_PROXIMITY_SENSOR);
         }
-        
+
     }
 
     public synchronized void startTracking() {
@@ -158,12 +138,12 @@ public class CallProximityManager implements SensorEventListener, OrientationLis
                     SensorManager.SENSOR_DELAY_NORMAL);
             proximitySensorTracked = true;
         }
-        if(!accelerometerEnabled) {
+        if (!accelerometerEnabled) {
             accelerometerManager.enable(true);
             accelerometerEnabled = true;
         }
     }
-    
+
 
     public synchronized void stopTracking() {
         if (proximitySensor != null && proximitySensorTracked) {
@@ -171,7 +151,7 @@ public class CallProximityManager implements SensorEventListener, OrientationLis
             sensorManager.unregisterListener(this);
             Log.d(THIS_FILE, "Unregister to sensor is done !!!");
         }
-        if(accelerometerEnabled) {
+        if (accelerometerEnabled) {
             accelerometerManager.enable(false);
             accelerometerEnabled = false;
         }
@@ -194,20 +174,20 @@ public class CallProximityManager implements SensorEventListener, OrientationLis
                 active = !active;
             }
             Log.d(THIS_FILE, "Distance is now " + distance);
-            
+
             boolean isValidCallState = false;
-            if(mDirector != null) {
+            if (mDirector != null) {
                 isValidCallState = mDirector.shouldActivateProximity();
             }
-            
+
             if (isValidCallState && active) {
                 mScreenLocker.show();
-                if(mDirector != null) {
+                if (mDirector != null) {
                     mDirector.onProximityTrackingChanged(true);
                 }
             } else {
                 mScreenLocker.hide();
-                if(mDirector != null) {
+                if (mDirector != null) {
                     mDirector.onProximityTrackingChanged(false);
                 }
             }
@@ -219,13 +199,14 @@ public class CallProximityManager implements SensorEventListener, OrientationLis
     }
 
     private boolean isProximityWakeHeld = false;
+
     /**
      * Release any lock taken by the proximity sensor
      */
     public synchronized void release(int flag) {
         if (proximityWakeLock != null && isProximityWakeHeld) {
             boolean usedNewRelease = false;
-            if(powerLockReleaseIntMethod != null) {
+            if (powerLockReleaseIntMethod != null) {
                 try {
                     powerLockReleaseIntMethod.invoke(proximityWakeLock, flag);
                     usedNewRelease = true;
@@ -234,17 +215,17 @@ public class CallProximityManager implements SensorEventListener, OrientationLis
                     Log.d(THIS_FILE, "Error calling new release method ", e);
                 }
             }
-            if(!usedNewRelease) {
+            if (!usedNewRelease) {
                 proximityWakeLock.release();
             }
             isProximityWakeHeld = false;
         }
 
-        if(shouldUseTimeoutOverlay()) {
+        if (shouldUseTimeoutOverlay()) {
             mScreenLocker.hide();
         }
         // Notify
-        if(mDirector != null) {
+        if (mDirector != null) {
             mDirector.onProximityTrackingChanged(false);
         }
     }
@@ -254,15 +235,15 @@ public class CallProximityManager implements SensorEventListener, OrientationLis
             proximityWakeLock.acquire();
             isProximityWakeHeld = true;
         }
-        if(shouldUseTimeoutOverlay()) {
+        if (shouldUseTimeoutOverlay()) {
             mScreenLocker.delayedLock(SCREEN_LOCKER_ACQUIRE_DELAY);
         }
         // Notify
-        if(mDirector != null) {
+        if (mDirector != null) {
             mDirector.onProximityTrackingChanged(true);
         }
     }
-    
+
 
     /**
      * Update proximity lock mode depending on current state
@@ -277,10 +258,10 @@ public class CallProximityManager implements SensorEventListener, OrientationLis
                 (mOrientation == AccelerometerListener.ORIENTATION_HORIZONTAL);
 
         boolean activeRegardingCalls = false;
-        if(mDirector != null) {
+        if (mDirector != null) {
             activeRegardingCalls = mDirector.shouldActivateProximity();
         }
-        
+
         Log.d(THIS_FILE, "Horizontal : " + horizontal + " and activate for calls " + activeRegardingCalls);
         if (activeRegardingCalls && !horizontal) {
             // Phone is in use! Arrange for the screen to turn off
@@ -294,21 +275,21 @@ public class CallProximityManager implements SensorEventListener, OrientationLis
             release(flags);
         }
     }
-    
+
 
     /**
      * Should the application display the overlay after a timeout.
      * @return false if we are in table mode or if proximity sensor can be used
      */
     private boolean shouldUseTimeoutOverlay() {
-        if(useTimeoutOverlay == null) {
+        if (useTimeoutOverlay == null) {
             useTimeoutOverlay = proximitySensor == null &&
                     proximityWakeLock == null &&
                     !Compatibility.isTabletScreen(mContext);
         }
         return useTimeoutOverlay;
     }
-    
+
     public void restartTimer() {
         if (shouldUseTimeoutOverlay()) {
             mScreenLocker.delayedLock(ScreenLocker.WAIT_BEFORE_LOCK_LONG);
@@ -322,5 +303,4 @@ public class CallProximityManager implements SensorEventListener, OrientationLis
     }
 
 
-    
 }

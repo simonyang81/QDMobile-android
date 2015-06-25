@@ -40,6 +40,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipCallSession;
 import com.qiyue.qdmobile.api.SipCallSession.StatusCode;
@@ -58,7 +59,6 @@ import com.qiyue.qdmobile.service.SipService.SipRunnable;
 import com.qiyue.qdmobile.service.impl.SipCallSessionImpl;
 import com.qiyue.qdmobile.utils.CallLogHelper;
 import com.qiyue.qdmobile.utils.Compatibility;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.Threading;
 import com.qiyue.qdmobile.utils.TimerWrapper;
 

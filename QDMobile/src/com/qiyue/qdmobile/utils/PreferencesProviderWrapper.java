@@ -34,6 +34,7 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.api.SipConfigManager;
 
 import java.io.BufferedReader;

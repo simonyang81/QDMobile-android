@@ -1,24 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.ui.favorites;
 
 import android.content.ComponentName;
@@ -39,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.ISipService;
 import com.qiyue.qdmobile.api.SipManager.PresenceStatus;
@@ -46,7 +26,6 @@ import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.service.SipService;
 import com.qiyue.qdmobile.utils.AccountListUtils;
 import com.qiyue.qdmobile.utils.AccountListUtils.AccountStatusDisplay;
-import com.qiyue.qdmobile.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,14 +39,11 @@ public class PresenceStatusSpinner extends Spinner implements android.widget.Ada
     private boolean hasPresenceRegistration = false;
     private boolean isValid = false;
     
-
     private PresencesAdapter mAdapter;
-
 
     public PresenceStatusSpinner(Context context, AttributeSet attrs) {
         super(context, attrs);
         
-
         List<CharSequence> list = new ArrayList<CharSequence>();
         if(!isInEditMode()) {
             String[] fromRes = context.getResources().getStringArray(R.array.presence_status_names);
@@ -130,11 +106,11 @@ public class PresenceStatusSpinner extends Spinner implements android.widget.Ada
             row.setPadding(padding, padding, padding, padding);
             
             // Content binding
-            if(hasPresenceRegistration) {
+            if (hasPresenceRegistration) {
                 label.setText(getItem(position));
                 icon.setImageResource(position == 0 ? android.R.drawable.presence_online : android.R.drawable.presence_invisible);
                 icon.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 label.setText(choiceMode ? getItem(position) : getContext().getString(R.string.presence));
                 icon.setVisibility(View.GONE);
             }
@@ -148,10 +124,10 @@ public class PresenceStatusSpinner extends Spinner implements android.widget.Ada
      */
     @Override
     public void onItemSelected(AdapterView<?> adapter, View v, int position, long id) {
-        if(profileId != SipProfile.INVALID_ID) {
-            if(hasPresenceRegistration && isValid) {
-                if(position < PRESENCES_ITEMS_LENGTH) {
-                    if(service != null) {
+        if (profileId != SipProfile.INVALID_ID) {
+            if (hasPresenceRegistration && isValid) {
+                if (position < PRESENCES_ITEMS_LENGTH) {
+                    if (service != null) {
                         try {
                             service.setPresence(getSelectedPresence().ordinal(), "Test", profileId);
                         } catch (RemoteException e) {
@@ -224,16 +200,16 @@ public class PresenceStatusSpinner extends Spinner implements android.widget.Ada
      * This include change selected account if we are in canChangeIfValid mode
      */
     private void updateRegistration() {
-        if(profileId < 0) {
+        if (profileId < 0) {
             return;
         }
         SipProfile acc = SipProfile.getProfileFromDbId(getContext(), profileId, ACC_PROJECTION);
         isValid = false;
         hasPresenceRegistration = false;
-        if(acc != null) {
+        if (acc != null) {
             AccountStatusDisplay accountStatusDisplay = AccountListUtils
                     .getAccountDisplay(getContext(), acc.id);
-            if(accountStatusDisplay.availableForCalls) {
+            if (accountStatusDisplay.availableForCalls) {
                 isValid = true;
             }
             hasPresenceRegistration = (acc.publish_enabled == 1);
@@ -279,7 +255,7 @@ public class PresenceStatusSpinner extends Spinner implements android.widget.Ada
         try {
             getContext().unbindService(connection);
         } catch (Exception e) {
-            // Just ignore that
+            Log.e(THIS_FILE, "onDetachedFromWindow(), " + e.toString());
         }
         if (statusObserver != null) {
             getContext().getContentResolver().unregisterContentObserver(statusObserver);

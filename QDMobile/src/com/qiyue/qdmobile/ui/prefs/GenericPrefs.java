@@ -11,8 +11,8 @@ import android.preference.PreferenceScreen;
 import android.text.TextUtils;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
-import com.qiyue.qdmobile.utils.Log;
 
 @SuppressWarnings("deprecation")
 public abstract class GenericPrefs extends SherlockPreferenceActivity implements

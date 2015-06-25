@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.ResourceCursorAdapter;
 import android.text.Html;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -17,11 +16,11 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.github.snowdream.android.util.Log;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipMessage;
 import com.qiyue.qdmobile.models.CallerInfo;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.SmileyParser;
 import com.qiyue.qdmobile.widgets.contactbadge.QuickContactBadge.ArrowPosition;
 
@@ -195,17 +194,7 @@ public class MessageAdapter extends ResourceCursorAdapter {
                 buf.append(parser.addSmileySpans(body));
             }
         }
-
-        // We always show two lines because the optional icon bottoms are
-        // aligned with the
-        // bottom of the text field, assuming there are two lines for the
-        // message and the sent time.
         buf.append("\n");
-
-//        int startOffset = buf.length();
-//
-//        buf.setSpan(mTextSmallSpan, startOffset, buf.length(),
-//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         return buf;
     }

@@ -1,22 +1,25 @@
 /**
  * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
  * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
+ * <p/>
+ * CSipSimple is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * If you own a pjsip commercial license you can also redistribute it
+ * and/or modify it under the terms of the GNU Lesser General Public License
+ * as an android library.
+ * <p/>
+ * CSipSimple is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p/>
+ * You should have received a copy of the GNU General Public License
+ * along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
+ * <p/>
+ * This file contains relicensed code from Apache copyright of
+ * Copyright (C) 2008 The Android Open Source Project
  */
 /**
  * This file contains relicensed code from Apache copyright of 
@@ -38,6 +41,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.models.CallerInfo;
 import com.qiyue.qdmobile.utils.contacts.ContactsWrapper;
@@ -47,9 +51,9 @@ import java.io.InputStream;
 
 public class ContactsAsyncHelper extends Handler {
     private static final String THIS_FILE = "ContactsAsyncHelper";
-    
+
     // TODO : use LRUCache for bitmaps.
-    
+
     LruCache<Uri, Bitmap> photoCache = new LruCache<Uri, Bitmap>(5 * 1024 * 1024 /* 5MiB */) {
         protected int sizeOf(Uri key, Bitmap value) {
             return value.getRowBytes() * value.getWidth();
@@ -62,11 +66,11 @@ public class ContactsAsyncHelper extends Handler {
     public interface OnImageLoadCompleteListener {
         /**
          * Called when the image load is complete.
-         * 
+         *
          * @param imagePresent true if an image was found
          */
         public void onImageLoadComplete(int token, Object cookie, ImageView iView,
-                boolean imagePresent);
+                                        boolean imagePresent);
     }
 
     // constants
@@ -95,6 +99,7 @@ public class ContactsAsyncHelper extends Handler {
     }
 
     public static final String HIGH_RES_URI_PARAM = "hiRes";
+
     /**
      * Thread worker class that handles the task of opening the stream and
      * loading the images.
@@ -114,7 +119,7 @@ public class ContactsAsyncHelper extends Handler {
                     uri = photoTag.uri;
                     boolean hiRes = false;
                     String p = uri.getQueryParameter(HIGH_RES_URI_PARAM);
-                    if(!TextUtils.isEmpty(p) && p.equalsIgnoreCase("1")) {
+                    if (!TextUtils.isEmpty(p) && p.equalsIgnoreCase("1")) {
                         hiRes = true;
                     }
                     Log.v(THIS_FILE, "get : " + uri);
@@ -122,7 +127,7 @@ public class ContactsAsyncHelper extends Handler {
                     synchronized (photoCache) {
                         img = photoCache.get(uri);
                     }
-                    if(img == null) {
+                    if (img == null) {
                         img = contactsWrapper.getContactPhoto(args.context, uri, hiRes,
                                 args.defaultResource);
                         synchronized (photoCache) {
@@ -178,7 +183,7 @@ public class ContactsAsyncHelper extends Handler {
                             img = ContactsWrapper.getInstance().getContactPhoto(args.context, uri, false, null);
                         }
                     }
-                    
+
                     if (img != null) {
                         args.result = img;
                         synchronized (photoCache) {
@@ -187,7 +192,7 @@ public class ContactsAsyncHelper extends Handler {
                     } else {
                         args.result = null;
                     }
-                    
+
                 }
             }
             args.loadedUri = uri;
@@ -215,7 +220,7 @@ public class ContactsAsyncHelper extends Handler {
      * tokens.
      */
     public static final void updateImageViewWithContactPhotoAsync(Context context,
-            ImageView imageView, CallerInfo person, int placeholderImageResource) {
+                                                                  ImageView imageView, CallerInfo person, int placeholderImageResource) {
         // Added additional Cookie field in the callee.
         updateImageViewWithContactPhotoAsync(DEFAULT_TOKEN, null, null, context,
                 imageView, person, placeholderImageResource);
@@ -228,8 +233,8 @@ public class ContactsAsyncHelper extends Handler {
      * -1) placeholderImageResource value, we make sure the image is visible.
      */
     public static final void updateImageViewWithContactPhotoAsync(int token,
-            OnImageLoadCompleteListener listener, Object cookie, Context context,
-            ImageView imageView, CallerInfo callerInfo, int placeholderImageResource) {
+                                                                  OnImageLoadCompleteListener listener, Object cookie, Context context,
+                                                                  ImageView imageView, CallerInfo callerInfo, int placeholderImageResource) {
         if (sThreadHandler == null) {
             new ContactsAsyncHelper();
         }
@@ -269,17 +274,17 @@ public class ContactsAsyncHelper extends Handler {
     }
 
     public static void updateImageViewWithContactPhotoAsync(Context context, ImageView imageView,
-            Uri photoUri, int placeholderImageResource) {
-       updateImageViewWithUriAsync(context, imageView, photoUri, placeholderImageResource, EVENT_LOAD_IMAGE_URI);
+                                                            Uri photoUri, int placeholderImageResource) {
+        updateImageViewWithUriAsync(context, imageView, photoUri, placeholderImageResource, EVENT_LOAD_IMAGE_URI);
     }
-    
+
     public static void updateImageViewWithContactAsync(Context context, ImageView imageView,
-            Uri contactUri, int placeholderImageResource) {
-       updateImageViewWithUriAsync(context, imageView, contactUri, placeholderImageResource, EVENT_LOAD_CONTACT_URI);
+                                                       Uri contactUri, int placeholderImageResource) {
+        updateImageViewWithUriAsync(context, imageView, contactUri, placeholderImageResource, EVENT_LOAD_CONTACT_URI);
     }
 
     private static void updateImageViewWithUriAsync(Context context, ImageView imageView,
-            Uri photoUri, int placeholderImageResource, int eventType) {
+                                                    Uri photoUri, int placeholderImageResource, int eventType) {
         if (sThreadHandler == null) {
             Log.v(THIS_FILE, "Update image view with contact async");
             new ContactsAsyncHelper();
@@ -339,7 +344,7 @@ public class ContactsAsyncHelper extends Handler {
     }
 
     private static boolean isAlreadyProcessed(ImageView imageView, Uri uri) {
-        if(imageView != null) {
+        if (imageView != null) {
             PhotoViewTag vt = (PhotoViewTag) imageView.getTag(TAG_PHOTO_INFOS);
             return (vt != null && UriUtils.areEqual(uri, vt.uri));
         }

@@ -1,13 +1,3 @@
-/*
- *  Copyright (c) 2012 The WebRTC project authors. All Rights Reserved.
- *
- *  Use of this source code is governed by a BSD-style license
- *  that can be found in the LICENSE file in the root of the source
- *  tree. An additional intellectual property rights grant can be found
- *  in the file PATENTS.  All contributing project authors may
- *  be found in the AUTHORS file in the root of the source tree.
- */
-
 package org.webrtc.videoengine;
 
 import java.util.concurrent.locks.ReentrantLock;
@@ -24,7 +14,8 @@ import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
-import android.util.Log;
+
+import com.github.snowdream.android.util.Log;
 
 @TargetApi(5)
 public class ViEAndroidGLES20 extends GLSurfaceView
@@ -312,13 +303,13 @@ public class ViEAndroidGLES20 extends GLSurfaceView
 
     public void onDrawFrame(GL10 gl) {
         nativeFunctionLock.lock();
-        if(!nativeFunctionsRegisted || !surfaceCreated) {
+        if (!nativeFunctionsRegisted || !surfaceCreated) {
             nativeFunctionLock.unlock();
             return;
         }
 
-        if(!openGLCreated) {
-            if(0 != CreateOpenGLNative(nativeObject, viewWidth, viewHeight)) {
+        if (!openGLCreated) {
+            if (0 != CreateOpenGLNative(nativeObject, viewWidth, viewHeight)) {
                 return; // Failed to create OpenGL
             }
             openGLCreated = true; // Created OpenGL successfully
@@ -333,8 +324,8 @@ public class ViEAndroidGLES20 extends GLSurfaceView
         viewHeight = height;
 
         nativeFunctionLock.lock();
-        if(nativeFunctionsRegisted) {
-            if(CreateOpenGLNative(nativeObject,width,height) == 0)
+        if (nativeFunctionsRegisted) {
+            if (CreateOpenGLNative(nativeObject,width,height) == 0)
                 openGLCreated = true;
         }
         nativeFunctionLock.unlock();
@@ -359,7 +350,7 @@ public class ViEAndroidGLES20 extends GLSurfaceView
     }
 
     public void ReDraw() {
-        if(surfaceCreated) {
+        if (surfaceCreated) {
             // Request the renderer to redraw using the render thread context.
             this.requestRender();
         }

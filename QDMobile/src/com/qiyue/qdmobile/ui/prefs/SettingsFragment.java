@@ -6,9 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.ui.prefs.cupcake.PrefsLoaderActivity;
-import com.qiyue.qdmobile.utils.Log;
 
 /**
  * Created by simon on 4/16/15.

@@ -1,26 +1,4 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- * <p/>
- * CSipSimple is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * If you own a pjsip commercial license you can also redistribute it
- * and/or modify it under the terms of the GNU Lesser General Public License
- * as an android library.
- * <p/>
- * CSipSimple is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU General Public License
- * along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.ui.account;
-
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -37,7 +15,6 @@ import android.provider.BaseColumns;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -50,6 +27,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.actionbarsherlock.view.Menu;
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.ui.account.AccountsEditListAdapter.AccountRowTag;
@@ -64,11 +42,10 @@ import com.qiyue.qdmobile.wizards.WizardUtils.WizardInfo;
 
 import java.util.ArrayList;
 
-public class AccountsEditListFragment extends CSSListFragment implements /*OnQuitListener,*/ OnCheckedRowListener {
+public class AccountsEditListFragment extends CSSListFragment implements OnCheckedRowListener {
 
     private boolean dualPane;
     private Long curCheckPosition = SipProfile.INVALID_ID;
-    //private String curCheckWizard = WizardUtils.EXPERT_WIZARD_TAG;
     private final Handler mHandler = new Handler();
     private AccountStatusContentObserver statusObserver = null;
     private View mHeaderView;
@@ -81,15 +58,11 @@ public class AccountsEditListFragment extends CSSListFragment implements /*OnQui
         }
 
         public void onChange(boolean selfChange) {
-            Log.d(THIS_FILE, "Accounts status.onChange( " + selfChange + ")");
             ((BaseAdapter) getListAdapter()).notifyDataSetChanged();
         }
     }
 
-
     private final static String CURRENT_CHOICE = "curChoice";
-    //private final static String CURRENT_WIZARD = "curWizard";
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,19 +75,14 @@ public class AccountsEditListFragment extends CSSListFragment implements /*OnQui
         super.onActivityCreated(savedInstanceState);
         ListView lv = getListView();
 
-        //getListView().setSelector(R.drawable.transparent);
         lv.setCacheColorHint(Color.TRANSPARENT);
 
-
-        // View management
         View detailsFrame = getActivity().findViewById(R.id.details);
         dualPane = detailsFrame != null && detailsFrame.getVisibility() == View.VISIBLE;
 
 
         if (savedInstanceState != null) {
-            // Restore last state for checked position.
             curCheckPosition = savedInstanceState.getLong(CURRENT_CHOICE, SipProfile.INVALID_ID);
-            //curCheckWizard = savedInstanceState.getString(CURRENT_WIZARD);
         }
         setListShown(false);
         if (mAdapter == null) {
@@ -137,17 +105,13 @@ public class AccountsEditListFragment extends CSSListFragment implements /*OnQui
 
         if (dualPane) {
             // In dual-pane mode, the list view highlights the selected item.
-            Log.d("lp", "dual pane mode");
             lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             //lv.setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_LEFT);
             lv.setVerticalScrollBarEnabled(false);
             lv.setFadingEdgeLength(50);
 
             updateCheckedItem();
-            // Make sure our UI is in the correct state.
-            //showDetails(curCheckPosition, curCheckWizard);
         } else {
-            //getListView().setVerticalScrollbarPosition(View.SCROLLBAR_POSITION_RIGHT);
             lv.setVerticalScrollBarEnabled(true);
             lv.setFadingEdgeLength(100);
         }
@@ -155,72 +119,6 @@ public class AccountsEditListFragment extends CSSListFragment implements /*OnQui
 
     private static final int CHOOSE_WIZARD = 0;
     private static final int CHANGE_WIZARD = 1;
-
-    // Menu stuff
-//	@Override
-//	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        menu.add(R.string.add_account)
-//                .setIcon(android.R.drawable.ic_menu_add)
-//                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem item) {
-//                        onClickAddAccount();
-//                        return true;
-//                    }
-//                })
-//                .setShowAsAction(
-//                        MenuItem.SHOW_AS_ACTION_IF_ROOM );
-//
-//        menu.add(R.string.reorder).setIcon(android.R.drawable.ic_menu_sort_by_size)
-//                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem item) {
-//                        AccountsEditListAdapter ad = (AccountsEditListAdapter) getListAdapter();
-//                        ad.toggleDraggable();
-//                        return true;
-//                    }
-//                }).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-//
-//        menu.add(R.string.backup_restore).setIcon(android.R.drawable.ic_menu_save)
-//                .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem item) {
-//
-//                        // Populate choice list
-//                        List<String> items = new ArrayList<String>();
-//                        items.add(getResources().getString(R.string.backup));
-//                        final File backupDir = PreferencesWrapper.getConfigFolder(getActivity());
-//                        if (backupDir != null) {
-//                            String[] filesNames = backupDir.list();
-//                            for (String fileName : filesNames) {
-//                                items.add(fileName);
-//                            }
-//                        }
-//
-//                        final String[] fItems = (String[]) items.toArray(new String[0]);
-//                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//                        builder.setTitle(R.string.backup_restore);
-//                        builder.setItems(fItems, new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int item) {
-//                                if (item == 0) {
-//                                    SipProfileJson.saveSipConfiguration(getActivity());
-//                                } else {
-//                                    File fileToRestore = new File(backupDir + File.separator
-//                                            + fItems[item]);
-//                                    SipProfileJson.restoreSipConfiguration(getActivity(),
-//                                            fileToRestore);
-//                                }
-//                            }
-//                        });
-//                        builder.setCancelable(true);
-//                        AlertDialog backupDialog = builder.create();
-//                        backupDialog.show();
-//                        return true;
-//                    }
-//                });
-//
-//		super.onCreateOptionsMenu(menu, inflater);
-//	}
 
     private static final String THIS_FILE = null;
 
@@ -325,11 +223,8 @@ public class AccountsEditListFragment extends CSSListFragment implements /*OnQui
         }
     }
 
-
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-
-        Log.d(THIS_FILE, "Checked " + position + " et " + id);
 
         ListView lv = getListView();
         lv.setItemChecked(position, true);
@@ -345,29 +240,7 @@ public class AccountsEditListFragment extends CSSListFragment implements /*OnQui
      * whole new activity in which it is displayed.
      */
     private void showDetails(long profileId, String wizard) {
-        //curCheckPosition = index;
 
-        /*
-        if (dualPane) {
-            // If we are not currently showing a fragment for the new
-            // position, we need to create and install a new one.
-        	AccountEditFragment df = AccountEditFragment.newInstance(profileId);
-            //df.setOnQuitListener(this);
-            // Execute a transaction, replacing any existing fragment
-            // with this one inside the frame.
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.details, df, null);
-          //  ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.setTransition(FragmentTransaction.TRANSIT_NONE);
-            //if(profileId != Profile.INVALID_ID) {
-            //	ft.addToBackStack(null);
-            //}
-            ft.commit();
-        } else {
-        */
-
-        // Otherwise we need to launch a new activity to display
-        // the dialog fragment with selected text.
         Intent intent = new Intent();
         //intent.setClass(getActivity(), AccountEdit.class);
         intent.setClass(getActivity(), BasePrefsWizard.class);
@@ -376,27 +249,8 @@ public class AccountsEditListFragment extends CSSListFragment implements /*OnQui
         }
         intent.putExtra(SipProfile.FIELD_WIZARD, wizard);
         startActivity(intent);
-        	
-        	/*
-        }
-        */
     }
 
-    /*
-	@Override
-	public void onQuit() {
-		curCheckPosition = SipProfile.INVALID_ID;
-		if(dualPane) {
-			showDetails(curCheckPosition, null);
-		}
-	}
-
-	@Override
-	public void onShowProfile(long profileId) {
-		curCheckPosition = profileId;
-		updateCheckedItem();
-	}
-	*/
 
     @Override
     public void onToggleRow(AccountRowTag tag) {
@@ -448,7 +302,6 @@ public class AccountsEditListFragment extends CSSListFragment implements /*OnQui
                             cv, null, null);
 
                 }
-
             }
         }
 
@@ -544,27 +397,7 @@ public class AccountsEditListFragment extends CSSListFragment implements /*OnQui
     }
 
     private void onClickAddAccount() {
-
-
-//        Intent result = getActivity().getIntent();
-//        result.putExtra(WizardUtils.ID, "BASIC");
-//
-//        getActivity().setResult(getActivity().RESULT_OK, result);
-
-//        Intent intent = new Intent(getActivity(), WizardChooser.class);
-//        intent.putExtra(WizardUtils.ID, "BASIC");
-//
-//        getActivity().setResult(getActivity().RESULT_OK, intent);
-////        startActivityForResult(intent, CHOOSE_WIZARD);
-//        startActivity(intent);
-
-
-//        String wizardId = data.getStringExtra(WizardUtils.ID);
-//        if (wizardId != null) {
-//        }
-
         showDetails(SipProfile.INVALID_ID, "BASIC");
-
     }
 
     @Override

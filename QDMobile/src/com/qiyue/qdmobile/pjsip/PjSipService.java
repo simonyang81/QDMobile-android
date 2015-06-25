@@ -16,6 +16,7 @@ import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.SurfaceView;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipCallSession;
 import com.qiyue.qdmobile.api.SipConfigManager;
@@ -39,7 +40,6 @@ import com.qiyue.qdmobile.service.SipService.ToCall;
 import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.ExtraPlugins;
 import com.qiyue.qdmobile.utils.ExtraPlugins.DynCodecInfos;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.PreferencesProviderWrapper;
 import com.qiyue.qdmobile.utils.PreferencesWrapper;
 import com.qiyue.qdmobile.utils.TimerWrapper;
@@ -170,8 +170,6 @@ public class PjSipService {
      * underlying stack must be done on the same thread
      */
     public boolean sipStart() throws SameThreadException {
-
-        Log.setLogLevel(4);
 
         if (!hasSipStack) {
             Log.e(THIS_FILE, "We have no sip stack, we can't start");
@@ -1072,7 +1070,7 @@ public class PjSipService {
      * @param prio the priority of the codec
      */
     private void buffCodecLog(StringBuilder sb, String codec, short prio) {
-        if (prio > 0 && Log.getLogLevel() >= 4) {
+        if (prio > 0) {
             sb.append(codec);
             sb.append(" (");
             sb.append(prio);

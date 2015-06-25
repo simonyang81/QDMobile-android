@@ -12,13 +12,13 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.ui.dialpad.DialerFragment;
 import com.qiyue.qdmobile.utils.Constants;
-import com.qiyue.qdmobile.utils.Log;
 
 /**
- * Created by newsbeat on 6/6/15.
+ * Created by Simon on 6/6/15.
  */
 public class FlashFragment extends Fragment {
 

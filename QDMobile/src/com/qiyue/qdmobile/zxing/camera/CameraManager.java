@@ -5,9 +5,9 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Handler;
-import android.util.Log;
 import android.view.SurfaceHolder;
 
+import com.github.snowdream.android.util.Log;
 import com.google.zxing.PlanarYUVLuminanceSource;
 import com.qiyue.qdmobile.zxing.camera.open.OpenCameraInterface;
 

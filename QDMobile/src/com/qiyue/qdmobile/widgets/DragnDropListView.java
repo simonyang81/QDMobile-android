@@ -1,28 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-/**
- * This file contains relicensed code from Apache copyright of 
- * Copyright (C) 2008 The Android Open Source Project
- */
-
 package com.qiyue.qdmobile.widgets;
 
 import android.content.Context;
@@ -42,8 +17,8 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
-import com.qiyue.qdmobile.utils.Log;
 
 public class DragnDropListView extends ListView {
 
@@ -96,7 +71,9 @@ public class DragnDropListView extends ListView {
 			if (itemnum != AdapterView.INVALID_POSITION) {
 
 				ViewGroup item = (ViewGroup) getChildAt(itemnum - getFirstVisiblePosition());
-				Log.d("DnD view", "Start dragging at " + (itemnum - getFirstVisiblePosition()) + " for "+ itemnum + " # "+ getFirstVisiblePosition());
+				Log.d("DragnDropListView",
+						"Start dragging at " + (itemnum - getFirstVisiblePosition())
+						+ " for " + itemnum + " # " + getFirstVisiblePosition());
 				mDragPoint = y - item.getTop();
 				mCoordOffset = ((int) ev.getRawY()) - y;
 				View dragger = item.findViewById(grabberId);

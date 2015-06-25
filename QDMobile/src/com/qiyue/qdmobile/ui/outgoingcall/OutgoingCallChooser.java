@@ -33,12 +33,12 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.ISipService;
 import com.qiyue.qdmobile.api.SipManager;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.utils.Compatibility;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.PreferencesProviderWrapper;
 import com.qiyue.qdmobile.utils.UriUtils;
 
@@ -80,7 +80,7 @@ public class OutgoingCallChooser extends SherlockFragmentActivity {
      * @return The phone number we are trying to call with this activity
      */
     public String getPhoneNumber() {
-        if(phoneNumber == null) {
+        if (phoneNumber == null) {
             Intent it = getIntent();
             // Use utility function to extract number
             phoneNumber = UriUtils.extractNumberFromIntent(it, this);
@@ -99,8 +99,7 @@ public class OutgoingCallChooser extends SherlockFragmentActivity {
                     }
                 }
             }
-            // Still null ... well make it empty.
-            if(phoneNumber == null) {
+            if (phoneNumber == null) {
                 phoneNumber = "";
             }
             return phoneNumber;
@@ -136,16 +135,16 @@ public class OutgoingCallChooser extends SherlockFragmentActivity {
      * @return True if we can call automatically some accounts.
      */
     public boolean canCallAutomatically() {
-        if(callAutomatically == null) {
-            if(getAccountToCallTo() == SipProfile.INVALID_ID) {
+        if (callAutomatically == null) {
+            if (getAccountToCallTo() == SipProfile.INVALID_ID) {
                 // No account specified, we can call automatically
                 callAutomatically = true;
-            }else {
+            } else {
                 int fallbackBehavior = getIntent().getIntExtra(SipManager.EXTRA_FALLBACK_BEHAVIOR, SipManager.FALLBACK_ASK);
-                if(fallbackBehavior == SipManager.FALLBACK_AUTO_CALL_OTHER) {
+                if (fallbackBehavior == SipManager.FALLBACK_AUTO_CALL_OTHER) {
                     // The other app explicitely asked to fallback to other
                     callAutomatically = true;
-                }else {
+                } else {
                     callAutomatically = false;
                 }
             }

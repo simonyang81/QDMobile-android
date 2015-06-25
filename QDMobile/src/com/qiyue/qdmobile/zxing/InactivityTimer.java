@@ -7,7 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
-import android.util.Log;
+
+import com.github.snowdream.android.util.Log;
 
 /**
  * Finishes an activity after a period of inactivity if the device is on battery power.
@@ -91,7 +92,7 @@ final class InactivityTimer {
                 Log.i(TAG, "Finishing activity due to inactivity");
                 activity.finish();
             } catch (InterruptedException e) {
-                // continue without killing
+                Log.e(TAG, "InactivityAsyncTask, " + e.toString());
             }
             return null;
         }

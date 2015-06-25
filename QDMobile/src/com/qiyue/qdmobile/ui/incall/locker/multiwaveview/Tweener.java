@@ -33,7 +33,8 @@ import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.util.Log;
+
+import com.github.snowdream.android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -2,12 +2,12 @@ package com.qiyue.qdmobile.wizards.impl;
 
 import android.preference.EditTextPreference;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.api.SipUri;
 import com.qiyue.qdmobile.api.SipUri.ParsedSipContactInfos;
 import com.qiyue.qdmobile.models.ZXingAccountJSON;
-import com.qiyue.qdmobile.utils.Log;
 
 import java.util.HashMap;
 

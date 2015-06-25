@@ -8,12 +8,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.text.format.DateFormat;
 
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.api.SipManager;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.db.DBProvider;
 import com.qiyue.qdmobile.models.Filter;
 import com.qiyue.qdmobile.utils.CallHandlerPlugin;
-import com.qiyue.qdmobile.utils.Log;
 import com.qiyue.qdmobile.utils.PreferencesWrapper;
 
 import org.json.JSONArray;

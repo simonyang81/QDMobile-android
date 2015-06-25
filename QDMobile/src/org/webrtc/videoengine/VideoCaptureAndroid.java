@@ -18,7 +18,7 @@ import android.hardware.Camera.PreviewCallback;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 
-import com.qiyue.qdmobile.utils.Log;
+import com.github.snowdream.android.util.Log;
 
 import org.webrtc.videoengine.VideoCaptureDeviceInfoAndroid.AndroidVideoCaptureDevice;
 import org.webrtc.videoengine.camera.CameraUtilsWrapper;
@@ -28,7 +28,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class VideoCaptureAndroid implements PreviewCallback, Callback {
 
-    private final static String TAG = "WEBRTC-JC";
+    private final static String TAG = VideoCaptureAndroid.class.getSimpleName();
 
     private Camera camera;
     private CameraUtilsWrapper cameraUtils;

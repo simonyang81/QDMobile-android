@@ -49,13 +49,13 @@ public class QDMobileApplication extends Application {
         sApplicationContext = getApplicationContext();
         String processName = getProcessName(sApplicationContext, android.os.Process.myPid());
 
+        FileUtil.deleteFilesOneMonthAgo(sApplicationContext);
+
+        initLog();
+        CrashUtils.getInstance().init();
+        FileUtil.initQDMobileLogsPath(sApplicationContext);
+
         if (Constants.REAL_PACKAGE_NAME.equalsIgnoreCase(processName)) {
-
-            FileUtil.deleteFilesOneMonthAgo(sApplicationContext);
-            initLog();
-            CrashUtils.getInstance().init();
-
-            Log.d(TAG, ">--- Initialize Logs ---<");
 
             if (mRestAdapter == null) {
                 mRestAdapter = new RestAdapter.Builder()
@@ -68,7 +68,6 @@ public class QDMobileApplication extends Application {
 
         initLBSLocation();
         Log.d(TAG, "onCreate() -> processName: " + processName);
-
     }
 
     private void initLBSLocation() {
@@ -231,7 +230,6 @@ public class QDMobileApplication extends Application {
         Log.setLog2FileEnabled(true);
         Log.setLogFormatter(new LogFormatter.IDEAFormatter("yyyy-MM-dd HH:mm:ss"));
 
-        FileUtil.initQDMobileLogsPath(sApplicationContext);
     }
 
     public static Context getContextQD() {

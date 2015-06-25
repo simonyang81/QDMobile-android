@@ -30,11 +30,14 @@ import com.qiyue.qdmobile.models.CallerInfo;
 import com.qiyue.qdmobile.service.SipNotifications;
 import com.qiyue.qdmobile.service.SipService;
 import com.qiyue.qdmobile.ui.PickupSipUri;
+import com.qiyue.qdmobile.utils.AccountUtils;
 import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.SmileyParser;
 import com.qiyue.qdmobile.utils.clipboard.ClipboardWrapper;
 
-public class MessageFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>, OnClickListener {
+public class MessageFragment extends ListFragment implements
+                                                    LoaderManager.LoaderCallbacks<Cursor>,
+                                                    OnClickListener {
 
     private static final String THIS_FILE = MessageFragment.class.getSimpleName();
 
@@ -61,8 +64,7 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
 
-        ListView lv = getListView();
-        lv.setOnCreateContextMenuListener(this);
+        getListView().setOnCreateContextMenuListener(this);
     }
 
     @Override
@@ -224,8 +226,6 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
         startActivityForResult(pickupIntent, Constants.PICKUP_SIP_URI);
     }
 
-
-//    TODO
     private void sendMessage() {
 
         if (service == null) {
@@ -233,17 +233,8 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
             return;
         }
 
-        Cursor c = getActivity().getContentResolver().query(
-                SipProfile.ACCOUNT_URI, Constants.ACC_PROJECTION,
-                SipProfile.FIELD_ACTIVE + "=?",
-                new String[] {"1"},
-                null);
-
         try {
-            SipProfile acc = null;
-            if (c != null && c.moveToFirst()) {
-                acc = new SipProfile(c);
-            }
+            SipProfile acc = AccountUtils.getAccount();
 
             if (acc != null && acc.id != SipProfile.INVALID_ID) {
                 try {
@@ -259,14 +250,6 @@ public class MessageFragment extends ListFragment implements LoaderManager.Loade
 
         } catch (Exception e) {
             Log.e(THIS_FILE, "sendMessage(), " + e.toString());
-        } finally {
-            try {
-                if (c != null && c.isClosed() == false) {
-                    c.close();
-                }
-            } catch (Exception e) {
-                Log.e(THIS_FILE, "sendMessage() close cursor error, " + e.toString());
-            }
         }
 
     }

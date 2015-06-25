@@ -1,17 +1,14 @@
 package com.qiyue.qdmobile.lbs;
 
-import android.database.Cursor;
-
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.github.snowdream.android.util.Log;
-import com.qiyue.qdmobile.QDMobileApplication;
 import com.qiyue.qdmobile.api.SipProfile;
+import com.qiyue.qdmobile.utils.AccountUtils;
 import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.DateUtils;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 import retrofit.Callback;
@@ -41,62 +38,39 @@ public class LBSLocationListener implements BDLocationListener {
         StringBuffer sb = new StringBuffer(256);
         sb.append("time : ");
         sb.append(location.getTime());
-        sb.append("\nerror code : ");
-        sb.append(location.getLocType());
-        sb.append("\nlatitude : ");
+        sb.append("\n");
+//        sb.append("\nerror code : ");
+//        sb.append(location.getLocType());
+//        sb.append("\nlatitude : ");
         sb.append(location.getLatitude());
-        sb.append("\nlontitude : ");
+        sb.append(",");
         sb.append(location.getLongitude());
-        sb.append("\nradius : ");
-        sb.append(location.getRadius());
+//        sb.append("\nradius : ");
+//        sb.append(location.getRadius());
         if (location.getLocType() == BDLocation.TypeGpsLocation){
             sb.append("\nspeed : ");
             sb.append(location.getSpeed());
-            sb.append("\nsatellite : ");
-            sb.append(location.getSatelliteNumber());
-            sb.append("\ndirection : ");
+//            sb.append("\nsatellite : ");
+//            sb.append(location.getSatelliteNumber());
+//            sb.append("\ndirection : ");
             sb.append("\naddr : ");
             sb.append(location.getAddrStr());
-            sb.append(location.getDirection());
+//            sb.append(location.getDirection());
         } else if (location.getLocType() == BDLocation.TypeNetWorkLocation){
             sb.append("\naddr : ");
             sb.append(location.getAddrStr());
 
-            sb.append("\noperationers : ");
-            sb.append(location.getOperators());
+//            sb.append("\noperationers : ");
+//            sb.append(location.getOperators());
         }
         Log.i(TAG, sb.toString());
 
         if (location != null) {
+            SipProfile acc = AccountUtils.getAccount();
 
-            Cursor c = QDMobileApplication.getContextQD().getContentResolver().query(
-                    SipProfile.ACCOUNT_URI, Constants.ACC_PROJECTION,
-                    SipProfile.FIELD_ACTIVE + "=?",
-                    new String[] {"1"},
-                    null);
-
-            try {
-                SipProfile acc = null;
-                if (c != null && c.moveToFirst()) {
-                    acc = new SipProfile(c);
-                }
-
-                if (acc != null && acc.id != SipProfile.INVALID_ID) {
-                    createPOI(location, acc.getSipUserName() + "@" + acc.getDefaultDomain());
-                }
-
-            } catch (Exception e) {
-                Log.e(TAG, "onReceiveLocation(), " + e.toString());
-            } finally {
-                try {
-                    if (c != null && c.isClosed() == false) {
-                        c.close();
-                    }
-                } catch (Exception e) {
-                    Log.e(TAG, "onReceiveLocation() close cursor error, " + e.toString());
-                }
+            if (acc != null && acc.id != SipProfile.INVALID_ID) {
+                createPOI(location, acc.getSipUserName() + "@" + acc.getDefaultDomain());
             }
-
         }
 
 

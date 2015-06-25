@@ -50,8 +50,8 @@ public class Codecs extends SherlockFragmentActivity {
             tabAdapter.addTab(audioWb, CodecsFragment.class);
             tabAdapter.addTab(audioNb, CodecsFragment.class);
             if (showVideoCodecs) {
-                Tab videoNb = ab.newTab().setText(R.string.slow).setIcon(R.drawable.ic_prefs_media_video);
-                Tab videoWb = ab.newTab().setText(R.string.fast).setIcon(R.drawable.ic_prefs_media_video);
+                Tab videoNb = ab.newTab().setText(R.string.slow).setIcon(R.drawable.icon_video_call_gray);
+                Tab videoWb = ab.newTab().setText(R.string.fast).setIcon(R.drawable.icon_video_call_gray);
 
                 tabAdapter.addTab(videoWb, CodecsFragment.class);
                 tabAdapter.addTab(videoNb, CodecsFragment.class);
@@ -61,7 +61,7 @@ public class Codecs extends SherlockFragmentActivity {
             tabAdapter.addTab(audioTab, CodecsFragment.class);
 
             if (showVideoCodecs) {
-                Tab videoTab = ab.newTab().setIcon(R.drawable.ic_prefs_media_video);
+                Tab videoTab = ab.newTab().setIcon(R.drawable.icon_video_call_gray);
                 tabAdapter.addTab(videoTab, CodecsFragment.class);
             }
         }

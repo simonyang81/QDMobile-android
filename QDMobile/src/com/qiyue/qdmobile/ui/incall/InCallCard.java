@@ -139,7 +139,10 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
             mActionMenuPresenter.setItemLimit(20);
             ActionMenuView menuView = (ActionMenuView) mActionMenuPresenter.getMenuView(menuViewWrapper);
             UtilityWrapper.getInstance().setBackgroundDrawable(menuView, null);
+
+//            TODO
             menuViewWrapper.addView(menuView, layoutParams);
+
             added = true;
         } else {
             mActionMenuPresenter.setWidthLimit(w, true);

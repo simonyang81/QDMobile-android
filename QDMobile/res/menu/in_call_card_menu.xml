@@ -44,7 +44,7 @@
         android:title="@string/send_dtmf"/>
     <item
         android:id="@+id/videoCallButton"
-        android:icon="@drawable/ic_prefs_media_video"
+        android:icon="@drawable/icon_video_call_gray"
         android:showAsAction="ifRoom"
         android:title="@string/video"/>
     <item

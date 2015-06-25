@@ -51,6 +51,7 @@ import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.ui.SipHome;
 import com.qiyue.qdmobile.ui.SipHome.ViewPagerVisibilityListener;
 import com.qiyue.qdmobile.ui.dialpad.DialerLayout.OnAutoCompleteListVisibilityChangedListener;
+import com.qiyue.qdmobile.utils.AccountUtils;
 import com.qiyue.qdmobile.utils.CallHandlerPlugin;
 import com.qiyue.qdmobile.utils.CallHandlerPlugin.OnLoadListener;
 import com.qiyue.qdmobile.utils.Constants;
@@ -539,21 +540,9 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
         }
         String toCall = "";
         Long accountToUse = SipProfile.INVALID_ID;
-        // Find account to use
-//        SipProfile acc = accountChooserButton.getSelectedAccount();
 
-        Cursor c = getActivity().getContentResolver().query(
-                SipProfile.ACCOUNT_URI, Constants.ACC_PROJECTION,
-                SipProfile.FIELD_ACTIVE + "=?",
-                new String[]{"1"},
-                null);
-
-        SipProfile acc = null;
-        if (c != null && c.moveToFirst()) {
-            acc = new SipProfile(c);
-        }
-
-        if (acc == null) {
+        SipProfile acc = AccountUtils.getAccount();
+        if (acc == null || acc.id == SipProfile.INVALID_ID) {
             return;
         }
 
@@ -593,22 +582,9 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
 
     public void placeVMCall() {
         Long accountToUse = SipProfile.INVALID_ID;
-//        SipProfile acc = null;
 
-//        acc = accountChooserButton.getSelectedAccount();
-        Cursor c = getActivity().getContentResolver().query(
-                SipProfile.ACCOUNT_URI, Constants.ACC_PROJECTION,
-                SipProfile.FIELD_ACTIVE + "=?",
-                new String[]{"1"},
-                null);
-
-        SipProfile acc = null;
-        if (c != null && c.moveToFirst()) {
-            acc = new SipProfile(c);
-        }
-
-        if (acc == null) {
-            // Maybe we could inform user nothing will happen here?
+        SipProfile acc = AccountUtils.getAccount();
+        if (acc == null || acc.id == SipProfile.INVALID_ID) {
             return;
         }
 

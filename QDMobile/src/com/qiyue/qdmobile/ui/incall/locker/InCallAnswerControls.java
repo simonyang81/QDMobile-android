@@ -1,28 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-/**
- * This file contains relicensed code from Apache copyright of 
- * Copyright (C) 2008 The Android Open Source Project
- */
-
 package com.qiyue.qdmobile.ui.incall.locker;
 
 import android.content.Context;
@@ -74,10 +49,10 @@ public class InCallAnswerControls extends RelativeLayout implements IOnLeftRight
         
         lockerWidgetType = LOCKER_GLOWPAD;
         setGravity(Gravity.CENTER_VERTICAL);
-        if(!isInEditMode()) {
+        if (!isInEditMode()) {
             int unlockerType = SipConfigManager.getPreferenceIntegerValue(context, SipConfigManager.UNLOCKER_TYPE, 0);
-            if(unlockerType <= 0 || unlockerType > 3) {
-                AccessibilityWrapper accessibilityManager = AccessibilityWrapper.getInstance();
+			if (unlockerType <= 0 || unlockerType > 3) {
+				AccessibilityWrapper accessibilityManager = AccessibilityWrapper.getInstance();
                 accessibilityManager.init(getContext());
                 if(accessibilityManager.isEnabled()) {
                     lockerWidgetType = LOCKER_BUTTON;
@@ -86,10 +61,10 @@ public class InCallAnswerControls extends RelativeLayout implements IOnLeftRight
                         && !Compatibility.isCompatible(Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
                     lockerWidgetType = LOCKER_BUTTON;
                 }
-            }else {
+            } else {
                 lockerWidgetType = unlockerType;
             }
-            if(lockerWidgetType == LOCKER_GLOWPAD && !Compatibility.isCompatible(Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
+            if (lockerWidgetType == LOCKER_GLOWPAD && !Compatibility.isCompatible(Build.VERSION_CODES.ICE_CREAM_SANDWICH)) {
                 lockerWidgetType = LOCKER_SLIDINGTAB;
             }
         }
@@ -107,10 +82,10 @@ public class InCallAnswerControls extends RelativeLayout implements IOnLeftRight
 	private void setCallLockerVisibility(int visibility) {
 	    controlMode = visibility == View.VISIBLE ? MODE_LOCKER : MODE_NO_ACTION;
 	    setVisibility(visibility);
-        if(visibility == View.VISIBLE) {
-            // Inflate sub views only if display is requested
-            if(lockerWidget == null) {
-                switch (lockerWidgetType) {
+		if (visibility == View.VISIBLE) {
+			// Inflate sub views only if display is requested
+			if (lockerWidget == null) {
+				switch (lockerWidgetType) {
                     case LOCKER_SLIDINGTAB:
                         lockerWidget = new SlidingTab(getContext());
                         break;
@@ -126,7 +101,7 @@ public class InCallAnswerControls extends RelativeLayout implements IOnLeftRight
                 lockerWidget.setOnLeftRightListener(this);
                 lockerWidget.setTypeOfLock(TypeOfLock.CALL);
                 LayoutParams lp = new LayoutParams(lockerWidget.getLayoutingWidth(), lockerWidget.getLayoutingHeight());
-                if(lockerWidget.getLayoutingHeight() == LayoutParams.WRAP_CONTENT ||
+                if (lockerWidget.getLayoutingHeight() == LayoutParams.WRAP_CONTENT ||
                         lockerWidget.getLayoutingWidth() == LayoutParams.WRAP_CONTENT) {
                     lp.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
                 }
@@ -134,7 +109,7 @@ public class InCallAnswerControls extends RelativeLayout implements IOnLeftRight
                 
             }
         }
-        if(lockerWidget != null) {
+        if (lockerWidget != null) {
             lockerWidget.setVisibility(visibility);
             lockerWidget.resetView();
         }
@@ -143,8 +118,8 @@ public class InCallAnswerControls extends RelativeLayout implements IOnLeftRight
 
 	public void setCallState(SipCallSession callInfo) {
 		currentCall = callInfo;
-		
-		if(currentCall == null) {
+
+		if (currentCall == null) {
 			setCallLockerVisibility(GONE);
 			return;
 		}
@@ -212,7 +187,6 @@ public class InCallAnswerControls extends RelativeLayout implements IOnLeftRight
 		}
 	}
 
-	
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

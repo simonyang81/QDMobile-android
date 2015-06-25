@@ -19,6 +19,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.RemoteException;
+import android.support.v4.app.FragmentActivity;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -31,7 +32,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.ISipService;
@@ -61,7 +61,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class InCallActivity extends SherlockFragmentActivity implements IOnCallActionTrigger,
+public class InCallActivity extends FragmentActivity implements IOnCallActionTrigger,
         IOnLeftRightChoice, ProximityDirector, OnDtmfListener {
 
     private static final int QUIT_DELAY = 3000;
@@ -82,20 +82,9 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
     private InCallInfoGrid activeCallsGrid;
     private Timer quitTimer;
 
-    // private LinearLayout detailedContainer, holdContainer;
-
-    // True if running unit tests
-    // private boolean inTest;
-
-
     private DialingFeedback dialFeedback;
     private PowerManager powerManager;
     private PreferencesProviderWrapper prefsWrapper;
-
-    // Dnd views
-    //private ImageView endCallTarget, holdTarget, answerTarget, xferTarget;
-    //private Rect endCallTargetRect, holdTargetRect, answerTargetRect, xferTargetRect;
-
 
     private SurfaceView cameraPreview;
     private CallProximityManager proximityManager;
@@ -618,7 +607,7 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
 
         proximityManager.release(0);
 
-        activeCallsGrid.setVisibility(View.VISIBLE);
+//        activeCallsGrid.setVisibility(View.VISIBLE);
         inCallControls.setVisibility(View.GONE);
 
         Log.d(THIS_FILE, "Start quit timer");
@@ -636,8 +625,6 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
             finish();
         }
     }
-
-    ;
 
     private void showDialpad(int callId) {
         DtmfDialogFragment newFragment = DtmfDialogFragment.newInstance(callId);
@@ -1053,220 +1040,6 @@ public class InCallActivity extends SherlockFragmentActivity implements IOnCallA
         }
 
     }
-
-    /*
-    // Drag and drop feature
-    private Timer draggingTimer;
-
-    public class OnBadgeTouchListener implements OnTouchListener {
-        private SipCallSession call;
-        private InCallCard badge;
-        private boolean isDragging = false;
-        private SetDraggingTimerTask draggingDelayTask;
-        Vibrator vibrator;
-        int beginX = 0;
-        int beginY = 0;
-
-        private class SetDraggingTimerTask extends TimerTask {
-            @Override
-            public void run() {
-                vibrator.vibrate(50);
-                setDragging(true);
-                Log.d(THIS_FILE, "Begin dragging");
-            }
-        };
-
-        public OnBadgeTouchListener(InCallCard aBadge, SipCallSession aCall) {
-            call = aCall;
-            badge = aBadge;
-            vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            // TODO : move somewhere else
-            if (draggingTimer == null) {
-                draggingTimer = new Timer("Dragging-timer");
-            }
-        }
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            int action = event.getAction();
-            int X = (int) event.getRawX();
-            int Y = (int) event.getRawY();
-
-            // Reset the not proximity sensor lock overlay
-            proximityManager.restartTimer();
-            
-
-            switch (action) {
-                case MotionEvent.ACTION_DOWN:
-                    if (draggingDelayTask != null) {
-                        draggingDelayTask.cancel();
-                    }
-                    draggingDelayTask = new SetDraggingTimerTask();
-                    beginX = X;
-                    beginY = Y;
-                    draggingTimer.schedule(draggingDelayTask, DRAGGING_DELAY);
-                case MotionEvent.ACTION_MOVE:
-                    if (isDragging) {
-                        float size = Math.max(75.0f, event.getSize() + 50.0f);
-                        
-                        Rect wrap = new Rect(
-                                (int) (X - (size)),
-                                (int) (Y - (size)),
-                                (int) (X + (size / 2.0f)),
-                                (int) (Y + (size / 2.0f)));
-                                
-                        badge.bringToFront();
-                        // Log.d(THIS_FILE, "Is moving to "+X+", "+Y);
-                        return true;
-                    } else {
-                        if (Math.abs(X - beginX) > 50 || Math.abs(Y - beginY) > 50) {
-                            Log.d(THIS_FILE, "Stop dragging");
-                            stopDragging();
-                            return true;
-                        }
-                        return false;
-                    }
-
-                case MotionEvent.ACTION_UP:
-                    onDropBadge(X, Y, badge, call);
-                    stopDragging();
-                    return true;
-                    // Yes we continue cause this is a stop action
-                case MotionEvent.ACTION_CANCEL:
-                case MotionEvent.ACTION_OUTSIDE:
-                    Log.d(THIS_FILE, "Stop dragging");
-                    stopDragging();
-                    return false;
-            }
-            return false;
-        }
-
-        private void stopDragging() {
-            // TODO : thread save it
-            if (draggingDelayTask != null) {
-                draggingDelayTask.cancel();
-            }
-            setDragging(false);
-        }
-
-        private void setDragging(boolean dragging) {
-            isDragging = dragging;
-            DraggingInfo di = new DraggingInfo(isDragging,
-                    badge, call);
-            runOnUiThread(new UpdateDraggingRunnable(di));
-        }
-        
-
-        public void setCallState(SipCallSession callInfo) {
-            Log.d(THIS_FILE,
-                    "Updated call infos : " + call.getCallState() + " and " + call.getMediaStatus()
-                            + " et " + call.isLocalHeld());
-            call = callInfo;
-        }
-    }
-    
-    private Rect getViewRect(int id) {
-        View v = findViewById(id);
-        if(v != null && v.getVisibility() == View.VISIBLE) {
-            return new Rect(v.getLeft(), v.getTop(), v.getRight(), v.getBottom());
-        }
-        return null;
-    }
-
-    private void onDropBadge(int X, int Y, InCallCard badge, SipCallSession call) {
-        Log.d(THIS_FILE, "Dropping !!! in " + X + ", " + Y);
-
-        // Rectangle init if not already done
-        if (endCallTargetRect == null) {
-            endCallTargetRect = getViewRect(R.id.dropHangup);
-        }
-        if (holdTargetRect == null) {
-            holdTargetRect = getViewRect(R.id.dropHold);
-        }
-        if (answerTargetRect == null) {
-            answerTargetRect = getViewRect(R.id.dropAnswer);
-        }
-        if (xferTargetRect == null) {
-            xferTargetRect = getViewRect(R.id.dropXfer);
-        }
-
-        // Rectangle matching
-
-        if (endCallTargetRect != null && endCallTargetRect.contains(X, Y)) {
-            // Drop in end call zone
-            onTrigger(call.isIncoming() && call.isBeforeConfirmed() ? DECLINE_CALL : CLEAR_CALL,
-                    call);
-        } else if (holdTargetRect != null && holdTargetRect.contains(X, Y)) {
-            // check if not drop on held call
-            boolean dropOnOtherCall = false;
-            
-            for (Entry<Integer, InCallInfo> badgeSet : badges.entrySet()) {
-                Log.d(THIS_FILE, "On drop target searching for another badge");
-                int callId = badgeSet.getKey();
-                if (callId != call.getCallId()) {
-                    Log.d(THIS_FILE, "found a different badge than self");
-                    SipCallSession callInfo = getCallInfo(callId);
-                    if (callInfo.isLocalHeld()) {
-                        Log.d(THIS_FILE, "Other badge is hold");
-                        InCallInfo otherBadge = badgeSet.getValue();
-                        Rect r = new Rect(otherBadge.getLeft(), otherBadge.getTop(),
-                                otherBadge.getRight(), otherBadge.getBottom());
-                        Log.d(THIS_FILE, "Current X, Y " + X + ", " + Y + " -- " + r.top + ", "
-                                + r.left + ", " + r.right + ", " + r.bottom);
-                        if (r.contains(X, Y)) {
-                            Log.d(THIS_FILE, "Yep we've got one");
-                            dropOnOtherCall = true;
-                            if (service != null) {
-                                try {
-                                    // 1 = PJSUA_XFER_NO_REQUIRE_REPLACES
-                                    service.xferReplace(call.getCallId(), callId, 1);
-                                } catch (RemoteException e) {
-                                    // TODO : toaster
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            
-
-            // Drop in hold zone
-
-            if (!dropOnOtherCall && !call.isLocalHeld()) {
-                onTrigger(TOGGLE_HOLD, call);
-            }
-        } else if (answerTargetRect != null && answerTargetRect.contains(X, Y)) {
-            if (call.isIncoming() && call.isBeforeConfirmed()) {
-                onTrigger(TAKE_CALL, call);
-            }
-        } else if (xferTargetRect != null && xferTargetRect.contains(X, Y)) {
-            if (!call.isBeforeConfirmed() && !call.isAfterEnded()) {
-                onTrigger(XFER_CALL, call);
-            }
-
-        } else {
-            Log.d(THIS_FILE, "Drop is done somewhere else " + call.getMediaStatus());
-            // Drop somewhere else
-            if (call.isLocalHeld()) {
-                Log.d(THIS_FILE, "Try to unhold");
-                onTrigger(TOGGLE_HOLD, call);
-            }
-        }
-        runOnUiThread(new UpdateUIFromMediaRunnable());
-    }
-
-    private class DraggingInfo {
-        public boolean isDragging = false;
-        // public InCallInfo2 badge;
-        public SipCallSession call;
-
-        public DraggingInfo(boolean aIsDragging, InCallCard aBadge, SipCallSession aCall) {
-            isDragging = aIsDragging;
-            // badge = aBadge;
-            call = aCall;
-        }
-    }
-    */
 
     private class ShowZRTPInfoRunnable implements Runnable, DialogInterface.OnClickListener {
         private String sasString;

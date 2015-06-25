@@ -44,11 +44,12 @@ public class InCallControls extends FrameLayout implements Callback {
         super(context, attrs, style);
 
         if (!isInEditMode()) {
-            supportMultipleCalls = SipConfigManager.getPreferenceBooleanValue(getContext(), SipConfigManager.SUPPORT_MULTIPLE_CALLS, false);
+            supportMultipleCalls = SipConfigManager.getPreferenceBooleanValue(getContext(),
+                    SipConfigManager.SUPPORT_MULTIPLE_CALLS, false);
         }
 
-        final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                (int) getResources().getDimension(R.dimen.incall_bottom_bar_height));
+        final FrameLayout.LayoutParams layoutParams
+                = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.incall_bottom_bar_height));
         ActionMenuPresenter mActionMenuPresenter = new ActionMenuPresenter(getContext()) {
             public void bindItemView(MenuItemImpl item, MenuView.ItemView itemView) {
                 super.bindItemView(item, itemView);

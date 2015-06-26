@@ -43,4 +43,15 @@ public class AccountUtils {
 
     }
 
+    public static String getLBSAccountID() {
+
+        SipProfile acc = getAccount();
+
+        if (acc == null || acc.id == SipProfile.INVALID_ID) {
+            return "";
+        }
+
+        return acc.getSipUserName() + "@" + acc.getDefaultDomain();
+    }
+
 }

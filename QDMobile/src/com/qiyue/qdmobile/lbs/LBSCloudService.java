@@ -1,6 +1,5 @@
 package com.qiyue.qdmobile.lbs;
 
-
 import com.qiyue.qdmobile.utils.Constants;
 
 import java.util.Map;
@@ -31,11 +30,9 @@ public interface LBSCloudService {
     void createColumn(@PartMap Map<String, Object> params, Callback<LBSBasPO> cb);
 
 
-
     @Multipart
     @POST(Constants.LBS_CLOUD_CREATE_POI_API_URL)
     void createPOI(@PartMap Map<String, Object> params, Callback<LBSBasPO> cb);
-
 
 
     @Multipart

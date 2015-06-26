@@ -3,6 +3,7 @@ package com.qiyue.qdmobile;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
@@ -11,6 +12,7 @@ import com.github.snowdream.android.util.LogFormatter;
 import com.qiyue.qdmobile.lbs.LBSBasPO;
 import com.qiyue.qdmobile.lbs.LBSCloudService;
 import com.qiyue.qdmobile.lbs.LBSLocationListener;
+import com.qiyue.qdmobile.utils.AccountUtils;
 import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.CrashUtils;
 import com.qiyue.qdmobile.utils.DateUtils;
@@ -168,7 +170,7 @@ public class QDMobileApplication extends Application {
                 put("type",                 1);
                 put("default_value",        0);
                 put("is_sortfilter_field",  0);
-                put("is_search_field",      0);
+                put("is_search_field", 0);
                 put("is_index_field",       1);
                 put("is_unique_field",      0);
                 put("geotable_id",          Constants.LBS_DQMobile_GEO_TABLE_ID);
@@ -204,6 +206,10 @@ public class QDMobileApplication extends Application {
                 put("geotable_id", Constants.LBS_DQMobile_GEO_TABLE_ID);
                 put(Constants.LBS_GEO_TABLE_COLUMN_TIME_PERIOD, "-," + currTime);
 
+                String lbsAccountID = AccountUtils.getLBSAccountID();
+                if (TextUtils.isEmpty(lbsAccountID) == false) {
+                    put(Constants.LBS_GEO_TABLE_COLUMN_SIP_ACCOUNT, lbsAccountID);
+                }
             }
         };
 

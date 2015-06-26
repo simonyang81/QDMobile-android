@@ -1,9 +1,10 @@
 package com.qiyue.qdmobile.lbs;
 
+import android.text.TextUtils;
+
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.github.snowdream.android.util.Log;
-import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.utils.AccountUtils;
 import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.DateUtils;
@@ -66,10 +67,9 @@ public class LBSLocationListener implements BDLocationListener {
         Log.i(TAG, sb.toString());
 
         if (location != null) {
-            SipProfile acc = AccountUtils.getAccount();
-
-            if (acc != null && acc.id != SipProfile.INVALID_ID) {
-                createPOI(location, acc.getSipUserName() + "@" + acc.getDefaultDomain());
+            String lbsAccountID = AccountUtils.getLBSAccountID();
+            if (TextUtils.isEmpty(lbsAccountID) == false) {
+                createPOI(location, lbsAccountID);
             }
         }
 

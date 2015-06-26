@@ -1,4 +1,4 @@
-<!-- Parts of this file are extract from the android project distributed under Apache license relicensed in GPLv3 -->
+<?xml version="1.0" encoding="utf-8"?>
 
 <com.qiyue.qdmobile.widgets.CheckableListItemView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -40,7 +40,7 @@
                 android:layout_toRightOf="@id/quick_contact_photo"
                 android:ellipsize="marquee"
                 android:singleLine="true"
-                android:textColor="#ffffffff"
+                android:textColor="@android:color/black"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <TextView
@@ -52,7 +52,7 @@
                 android:layout_marginLeft="5dip"
                 android:layout_marginRight="10dip"
                 android:singleLine="true"
-                android:textColor="#ffffffff"
+                android:textColor="@android:color/black"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <ImageView
@@ -86,20 +86,19 @@
                 android:layout_toLeftOf="@id/date"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="#ffffffff"
+                android:textColor="@android:color/black"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
 
-        <View
-                android:id="@+id/call_log_divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dip"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="@dimen/call_log_outer_margin"
-                android:layout_marginRight="@dimen/call_log_outer_margin"
-                android:layout_marginTop="@dimen/call_log_inner_margin"
-                android:background="#55ffffff"/>
+
     </RelativeLayout>
+
+    <View android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/line"
+        />
 
 </com.qiyue.qdmobile.widgets.CheckableListItemView>

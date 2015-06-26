@@ -90,7 +90,7 @@ public class SipHome extends FragmentActivity {
         }
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
-        tintManager.setTintColor(Color.parseColor("#FF9563BE"));
+        tintManager.setTintColor(Color.parseColor(Constants.HOME_SCREEN_STATUS_BAR_COLOR));
 
         mRBCLightFontFace = Typeface.createFromAsset(getAssets(), Constants.FONTS_RBC_LIGHT);
 

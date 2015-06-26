@@ -199,7 +199,7 @@ public class QDMobileApplication extends Application {
             {
 
                 Calendar cal = Calendar.getInstance();
-                cal.add(Calendar.DAY_OF_YEAR, -7);
+                cal.add(Calendar.DAY_OF_YEAR, Constants.LBS_OLD_DATA_TIME_PERIOD);
                 String currTime = DateUtils.getDateLabel(cal.getTime(), Constants.LBS_DATE_FORMAT);
 
                 put("ak", Constants.LBS_SERVER_AK);

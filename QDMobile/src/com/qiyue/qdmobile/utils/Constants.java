@@ -15,7 +15,9 @@ public class Constants {
 
     public static final String FONTS_RBC_LIGHT = "fonts/RobotoCondensed-Light.ttf";
 
-    public final static int PICKUP_SIP_URI = 0;
+    public static final int PICKUP_SIP_URI = 0;
+
+    public static final String HOME_SCREEN_STATUS_BAR_COLOR = "#FF9563BE";
 
     public static final String[] ACC_PROJECTION = new String[] {
             SipProfile.FIELD_ID,
@@ -40,7 +42,7 @@ public class Constants {
 
     public static final int LBS_SCAN_SPAN = 1000 * 60; // 60 seconds
 
-    public static final int LBS_OLD_DATA_TIME_PERIOD = 1000 * 60 * 10; // 10 mins
+    public static final int LBS_OLD_DATA_TIME_PERIOD = -7; // 7 days ago
 
     public static final String LBS_SERVER_AK = "NIHuuEoFPysGihl2CwTOOzVb";
 
@@ -61,8 +63,6 @@ public class Constants {
     public static final String LBS_PROCESS = "lbsStack";
 
     public static final String LBS_DQMobile_GEO_TABLE_ID = "111180";
-
-
 
 
 

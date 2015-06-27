@@ -19,7 +19,6 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.RemoteException;
-import android.support.v4.app.FragmentActivity;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -33,6 +32,7 @@ import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 
 import com.github.snowdream.android.util.Log;
+import com.qiyue.qdmobile.BasFragmentActivity;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.ISipService;
 import com.qiyue.qdmobile.api.MediaState;
@@ -61,7 +61,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class InCallActivity extends FragmentActivity implements IOnCallActionTrigger,
+public class InCallActivity extends BasFragmentActivity implements IOnCallActionTrigger,
         IOnLeftRightChoice, ProximityDirector, OnDtmfListener {
 
     private static final int QUIT_DELAY = 3000;
@@ -105,8 +105,10 @@ public class InCallActivity extends FragmentActivity implements IOnCallActionTri
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //handler.setActivityInstance(this);
-        Log.d(THIS_FILE, "Create in call");
+        Log.d(THIS_FILE, ">>--- onCreate() ---<<");
         setContentView(R.layout.in_call_main);
+
+        initBarTintManager();
 
         SipCallSession initialSession = getIntent().getParcelableExtra(SipManager.EXTRA_CALL_INFO);
         synchronized (callMutex) {
@@ -195,7 +197,6 @@ public class InCallActivity extends FragmentActivity implements IOnCallActionTri
         inCallControls.setCallState(initialSession);
         inCallAnswerControls.setCallState(initialSession);
     }
-
 
     @Override
     protected void onStart() {

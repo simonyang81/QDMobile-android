@@ -103,10 +103,10 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
         callSecureText = (TextView) findViewById(R.id.call_secure_text);
         endCallBar = (ViewGroup) findViewById(R.id.end_call_bar);
 
-
-        View btn;
-        btn = findViewById(R.id.endButton);
-        btn.setOnClickListener(this);
+        View btn = findViewById(R.id.endButton);
+        if (btn != null) {
+            btn.setOnClickListener(this);
+        }
 
         btnMenuBuilder = new MenuBuilder(getContext());
         btnMenuBuilder.setCallback(this);
@@ -135,7 +135,7 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
             ViewGroup menuViewWrapper = (ViewGroup) findViewById(R.id.call_action_bar);
             mActionMenuPresenter.setReserveOverflow(true);
             mActionMenuPresenter.setWidthLimit(w, true);
-            // Use width limit (this means we don't care item limits 
+            // Use width limit (this means we don't care item limits
             mActionMenuPresenter.setItemLimit(20);
             ActionMenuView menuView = (ActionMenuView) mActionMenuPresenter.getMenuView(menuViewWrapper);
             UtilityWrapper.getInstance().setBackgroundDrawable(menuView, null);
@@ -201,10 +201,10 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
                     Log.d(THIS_FILE, "Render window added");
                     SipService.setVideoWindow(callInfo.getCallId(), renderView, false);
 
-                    View v = findViewById(R.id.end_call_bar);
-                    ViewGroup.LayoutParams lp2 = v.getLayoutParams();
-                    lp2.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    v.setLayoutParams(lp2);
+//                    View v = findViewById(R.id.end_call_bar);
+//                    ViewGroup.LayoutParams lp2 = v.getLayoutParams();
+//                    lp2.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+//                    v.setLayoutParams(lp2);
                 }
                 hasVideo = true;
             } else {
@@ -258,14 +258,16 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
                 } else {
                     setPadding(0, 0, 0, 0);
                 }
-                View v = findViewById(R.id.end_call_bar);
-                ViewGroup.LayoutParams lp = v.getLayoutParams();
-                if (currentRatio < minButtonRation && !hasVideo) {
-                    lp.height = (int) ((1.0f - minButtonRation) * newHeight);
-                } else {
-                    lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                }
-                v.setLayoutParams(lp);
+
+//                TODO -- Simon
+//                View v = findViewById(R.id.end_call_bar);
+//                ViewGroup.LayoutParams lp = v.getLayoutParams();
+//                if (currentRatio < minButtonRation && !hasVideo) {
+//                    lp.height = (int) ((1.0f - minButtonRation) * newHeight);
+//                } else {
+//                    lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+//                }
+//                v.setLayoutParams(lp);
                 updateMenuView();
             }
         }

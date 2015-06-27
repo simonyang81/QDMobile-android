@@ -5,7 +5,7 @@
   <string name="touch_lock">Doble toque para desbloquear</string>
   <string name="dialpad">Teclado</string>
   <string name="bluetooth">Bluetooth</string>
-  <string name="speaker">Altavoz</string>
+  <string name="call_action_speaker">Altavoz</string>
   <string name="mute">Silenciar</string>
   <string name="add_call">Añadir llamada</string>
   <string name="call_state_calling">Llamando…</string>

@@ -5,7 +5,7 @@
   <string name="touch_lock">טפיחה כפולה לפתיחה</string>
   <string name="dialpad">לוח חיוג</string>
   <string name="bluetooth">בלוטות\'</string>
-  <string name="speaker">רמקול</string>
+  <string name="call_action_speaker">רמקול</string>
   <string name="mute">השתקה</string>
   <string name="add_call">הוספת שיחה</string>
   <string name="call_state_calling">מתקשר…</string>

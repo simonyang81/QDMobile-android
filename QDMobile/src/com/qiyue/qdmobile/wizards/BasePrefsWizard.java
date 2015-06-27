@@ -1,13 +1,18 @@
 package com.qiyue.qdmobile.wizards;
 
+import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.actionbarsherlock.view.Menu;
@@ -23,6 +28,7 @@ import com.qiyue.qdmobile.ui.prefs.GenericPrefs;
 import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.PreferencesWrapper;
 import com.qiyue.qdmobile.wizards.WizardUtils.WizardInfo;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -55,6 +61,13 @@ public class BasePrefsWizard extends GenericPrefs {
 
 		super.onCreate(savedInstanceState);
 
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			setTranslucentStatus(true);
+		}
+		SystemBarTintManager tintManager = new SystemBarTintManager(this);
+		tintManager.setStatusBarTintEnabled(true);
+		tintManager.setTintColor(Color.parseColor(Constants.HOME_SCREEN_STATUS_BAR_COLOR));
+
 		// Bind buttons to their actions
 		Button bt = (Button) findViewById(R.id.cancel_bt);
 		bt.setOnClickListener(new OnClickListener() {
@@ -84,6 +97,19 @@ public class BasePrefsWizard extends GenericPrefs {
 			wizard.fillLayout(account);
 		}
 
+	}
+
+	@TargetApi(19)
+	protected void setTranslucentStatus(boolean on) {
+		Window win = getWindow();
+		WindowManager.LayoutParams winParams = win.getAttributes();
+		final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+		if (on) {
+			winParams.flags |= bits;
+		} else {
+			winParams.flags &= ~bits;
+		}
+		win.setAttributes(winParams);
 	}
 
 	private boolean isResumed = false;

@@ -224,4 +224,10 @@
     <string name="sbc_name">Google图书搜索</string>
     <string name="wifi_changing_network">请求连接到网络\u2026</string>
 
+    <string name="call_action_end_call">结束通话</string>
+    <string name="call_action_dialer">键盘</string>
+    <string name="call_action_video_call">视频通话</string>
+    <string name="call_action_mute">静音</string>
+    <string name="call_action_bluetooth">蓝牙</string>
+
 </resources>

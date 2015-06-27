@@ -1,6 +1,5 @@
 package com.qiyue.qdmobile.zxing;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -19,6 +18,7 @@ import com.github.snowdream.android.util.Log;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
+import com.qiyue.qdmobile.BasActivity;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.utils.Constants;
@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
-public final class CaptureActivity extends Activity implements SurfaceHolder.Callback {
+public final class CaptureActivity extends BasActivity implements SurfaceHolder.Callback {
 
     private static final String TAG = CaptureActivity.class.getSimpleName();
 
@@ -68,6 +68,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.capture);
+
+        initBarTintManager();
 
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);

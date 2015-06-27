@@ -7,7 +7,7 @@
   <string name="touch_lock">ប៉ះ​ពីរដង​ដើម្បីដោះសោ</string>
   <string name="dialpad">DTMF</string>
   <string name="bluetooth">ប៊្លូធូស</string>
-  <string name="speaker">អូប៉ាល័រ</string>
+  <string name="call_action_speaker">អូប៉ាល័រ</string>
   <string name="mute">បិទ​សំឡេង</string>
   <string name="add_call">បន្ថែម​ការ​ហៅ</string>
   <string name="call_state_calling">កំពុង​ហៅ…</string>

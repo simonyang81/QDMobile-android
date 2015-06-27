@@ -7,7 +7,7 @@
   <string name="touch_lock">Doble pulsación para desbloquear</string>
   <string name="dialpad">Marcación por tonos (DTMF)</string>
   <string name="bluetooth">BlueTooth</string>
-  <string name="speaker">Altavoz</string>
+  <string name="call_action_speaker">Altavoz</string>
   <string name="mute">Silenciar</string>
   <string name="add_call">Añadir llamada</string>
   <string name="call_state_calling">Llamando...</string>

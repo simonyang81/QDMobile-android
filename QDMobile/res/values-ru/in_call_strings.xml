@@ -5,7 +5,7 @@
   <string name="touch_lock">Дважды нажмите, чтобы разблокировать</string>
   <string name="dialpad">Кнопки</string>
   <string name="bluetooth">Bluetooth</string>
-  <string name="speaker">Динамик</string>
+  <string name="call_action_speaker">Динамик</string>
   <string name="mute">Откл. звук</string>
   <string name="add_call">+ вызов</string>
   <string name="call_state_calling">Набор номера</string>

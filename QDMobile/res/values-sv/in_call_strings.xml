@@ -7,7 +7,7 @@
   <string name="touch_lock">Dubbelknacka för att låsa upp</string>
   <string name="dialpad">Tonval</string>
   <string name="bluetooth">Blåtand</string>
-  <string name="speaker">Högtalare</string>
+  <string name="call_action_speaker">Högtalare</string>
   <string name="mute">Dämpa</string>
   <string name="add_call">Lägg till samtal</string>
   <string name="call_state_calling">Ringer upp...</string>

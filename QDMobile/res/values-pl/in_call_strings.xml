@@ -7,7 +7,7 @@
   <string name="touch_lock">Dwukrotnie dotknij, aby odblokować</string>
   <string name="dialpad">DTMF</string>
   <string name="bluetooth">Bluetooth</string>
-  <string name="speaker">Głośnik</string>
+  <string name="call_action_speaker">Głośnik</string>
   <string name="mute">Wycisz</string>
   <string name="add_call">Dodaj połączenie</string>
   <string name="call_state_calling">Wybieranie numeru…</string>

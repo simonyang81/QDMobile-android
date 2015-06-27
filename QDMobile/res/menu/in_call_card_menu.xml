@@ -41,16 +41,21 @@
         android:id="@+id/dtmfCallButton"
         android:icon="@drawable/ic_ab_dialpad"
         android:showAsAction="ifRoom"
-        android:title="@string/send_dtmf"/>
+        android:title="@string/send_dtmf"
+        android:visible="false"
+        />
     <item
         android:id="@+id/videoCallButton"
         android:icon="@drawable/icon_video_call_gray"
         android:showAsAction="ifRoom"
         android:title="@string/video"/>
+
     <item
         android:id="@+id/detailedDisplayCallButton"
         android:icon="@android:drawable/ic_menu_info_details"
         android:showAsAction="ifRoom"
-        android:title="@string/info"/>
+        android:title="@string/info"
+        android:visible="false"
+        />
 
 </menu>

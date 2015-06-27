@@ -7,7 +7,7 @@
   <string name="touch_lock">ダブルタップでアンロック</string>
   <string name="dialpad">DTMF</string>
   <string name="bluetooth">Bluetooth</string>
-  <string name="speaker">スピーカー</string>
+  <string name="call_action_speaker">スピーカー</string>
   <string name="mute">ミュート</string>
   <string name="add_call">通話を追加</string>
   <string name="call_state_calling">発信中...</string>

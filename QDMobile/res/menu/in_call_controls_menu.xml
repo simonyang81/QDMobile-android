@@ -6,7 +6,7 @@
         android:checkable="true"
         android:icon="@drawable/ic_sound_speakerphone_holo_dark"
         android:showAsAction="ifRoom"
-        android:title="@string/speaker"/>
+        android:title="@string/call_action_speaker"/>
     <item
         android:id="@+id/muteButton"
         android:checkable="true"

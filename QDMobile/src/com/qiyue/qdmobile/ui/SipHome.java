@@ -1,6 +1,5 @@
 package com.qiyue.qdmobile.ui;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ComponentName;
@@ -8,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -20,9 +18,9 @@ import android.support.v4.view.ViewPager;
 import android.view.*;
 import android.widget.TextView;
 
-import com.baidu.location.LocationClient;
 import com.github.snowdream.android.util.Log;
 import com.nineoldandroids.animation.ValueAnimator;
+import com.qiyue.qdmobile.BasFragmentActivity;
 import com.qiyue.qdmobile.QDMobileApplication;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipConfigManager;
@@ -38,12 +36,11 @@ import com.qiyue.qdmobile.utils.NightlyUpdater.UpdaterPopupLauncher;
 import com.qiyue.qdmobile.utils.backup.BackupWrapper;
 import com.qiyue.qdmobile.wizards.BasePrefsWizard;
 import com.qiyue.qdmobile.wizards.WizardUtils.WizardInfo;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class SipHome extends FragmentActivity {
+public class SipHome extends BasFragmentActivity {
 
     private static final String THIS_FILE = SipHome.class.getSimpleName();
 
@@ -85,12 +82,7 @@ public class SipHome extends FragmentActivity {
 
         setContentView(R.layout.sip_home_one_pane);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatus(true);
-        }
-        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        tintManager.setStatusBarTintEnabled(true);
-        tintManager.setTintColor(Color.parseColor(Constants.HOME_SCREEN_STATUS_BAR_COLOR));
+        initBarTintManager();
 
         mRBCLightFontFace = Typeface.createFromAsset(getAssets(), Constants.FONTS_RBC_LIGHT);
 
@@ -219,19 +211,6 @@ public class SipHome extends FragmentActivity {
         };
         asyncSanityChecker.start();
 
-    }
-
-    @TargetApi(19)
-    private void setTranslucentStatus(boolean on) {
-        Window win = getWindow();
-        WindowManager.LayoutParams winParams = win.getAttributes();
-        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-        if (on) {
-            winParams.flags |= bits;
-        } else {
-            winParams.flags &= ~bits;
-        }
-        win.setAttributes(winParams);
     }
 
     public enum MenuButton {

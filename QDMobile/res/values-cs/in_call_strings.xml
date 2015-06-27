@@ -7,7 +7,7 @@
   <string name="touch_lock">Dvakrát klepněte pro odemknutí</string>
   <string name="dialpad">DTMF</string>
   <string name="bluetooth">Bluetooth</string>
-  <string name="speaker">Reproduktor</string>
+  <string name="call_action_speaker">Reproduktor</string>
   <string name="mute">Ztlumit</string>
   <string name="add_call">Přidat hovor</string>
   <string name="call_state_calling">Volání…</string>

@@ -7,7 +7,7 @@
   <string name="touch_lock">Két érintes a feloldáshoz</string>
   <string name="dialpad">Tárcsázó</string>
   <string name="bluetooth">Bluetooth</string>
-  <string name="speaker">Hangszóró</string>
+  <string name="call_action_speaker">Hangszóró</string>
   <string name="mute">Némít</string>
   <string name="add_call">Hívást hozzáad</string>
   <string name="call_state_calling">Hívás..</string>

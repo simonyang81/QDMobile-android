@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_shape"
     android:orientation="vertical"
-    tools:context="com.qiyue.qdmobile.ui.account.AccountActivity">
+    tools:context="com.qiyue.qdmobile.ui.account.AccountActivity"
+    android:fitsSystemWindows="true"
+    >
 
     <TextView
         android:id="@+id/add_account_title"

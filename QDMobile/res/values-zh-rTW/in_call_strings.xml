@@ -5,7 +5,7 @@
   <string name="touch_lock">雙擊解鎖</string>
   <string name="dialpad">撥號盤</string>
   <string name="bluetooth">藍芽</string>
-  <string name="speaker">揚聲器</string>
+  <string name="call_action_speaker">揚聲器</string>
   <string name="mute">靜音</string>
   <string name="add_call">加入呼叫</string>
   <string name="call_state_calling">呼叫中…</string>

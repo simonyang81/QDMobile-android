@@ -7,7 +7,7 @@
   <string name="touch_lock">Duplo toque para desbloquear</string>
   <string name="dialpad">Teclado</string>
   <string name="bluetooth">Bluetooth</string>
-  <string name="speaker">Viva-Voz</string>
+  <string name="call_action_speaker">Viva-Voz</string>
   <string name="mute">Mudo</string>
   <string name="add_call">Adicionar chamada</string>
   <string name="call_state_calling">Chamando…</string>

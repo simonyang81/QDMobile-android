@@ -4,8 +4,7 @@
     android:id="@+id/call_card_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    android:padding="2dip"
+    android:background="@android:color/black"
     tools:ignore="Overdraw" >
 
     <com.qiyue.qdmobile.widgets.MaxScaleImageView
@@ -24,7 +23,8 @@
         android:id="@+id/contact_name_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#9e808080"
+        android:background="#C08558AA"
+        android:layout_alignParentTop="true"
         android:gravity="center_vertical" >
 
         <com.qiyue.qdmobile.widgets.MarqueeTextView
@@ -119,22 +119,128 @@
     <LinearLayout
         android:id="@+id/end_call_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal"
+        android:layout_above="@+id/end_call_bar_2"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        >
+
+        <TextView
+            android:id="@+id/dialpadButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/call_action_icon_dialer"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="@string/call_action_dialer"
+            android:textColor="#FFFFFFFF"
+            android:background="@color/menu_text_color"
+            android:padding="10dp"
+            android:textSize="14sp"
+            android:layout_marginRight="1dp"
+
+            />
+
+        <TextView
+            android:id="@+id/videoCallButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/call_action_video_call"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="@string/call_action_video_call"
+            android:textColor="#FFFFFFFF"
+            android:background="@color/menu_text_color"
+            android:padding="10dp"
+            android:textSize="14sp"
+            android:layout_marginRight="1dp"
+
+            />
+
+        <TextView
+            android:id="@+id/endButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/icon_end_call"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="@string/call_action_end_call"
+            android:textColor="#FFFFFFFF"
+            android:background="@color/menu_text_color"
+            android:padding="10dp"
+            android:textSize="14sp"
+
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/end_call_bar_2"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="2dip"
-        android:background="@drawable/end_call_background"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:layout_marginTop="1dp"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        >
 
-        <ImageButton
-            android:id="@+id/endButton"
-            style="?attr/actionButtonStyle"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/speakerButton"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:contentDescription="@string/done"
-            android:minHeight="64dip"
-            android:src="@drawable/ic_end_call" />
+            android:layout_weight="1"
+            android:drawableTop="@drawable/call_action_speaker"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="@string/call_action_speaker"
+            android:textColor="#FFFFFFFF"
+            android:background="@color/menu_text_color"
+            android:padding="10dp"
+            android:textSize="14sp"
+            android:layout_marginRight="1dp"
+
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/call_action_mute"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="@string/call_action_mute"
+            android:textColor="#FFFFFFFF"
+            android:background="@color/menu_text_color"
+            android:padding="10dp"
+            android:textSize="14sp"
+            android:layout_marginRight="1dp"
+
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/call_action_bluetooth"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="@string/call_action_bluetooth"
+            android:textColor="#FFFFFFFF"
+            android:background="@color/menu_text_color"
+            android:padding="10dp"
+            android:textSize="14sp"
+
+            />
+
     </LinearLayout>
 
 </RelativeLayout>

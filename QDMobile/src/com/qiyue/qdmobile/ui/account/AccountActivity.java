@@ -7,13 +7,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.qiyue.qdmobile.BasActivity;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.wizards.BasePrefsWizard;
 import com.qiyue.qdmobile.zxing.CaptureActivity;
 
-public class AccountActivity extends Activity {
+public class AccountActivity extends BasActivity {
 
     private View mScanView, mManuallyView;
 
@@ -22,6 +23,8 @@ public class AccountActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+
+        super.initBarTintManager();
 
         mScanView = findViewById(R.id.add_account_scan);
         mManuallyView = findViewById(R.id.add_account_manually);

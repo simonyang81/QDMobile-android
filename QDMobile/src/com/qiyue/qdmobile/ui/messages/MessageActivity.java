@@ -2,13 +2,15 @@ package com.qiyue.qdmobile.ui.messages;
 
 import android.os.Bundle;
 
-import android.support.v4.app.FragmentActivity;
+import com.qiyue.qdmobile.BasFragmentActivity;
 
-public class MessageActivity extends FragmentActivity implements MessageFragment.OnQuitListener {
+public class MessageActivity extends BasFragmentActivity implements MessageFragment.OnQuitListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        initBarTintManager();
         
         if (savedInstanceState == null) {
             // During initial setup, plug in the details fragment.

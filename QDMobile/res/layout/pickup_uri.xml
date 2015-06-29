@@ -1,43 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/bg_qd"
-        >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_shape"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <com.qiyue.qdmobile.widgets.EditSipUri
-            android:id="@+id/sip_uri"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_above="@+id/footer"
-            android:gravity="center_horizontal"/>
+        android:id="@+id/sip_uri"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/footer"
+        android:gravity="center_horizontal"
+        />
 
     <LinearLayout
-            android:id="@+id/footer"
-            style="@style/ButtonBar.AlertDialog"
+        android:id="@+id/footer"
+        style="@style/ButtonBar.AlertDialog"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cancel"
+            style="@style/ButtonBarButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal">
+            android:layout_weight="0.5"
+            android:text="@string/cancel"
+            android:textColor="@android:color/white"
+            android:background="@color/menu_text_color" />
 
         <Button
-                android:id="@+id/cancel"
-                style="@style/ButtonBarButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="@string/cancel"/>
-
-        <Button
-                android:id="@+id/ok"
-                style="@style/ButtonBarButton"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="@string/ok"/>
+            android:id="@+id/ok"
+            style="@style/ButtonBarButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/ok"
+            android:textColor="@android:color/white"
+            android:background="@color/menu_text_color" />
     </LinearLayout>
 
 </RelativeLayout>

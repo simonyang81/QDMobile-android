@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.support.v4.widget.CursorAdapter;
 import android.telephony.PhoneNumberUtils;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -15,28 +16,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AlphabetIndexer;
+import android.widget.AutoCompleteTextView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
+
+import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.models.Filter;
+import com.qiyue.qdmobile.utils.AccountUtils;
 
 /**
  * This adapter is used to filter contacts on both name and number.
  */
 public class ContactsSearchAdapter extends CursorAdapter implements SectionIndexer {
 
+    private static final String TAG = ContactsSearchAdapter.class.getSimpleName();
+
     private final Context mContext;
     private long currentAccId = SipProfile.INVALID_ID;
     AlphabetIndexer alphaIndexer;
     private String currentFilter = "";
+
     private CharacterStyle boldStyle = new StyleSpan(android.graphics.Typeface.BOLD);
     private CharacterStyle highlightStyle = new ForegroundColorSpan(0xFF33B5E5);
 
-    public ContactsSearchAdapter(Context context) {
+    private AutoCompleteTextView mDialUser;
+
+    public ContactsSearchAdapter(Context context, AutoCompleteTextView dialUser) {
         super(context, null, false);
         mContext = context;
-
+        mDialUser = dialUser;
     }
 
     public final void setSelectedAccount(long accId) {
@@ -66,6 +76,9 @@ public class ContactsSearchAdapter extends CursorAdapter implements SectionIndex
     private boolean highlightTextViewSearch(TextView tv) {
         if (currentFilter.length() > 0) {
             String value = tv.getText().toString();
+
+            Log.d(TAG, "highlightTextViewSearch(), value : " + value);
+
             int foundIdx = value.toLowerCase().indexOf(currentFilter);
             if (foundIdx >= 0) {
                 SpannableString spn = new SpannableString(value);
@@ -79,10 +92,32 @@ public class ContactsSearchAdapter extends CursorAdapter implements SectionIndex
     }
 
     @Override
-    public final void bindView(View view, Context context, Cursor cursor) {
+    public final void bindView(final View view, final Context context, Cursor cursor) {
         ContactsWrapper.getInstance().bindContactPhoneView(view, context, cursor);
         highlightTextViewSearch((TextView) view.findViewById(R.id.name));
         highlightTextViewSearch((TextView) view.findViewById(R.id.number));
+
+        if (view != null) {
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String number = (String) view.getTag();
+                    SipProfile account = AccountUtils.getAccount();
+                    String rewritten = Filter.rewritePhoneNumber(context, account.id, number);
+
+                    if (mDialUser != null) {
+                        Editable text = mDialUser.getText();
+                        if (text != null) {
+                            text.clear();
+                            text.append(rewritten);
+                        }
+                    }
+
+
+                }
+            });
+        }
     }
 
     @Override

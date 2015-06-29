@@ -1,69 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="10dp"
+    >
 
     <com.makeramen.roundedimageview.RoundedImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/contact_photo"
-            android:layout_width="?android:attr/listPreferredItemHeight"
-            android:layout_height="?android:attr/listPreferredItemHeight"
-            android:contentDescription="@string/empty_description"
-            android:padding="2dip"
-            android:src="@drawable/ic_contact_picture_holo_dark"
-            android:scaleType="fitXY"
-            android:focusable="true"
-            android:layout_gravity="center"
-            app:riv_corner_radius="100dip" />
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/contact_photo"
+        android:layout_width="@dimen/call_log_list_contact_photo_size"
+        android:layout_height="@dimen/call_log_list_contact_photo_size"
+        android:layout_gravity="center"
+        android:focusable="true"
+        android:padding="2dip"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_contact_picture_holo_dark"
+        app:riv_corner_radius="100dip" />
 
-    <View
-        android:id="@+id/strut"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_centerVertical="true" />
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/strut"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="2dip"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
         android:layout_toRightOf="@+id/contact_photo"
         android:ellipsize="end"
         android:gravity="center_vertical"
+        android:text="name"
         android:singleLine="true"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#FF000000" />
 
     <TextView
         android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/strut"
+        android:layout_below="@+id/name"
         android:layout_marginLeft="5dip"
         android:layout_marginRight="5dip"
         android:layout_toRightOf="@+id/contact_photo"
         android:gravity="center_vertical"
         android:singleLine="true"
+        android:text="label"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:attr/textColorSecondary" />
+        android:textColor="#FF767676" />
 
     <TextView
         android:id="@+id/number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/strut"
         android:layout_toRightOf="@+id/label"
+        android:layout_below="@+id/name"
         android:gravity="center_vertical"
         android:singleLine="true"
+        android:text="number"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:attr/textColorPrimary" />
+        android:textColor="#FF767676"
+        />
 
 </RelativeLayout>

@@ -90,6 +90,9 @@ public class ContactsUtils14 extends ContactsUtils5 {
                     }
 
                 }
+
+                Log.d(THIS_FILE, "callerInfo: " + callerInfo.toString());
+
             } catch (Exception e) {
                 Log.e(THIS_FILE, "Exception while retrieving cursor infos", e);
             } finally {

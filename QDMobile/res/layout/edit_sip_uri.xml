@@ -1,50 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
-        android:id="@+id/topFieldText"
-        android:layout_width="fill_parent"
-        android:layout_height="60dip"
-        android:layout_marginBottom="10dip"
-        android:orientation="horizontal"
-        android:padding="0dip" >
 
-        <AutoCompleteTextView
-            android:id="@+id/dialtxt_user"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_marginLeft="5dip"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:completionThreshold="1"
-            android:dropDownWidth="fill_parent"
-            android:gravity="left|center_vertical"
-            android:hint="@string/type_sip_uri_or_autocomplete"
-            android:textColorHint="#f0ecec"
-            android:imeOptions="actionGo"
-            android:inputType="text|textAutoComplete"
-            android:lines="1"
-            android:textColor="#FFF" />
+    <AutoCompleteTextView
+        android:id="@+id/dialtxt_user"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dip"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/bg_input1"
+        android:completionThreshold="1"
+        android:dropDownWidth="match_parent"
+        android:gravity="left|center_vertical"
+        android:hint="@string/type_sip_uri_or_autocomplete"
+        android:imeOptions="actionGo"
+        android:inputType="text|textAutoComplete"
+        android:lines="1"
+        android:padding="10dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="#f0ecec"
+        android:textCursorDrawable="@drawable/color_cursor" />
 
-        <com.qiyue.qdmobile.widgets.AccountChooserButton
-            android:id="@+id/accountChooserButtonText"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="0" />
-    </LinearLayout>
 
-    <TextView
-        android:id="@+id/dialtxt_domain_helper"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right|center_vertical"
-        android:paddingRight="10dip" />
+    <!--<TextView-->
+    <!--android:id="@+id/dialtxt_domain_helper"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:gravity="right|center_vertical"-->
+    <!--android:paddingRight="10dip"-->
+    <!--android:textColor="#FF767676"-->
+
+    <!--/>-->
 
     <ListView
         android:id="@+id/autoCompleteList"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:fastScrollEnabled="true" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </merge>

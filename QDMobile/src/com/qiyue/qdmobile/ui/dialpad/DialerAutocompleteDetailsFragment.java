@@ -38,7 +38,7 @@ public class DialerAutocompleteDetailsFragment extends SherlockListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        autoCompleteAdapter = new ContactsSearchAdapter(getActivity());
+        autoCompleteAdapter = new ContactsSearchAdapter(getActivity(), null);
     }
     
     @Override

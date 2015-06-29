@@ -127,7 +127,7 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
         mDualPane = getResources().getBoolean(R.bool.use_dual_panes);
         digitFormater = new PhoneNumberFormattingTextWatcher();
         // Auto complete list in case of text
-        autoCompleteAdapter = new ContactsSearchAdapter(getActivity());
+        autoCompleteAdapter = new ContactsSearchAdapter(getActivity(), null);
         autoCompleteListItemListener = new OnAutoCompleteListItemClicked(autoCompleteAdapter);
 
         if (isDigit == null) {

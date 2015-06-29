@@ -44,7 +44,7 @@ public class MessageFragment extends ListFragment implements
     private String remoteFrom;
     private TextView fullFromText;
     private EditText bodyInput;
-    private Button sendButton;
+    private View sendButton;
     private SipNotifications notifications;
     private MessageAdapter mAdapter;
 
@@ -85,7 +85,7 @@ public class MessageFragment extends ListFragment implements
 
         fullFromText = (TextView) v.findViewById(R.id.subject);
         bodyInput = (EditText) v.findViewById(R.id.embedded_text_editor);
-        sendButton = (Button) v.findViewById(R.id.send_button);
+        sendButton = v.findViewById(R.id.send_button);
 
         return v;
     }

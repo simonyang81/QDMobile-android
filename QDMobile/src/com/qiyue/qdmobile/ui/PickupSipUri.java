@@ -10,12 +10,14 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+
+import com.qiyue.qdmobile.BasActivity;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.widgets.EditSipUri;
 import com.qiyue.qdmobile.widgets.EditSipUri.ToCall;
 
-public class PickupSipUri extends Activity implements OnClickListener {
+public class PickupSipUri extends BasActivity implements OnClickListener {
 
     private EditSipUri sipUri;
     private Button okBtn;
@@ -25,6 +27,7 @@ public class PickupSipUri extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.pickup_uri);
+        initBarTintManager();
 
         okBtn = (Button) findViewById(R.id.ok);
         okBtn.setOnClickListener(this);

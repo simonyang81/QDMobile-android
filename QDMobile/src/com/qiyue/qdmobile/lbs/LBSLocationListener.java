@@ -7,6 +7,7 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.mapapi.map.MyLocationData;
 import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.QDMobileApplication;
+import com.qiyue.qdmobile.backup.SharedPreferenceHelper;
 import com.qiyue.qdmobile.utils.AccountUtils;
 import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.DateUtils;
@@ -103,9 +104,16 @@ public class LBSLocationListener implements BDLocationListener {
         }
 
         if (location != null) {
+
             String lbsAccountID = AccountUtils.getLBSAccountID();
+
             if (TextUtils.isEmpty(lbsAccountID) == false) {
-                createPOI(location, lbsAccountID);
+                long tlastcreate = SharedPreferenceHelper.getCreatePOITime();
+                long tc = System.currentTimeMillis();
+                if ((tc < tlastcreate) || (tc - tlastcreate) > Constants.LBS_CREATE_POI_TIMEOUT) {
+                    createPOI(location, lbsAccountID);
+                }
+
             }
         }
 
@@ -133,6 +141,7 @@ public class LBSLocationListener implements BDLocationListener {
                     @Override
                     public void success(LBSBasPO lbsBasPO, Response response) {
                         Log.d(TAG, "createPOI() -> success, " + lbsBasPO.toString());
+                        SharedPreferenceHelper.setCreatePOITime(System.currentTimeMillis());
                     }
 
                     @Override

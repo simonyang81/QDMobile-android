@@ -43,6 +43,7 @@ public class Constants {
     public static final String DEBUG_CODE = "*3328433284#";
 
     public static final int LBS_SCAN_SPAN           = 1000 * 10;
+    public static final int LBS_CREATE_POI_TIMEOUT  = 1000 * 60;    // 60 seconds
 
     public static final int LBS_OLD_DATA_TIME_PERIOD = -7; // 7 days ago
 
@@ -68,8 +69,10 @@ public class Constants {
 
     public static final String LBS_DQMobile_GEO_TABLE_ID = "111180";
 
-
     public static final String LOCATION_TAG = "LBS_LOCATION";
+
+    public static final String SHARED_PREFERENCES_KEY = "QD_SHARED_PREFERENCES_SHARE";
+    public static final String SHARED_PREFERENCES_CREATE_POI_TIME = "QD_SHARED_PREFERENCES_createPOITime";
 
 
 

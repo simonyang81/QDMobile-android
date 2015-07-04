@@ -72,7 +72,7 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
     private MediaState lastMediaState;
 
     private ViewGroup mainFrame;
-    private InCallControls inCallControls;
+//    private InCallControls inCallControls;
 
     // Screen wake lock for incoming call
     private WakeLock wakeLock;
@@ -93,8 +93,8 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
     private boolean useAutoDetectSpeaker = false;
     private InCallAnswerControls inCallAnswerControls;
     private CallsAdapter activeCallsAdapter;
-    private InCallInfoGrid heldCallsGrid;
-    private CallsAdapter heldCallsAdapter;
+//    private InCallInfoGrid heldCallsGrid;
+//    private CallsAdapter heldCallsAdapter;
 
     private final static int PICKUP_SIP_URI_XFER = 0;
     private final static int PICKUP_SIP_URI_NEW_CALL = 1;
@@ -107,7 +107,6 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
         //handler.setActivityInstance(this);
         Log.d(THIS_FILE, ">>--- onCreate() ---<<");
         setContentView(R.layout.in_call_main);
-
         initBarTintManager();
 
         SipCallSession initialSession = getIntent().getParcelableExtra(SipManager.EXTRA_CALL_INFO);
@@ -124,22 +123,22 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
         powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK
                         | PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.ON_AFTER_RELEASE,
-                "com.csipsimple.onIncomingCall");
+                "com.qiyue.qdmobile.onIncomingCall");
         wakeLock.setReferenceCounted(false);
 
         takeKeyEvents(true);
 
         // Cache findViews
         mainFrame = (ViewGroup) findViewById(R.id.mainFrame);
-        inCallControls = (InCallControls) findViewById(R.id.inCallControls);
+//        inCallControls = (InCallControls) findViewById(R.id.inCallControls);
         inCallAnswerControls = (InCallAnswerControls) findViewById(R.id.inCallAnswerControls);
         activeCallsGrid = (InCallInfoGrid) findViewById(R.id.activeCallsGrid);
-        heldCallsGrid = (InCallInfoGrid) findViewById(R.id.heldCallsGrid);
+//        heldCallsGrid = (InCallInfoGrid) findViewById(R.id.heldCallsGrid);
 
         // Bind
         attachVideoPreview();
 
-        inCallControls.setOnTriggerListener(this);
+//        inCallControls.setOnTriggerListener(this);
         inCallAnswerControls.setOnTriggerListener(this);
 
         if (activeCallsAdapter == null) {
@@ -147,29 +146,15 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
         }
         activeCallsGrid.setAdapter(activeCallsAdapter);
 
-        if (heldCallsAdapter == null) {
-            heldCallsAdapter = new CallsAdapter(false);
-        }
-        heldCallsGrid.setAdapter(heldCallsAdapter);
+//        if (heldCallsAdapter == null) {
+//            heldCallsAdapter = new CallsAdapter(false);
+//        }
+//        heldCallsGrid.setAdapter(heldCallsAdapter);
 
 
         ScreenLocker lockOverlay = (ScreenLocker) findViewById(R.id.lockerOverlay);
         lockOverlay.setActivity(this);
         lockOverlay.setOnLeftRightListener(this);
-        
-        /*
-        middleAddCall = (Button) findViewById(R.id.add_call_button);
-        middleAddCall.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                onTrigger(ADD_CALL, null);
-            }
-        });
-        if (!prefsWrapper.getPreferenceBooleanValue(SipConfigManager.SUPPORT_MULTIPLE_CALLS)) {
-            middleAddCall.setEnabled(false);
-            middleAddCall.setText(R.string.not_configured_multiple_calls);
-        }
-        */
 
         // Listen to media & sip events to update the UI
         registerReceiver(callStateReceiver, new IntentFilter(SipManager.ACTION_SIP_CALL_CHANGED));
@@ -191,10 +176,8 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
 
         useAutoDetectSpeaker = prefsWrapper.getPreferenceBooleanValue(SipConfigManager.AUTO_DETECT_SPEAKER);
 
-        applyTheme();
         proximityManager.startTracking();
 
-        inCallControls.setCallState(initialSession);
         inCallAnswerControls.setCallState(initialSession);
     }
 
@@ -209,14 +192,7 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
     @Override
     protected void onResume() {
         super.onResume();
-        /*
-        endCallTargetRect = null;
-        holdTargetRect = null;
-        answerTargetRect = null;
-        xferTargetRect = null;
-        */
         dialFeedback.resume();
-
 
         runOnUiThread(new UpdateUIFromCallRunnable());
 
@@ -246,13 +222,6 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
             quitTimer.purge();
             quitTimer = null;
         }
-        /*
-        if (draggingTimer != null) {
-            draggingTimer.cancel();
-            draggingTimer.purge();
-            draggingTimer = null;
-        }
-        */
 
         try {
             unbindService(connection);
@@ -298,7 +267,8 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
             }
 
             if (videoWakeLock == null) {
-                videoWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "com.csipsimple.videoCall");
+                videoWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP,
+                        "com.qiyue.qdmobile.videoCall");
                 videoWakeLock.setReferenceCounted(false);
             }
         }
@@ -333,17 +303,9 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
         super.onConfigurationChanged(newConfig);
         Log.d(THIS_FILE, "Configuration changed");
         if (cameraPreview != null && cameraPreview.getVisibility() == View.VISIBLE) {
-
             cameraPreview.setVisibility(View.GONE);
         }
         runOnUiThread(new UpdateUIFromCallRunnable());
-    }
-
-    private void applyTheme() {
-        Theme t = Theme.getCurrentTheme(this);
-        if (t != null) {
-            // TODO ...
-        }
     }
 
 
@@ -467,17 +429,17 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
             // because badge avail size depends on that
             if ((mainsCalls + heldsCalls) >= 1) {
                 // Update in call actions
-                inCallControls.setCallState(mainCallInfo);
+//                inCallControls.setCallState(mainCallInfo);
                 inCallAnswerControls.setCallState(mainCallInfo);
             } else {
-                inCallControls.setCallState(null);
+//                inCallControls.setCallState(null);
                 inCallAnswerControls.setCallState(null);
             }
 
-            heldCallsGrid.setVisibility((heldsCalls > 0) ? View.VISIBLE : View.GONE);
+//            heldCallsGrid.setVisibility((heldsCalls > 0) ? View.VISIBLE : View.GONE);
 
             activeCallsAdapter.notifyDataSetChanged();
-            heldCallsAdapter.notifyDataSetChanged();
+//            heldCallsAdapter.notifyDataSetChanged();
 
             //findViewById(R.id.inCallContainer).requestLayout();
 
@@ -535,7 +497,6 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
     private class UpdateUIFromMediaRunnable implements Runnable {
         @Override
         public void run() {
-            inCallControls.setMediaState(lastMediaState);
             proximityManager.updateProximitySensorMode();
         }
     }
@@ -570,35 +531,6 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
     }
     
 
-    /*
-    private void setSubViewVisibilitySafely(int id, boolean visible) {
-        View v = findViewById(id);
-        if(v != null) {
-            v.setVisibility(visible ? View.VISIBLE : View.GONE);
-        }
-    }
-    private class UpdateDraggingRunnable implements Runnable {
-        private DraggingInfo di;
-        
-        UpdateDraggingRunnable(DraggingInfo draggingInfo){
-            di = draggingInfo;
-        }
-        
-        public void run() {
-            inCallControls.setVisibility(di.isDragging ? View.GONE : View.VISIBLE);
-            findViewById(R.id.dropZones).setVisibility(di.isDragging ? View.VISIBLE : View.GONE);
-            
-            setSubViewVisibilitySafely(R.id.dropHangup, di.isDragging);
-            setSubViewVisibilitySafely(R.id.dropHold, (di.isDragging && di.call.isActive() && !di.call.isBeforeConfirmed()));
-            setSubViewVisibilitySafely(R.id.dropAnswer, (di.call.isActive() && di.call.isBeforeConfirmed()
-                    && di.call.isIncoming() && di.isDragging));
-            setSubViewVisibilitySafely(R.id.dropXfer, (!di.call.isBeforeConfirmed()
-                    && !di.call.isAfterEnded() && di.isDragging));
-            
-        }
-    }
-    */
-
     private synchronized void delayedQuit() {
 
         if (wakeLock != null && wakeLock.isHeld()) {
@@ -607,9 +539,6 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
         }
 
         proximityManager.release(0);
-
-//        activeCallsGrid.setVisibility(View.VISIBLE);
-        inCallControls.setVisibility(View.GONE);
 
         Log.d(THIS_FILE, "Start quit timer");
         if (quitTimer != null) {
@@ -631,7 +560,6 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
         DtmfDialogFragment newFragment = DtmfDialogFragment.newInstance(callId);
         newFragment.show(getSupportFragmentManager(), "dialog");
     }
-
 
     @Override
     public void OnDtmf(int callId, int keyCode, int dialTone) {
@@ -789,6 +717,8 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
     @Override
     public void onTrigger(int whichAction, final SipCallSession call) {
 
+        Log.d(THIS_FILE, "onTrigger(), whichAction: " + whichAction);
+
         // Sanity check for actions requiring valid call id
         if (whichAction == TAKE_CALL || whichAction == REJECT_CALL || whichAction == DONT_TAKE_CALL ||
                 whichAction == TERMINATE_CALL || whichAction == DETAILED_DISPLAY ||
@@ -851,6 +781,9 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
                 }
                 case REJECT_CALL:
                 case TERMINATE_CALL: {
+
+                    Log.d(THIS_FILE, ">>--- REJECT_CALL or REJECT_CALL ---<<");
+
                     if (service != null) {
                         service.hangup(call.getCallId(), 0);
                     }
@@ -869,6 +802,7 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
                         Log.d(THIS_FILE, "Manually switch to speaker");
                         useAutoDetectSpeaker = false;
                         service.setSpeakerphoneOn((whichAction == SPEAKER_ON) ? true : false);
+
                     }
                     break;
                 }
@@ -1092,7 +1026,6 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
                 return false;
             }
             if (lastMediaState.isSpeakerphoneOn && !useAutoDetectSpeaker) {
-                // Imediate reason to not enable proximity sensor
                 return false;
             }
         }
@@ -1258,8 +1191,6 @@ public class InCallActivity extends BasFragmentActivity implements IOnCallAction
             if (convertView instanceof InCallCard) {
                 InCallCard vc = (InCallCard) convertView;
                 vc.setOnTriggerListener(InCallActivity.this);
-                // TODO ---
-                //badge.setOnTouchListener(new OnBadgeTouchListener(badge, call));
 
                 SipCallSession session = (SipCallSession) getItem(position);
                 vc.setCallState(session);

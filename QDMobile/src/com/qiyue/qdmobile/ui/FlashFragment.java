@@ -88,7 +88,7 @@ public class FlashFragment extends Fragment {
         ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         ft.replace(R.id.content_frame, mDialpadFragment, Constants.FRAGMENT_TAG_DIALPAD);
 
-        ft.commit();
+        ft.commitAllowingStateLoss();
 
         ((SipHome) getActivity()).showMenuWithAnimator();
 

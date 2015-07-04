@@ -11,7 +11,7 @@ import com.qiyue.qdmobile.utils.Constants;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 /**
- * Created by newsbeat on 6/27/15.
+ * Created by Simon on 6/27/15.
  */
 public class BasFragmentActivity extends FragmentActivity {
 

@@ -51,7 +51,8 @@ public class AccountUtils {
             return "";
         }
 
-        return acc.getSipUserName() + "@" + acc.getDefaultDomain();
+        return "<sip:" + acc.getSipUserName() + "@" + acc.getDefaultDomain() + ">";
     }
+
 
 }

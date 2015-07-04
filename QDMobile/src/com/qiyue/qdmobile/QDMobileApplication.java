@@ -7,6 +7,8 @@ import android.text.TextUtils;
 
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.MyLocationData;
 import com.github.snowdream.android.util.Log;
 import com.github.snowdream.android.util.LogFormatter;
 import com.qiyue.qdmobile.lbs.LBSBasPO;
@@ -27,13 +29,14 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedString;
+import rx.functions.Action1;
 
 /**
  * Created by Simon on 6/23/15.
  */
 public class QDMobileApplication extends Application {
 
-    public LocationClient mLocationClient;
+    public LocationClient mLocalLocationClient;
 
     private static final String TAG = QDMobileApplication.class.getSimpleName();
 
@@ -43,6 +46,8 @@ public class QDMobileApplication extends Application {
     protected static Context sApplicationContext = null;
 
     public RestAdapter mRestAdapter;
+
+    public Action1<MyLocationData> mSubscriber;
 
     @Override
     public void onCreate() {
@@ -57,6 +62,8 @@ public class QDMobileApplication extends Application {
         CrashUtils.getInstance().init();
         FileUtil.initQDMobileLogsPath(sApplicationContext);
 
+        SDKInitializer.initialize(sApplicationContext);
+
         if (Constants.REAL_PACKAGE_NAME.equalsIgnoreCase(processName)) {
 
             if (mRestAdapter == null) {
@@ -68,11 +75,12 @@ public class QDMobileApplication extends Application {
             createGeoTable();
         }
 
-        initLBSLocation();
+        initLBSLocalLocation();
+//        initLBSRemoteLocation();
         Log.d(TAG, "onCreate() -> processName: " + processName);
     }
 
-    private void initLBSLocation() {
+    private void initLBSLocalLocation() {
 
         if (mRestAdapter == null) {
             mRestAdapter = new RestAdapter.Builder()
@@ -80,25 +88,55 @@ public class QDMobileApplication extends Application {
                     .build();
         }
 
-        Log.d(TAG, ">>---- Start LBS Location Server ----<<");
+        Log.d(TAG, ">>---- Start LBS Local Location Server ----<<");
 
-        if (mLocationClient != null && mLocationClient.isStarted()) {
+        if (mLocalLocationClient != null && mLocalLocationClient.isStarted()) {
             Log.d(TAG, "== END ==\n The LBS location is started.");
             return;
         }
 
-        mLocationClient = new LocationClient(this.getApplicationContext());
+        mLocalLocationClient = new LocationClient(this.getApplicationContext());
 
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         option.setScanSpan(Constants.LBS_SCAN_SPAN);
         option.setIsNeedAddress(true);
         option.setNeedDeviceDirect(true);
-        mLocationClient.setLocOption(option);
+        mLocalLocationClient.setLocOption(option);
         LBSLocationListener locationListener = new LBSLocationListener();
-        mLocationClient.registerLocationListener(locationListener);
+        mLocalLocationClient.registerLocationListener(locationListener);
         locationListener.setRestAdapter(mRestAdapter);
+        locationListener.setApplication(this);
     }
+
+//    private void initLBSRemoteLocation() {
+//
+//        if (mRestAdapter == null) {
+//            mRestAdapter = new RestAdapter.Builder()
+//                    .setEndpoint(Constants.LBS_CLOUD_API_URL)
+//                    .build();
+//        }
+//
+//        Log.d(TAG, ">>---- Start LBS Remote Location Server ----<<");
+//
+//        if (mRemoteLocationClient != null && mRemoteLocationClient.isStarted()) {
+//            Log.d(TAG, "== END ==\n The LBS location is started.");
+//            return;
+//        }
+//
+//        mRemoteLocationClient = new LocationClient(this.getApplicationContext());
+//
+//        LocationClientOption option = new LocationClientOption();
+//        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+//        option.setScanSpan(Constants.LBS_REMOTE_SCAN_SPAN);
+//        option.setIsNeedAddress(true);
+//        option.setNeedDeviceDirect(true);
+//        mRemoteLocationClient.setLocOption(option);
+//        LBSRemoteLocationListener locationListener = new LBSRemoteLocationListener();
+//        mRemoteLocationClient.registerLocationListener(locationListener);
+//        locationListener.setRestAdapter(mRestAdapter);
+////        locationListener.setApplication(this);
+//    }
 
     private void createGeoTable() {
 
@@ -213,8 +251,6 @@ public class QDMobileApplication extends Application {
             }
         };
 
-        Log.d(TAG, "params: " + params.toString());
-
         mRestAdapter.create(LBSCloudService.class).deletePOI(params,
                 new Callback<LBSBasPO>() {
                     @Override
@@ -261,6 +297,10 @@ public class QDMobileApplication extends Application {
             }
         }
         return null;
+    }
+
+    public void registerLocationSubscriber(Action1<MyLocationData> subscriber) {
+        mSubscriber = subscriber;
     }
 
 

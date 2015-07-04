@@ -2,6 +2,7 @@ package com.qiyue.qdmobile.ui.incall;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -20,27 +21,23 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.internal.utils.UtilityWrapper;
-import com.actionbarsherlock.internal.view.menu.ActionMenuPresenter;
-import com.actionbarsherlock.internal.view.menu.ActionMenuView;
 import com.actionbarsherlock.internal.view.menu.MenuBuilder;
 import com.actionbarsherlock.internal.view.menu.MenuBuilder.Callback;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipCallSession;
-import com.qiyue.qdmobile.api.SipCallSession.MediaState;
 import com.qiyue.qdmobile.api.SipConfigManager;
 import com.qiyue.qdmobile.api.SipManager;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.api.SipUri;
 import com.qiyue.qdmobile.api.SipUri.ParsedSipContactInfos;
+import com.qiyue.qdmobile.lbs.LocationActivity;
 import com.qiyue.qdmobile.models.CallerInfo;
+import com.qiyue.qdmobile.models.InCallPO;
 import com.qiyue.qdmobile.service.SipService;
 import com.qiyue.qdmobile.utils.Constants;
 import com.qiyue.qdmobile.utils.ContactsAsyncHelper;
-import com.qiyue.qdmobile.utils.CustomDistribution;
 import com.qiyue.qdmobile.utils.ExtraPlugins;
 import com.qiyue.qdmobile.utils.ExtraPlugins.DynActivityPlugin;
 import com.qiyue.qdmobile.utils.PreferencesProviderWrapper;
@@ -69,16 +66,16 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
     private Chronometer elapsedTime;
     private SurfaceView renderView;
     private PreferencesProviderWrapper prefs;
-    private ViewGroup endCallBar;
-    private MenuBuilder btnMenuBuilder;
+    private ViewGroup callAction1, callAction2;
     private boolean hasVideo = false;
     private boolean canVideo = false;
     private boolean cachedZrtpVerified;
     private boolean cachedZrtpActive;
 
-    private ActionMenuPresenter mActionMenuPresenter;
 
     private Map<String, DynActivityPlugin> incallPlugins;
+
+    private Context mContext;
 
 
     public InCallCard(Context context, AttributeSet attrs) {
@@ -91,64 +88,121 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
         initControllerView();
 
         incallPlugins = ExtraPlugins.getDynActivityPlugins(context, SipManager.ACTION_INCALL_PLUGIN);
+        mContext = context;
     }
 
     private void initControllerView() {
-        photo = (ImageView) findViewById(R.id.contact_photo);
-        remoteName = (TextView) findViewById(R.id.contact_name_display_name);
-        remoteSipAddress = (TextView) findViewById(R.id.contact_name_sip_address);
-        elapsedTime = (Chronometer) findViewById(R.id.elapsedTime);
-        callStatusText = (TextView) findViewById(R.id.call_status_text);
-        callSecureBar = (ViewGroup) findViewById(R.id.call_secure_bar);
-        callSecureText = (TextView) findViewById(R.id.call_secure_text);
-        endCallBar = (ViewGroup) findViewById(R.id.end_call_bar);
+        photo               = (ImageView) findViewById(R.id.contact_photo);
+        remoteName          = (TextView) findViewById(R.id.contact_name_display_name);
+        remoteSipAddress    = (TextView) findViewById(R.id.contact_name_sip_address);
+        elapsedTime         = (Chronometer) findViewById(R.id.elapsedTime);
+        callStatusText      = (TextView) findViewById(R.id.call_status_text);
+        callSecureBar       = (ViewGroup) findViewById(R.id.call_secure_bar);
+        callSecureText      = (TextView) findViewById(R.id.call_secure_text);
 
-        View btn = findViewById(R.id.endButton);
-        if (btn != null) {
-            btn.setOnClickListener(this);
-        }
+        callAction1 = (ViewGroup) findViewById(R.id.call_action_group1);
+        callAction2 = (ViewGroup) findViewById(R.id.call_action_group2);
 
-        btnMenuBuilder = new MenuBuilder(getContext());
-        btnMenuBuilder.setCallback(this);
-        MenuInflater inflater = new MenuInflater(getContext());
-        inflater.inflate(R.menu.in_call_card_menu, btnMenuBuilder);
+        initInCallActionButton();
 
-        mActionMenuPresenter = new ActionMenuPresenter(getContext());
-        mActionMenuPresenter.setReserveOverflow(true);
-
-        btnMenuBuilder.addMenuPresenter(mActionMenuPresenter);
-
-        updateMenuView();
     }
 
-    private boolean added = false;
+    private void initInCallActionButton() {
+        final InCallPO inCallPO = new InCallPO();
 
-    private void updateMenuView() {
-        int w = getWidth();
-        if (w <= 0) {
-            w = getResources().getDisplayMetrics().widthPixels;
+        View endCall = findViewById(R.id.call_action_endCallButton);
+        if (endCall != null) {
+            endCall.setOnClickListener(this);
         }
-        w -= 100;
-        if (!added) {
-            final FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-            ViewGroup menuViewWrapper = (ViewGroup) findViewById(R.id.call_action_bar);
-            mActionMenuPresenter.setReserveOverflow(true);
-            mActionMenuPresenter.setWidthLimit(w, true);
-            // Use width limit (this means we don't care item limits
-            mActionMenuPresenter.setItemLimit(20);
-            ActionMenuView menuView = (ActionMenuView) mActionMenuPresenter.getMenuView(menuViewWrapper);
-            UtilityWrapper.getInstance().setBackgroundDrawable(menuView, null);
 
-//            TODO
-            menuViewWrapper.addView(menuView, layoutParams);
+        View dialpad = findViewById(R.id.call_action_dialpadButton);
+        if (dialpad != null) {
+            dialpad.setOnClickListener(v -> dispatchTriggerEvent(IOnCallActionTrigger.DTMF_DISPLAY));
+        }
 
-            added = true;
-        } else {
-            mActionMenuPresenter.setWidthLimit(w, true);
-            mActionMenuPresenter.updateMenuView(true);
+        View locationBtn = findViewById(R.id.call_action_location);
+        if (locationBtn != null) {
+            locationBtn.setOnClickListener(v -> {
+
+                Intent intent = new Intent(mContext, LocationActivity.class);
+                intent.putExtra(Constants.EXTRA_SIP_ACCOUNT, callInfo.getRemoteContact());
+                mContext.startActivity(intent);
+
+            });
+        }
+
+        final TextView speakerBtn = (TextView) findViewById(R.id.call_action_speakerButton);
+        final Drawable noSpeakerDrawable = getResources().getDrawable(R.drawable.call_action_speaker);
+        final Drawable speakerDrawable = getResources().getDrawable(R.drawable.call_action_speaker_on);
+        if (speakerBtn != null) {
+            speakerBtn.setOnClickListener(v -> {
+
+                if (inCallPO.isSpeakerON) {
+                    dispatchTriggerEvent(IOnCallActionTrigger.SPEAKER_OFF);
+                    setViewON(speakerBtn, noSpeakerDrawable);
+                } else {
+                    dispatchTriggerEvent(IOnCallActionTrigger.SPEAKER_ON);
+                    setViewOFF(speakerBtn, speakerDrawable);
+                }
+
+                inCallPO.isSpeakerON = !inCallPO.isSpeakerON;
+
+            });
+        }
+
+        final Drawable unMuteDrawable = getResources().getDrawable(R.drawable.call_action_unmute);
+        final Drawable muteDrawable = getResources().getDrawable(R.drawable.call_action_mute);
+        final TextView muteButton = (TextView) findViewById(R.id.call_action_muteButton);
+        if (muteButton != null) {
+            muteButton.setOnClickListener(v -> {
+
+                if (inCallPO.isMuteON) {
+                    dispatchTriggerEvent(IOnCallActionTrigger.MUTE_OFF);
+                    setViewON(muteButton, unMuteDrawable);
+                } else {
+                    dispatchTriggerEvent(IOnCallActionTrigger.MUTE_ON);
+                    setViewOFF(muteButton, muteDrawable);
+                }
+
+                inCallPO.isMuteON = !inCallPO.isMuteON;
+
+            });
+        }
+
+        final Drawable bluetoothDrawable = getResources().getDrawable(R.drawable.call_action_bluetooth);
+        final Drawable bluetoothOnDrawable = getResources().getDrawable(R.drawable.call_action_bluetooth_on);
+        final TextView bluetoothButton = (TextView) findViewById(R.id.call_action_bluetoothButton);
+        if (bluetoothButton != null) {
+            bluetoothButton.setOnClickListener(v -> {
+
+                if (inCallPO.isBluetoothON) {
+                    dispatchTriggerEvent(IOnCallActionTrigger.BLUETOOTH_OFF);
+                    setViewON(bluetoothButton, bluetoothDrawable);
+                } else {
+                    dispatchTriggerEvent(IOnCallActionTrigger.BLUETOOTH_ON);
+                    setViewOFF(bluetoothButton, bluetoothOnDrawable);
+                }
+                inCallPO.isBluetoothON = !inCallPO.isBluetoothON;
+
+            });
         }
     }
+
+    private void setViewOFF(TextView textView, Drawable OFFDrawable) {
+        textView.setBackgroundColor(getResources().getColor(R.color.call_action_on_pressed));
+        textView.setTextColor(getResources().getColor(R.color.menu_text_color));
+        textView.setCompoundDrawablesWithIntrinsicBounds(null,
+                OFFDrawable, null, null);
+    }
+
+    private void setViewON(TextView textView, Drawable ONDrawable) {
+        textView.setBackgroundColor(getResources().getColor(R.color.menu_text_color));
+        textView.setTextColor(getResources().getColor(android.R.color.white));
+
+        textView.setCompoundDrawablesWithIntrinsicBounds(null,
+                ONDrawable, null, null);
+    }
+
 
     public synchronized void setCallState(SipCallSession aCallInfo) {
         callInfo = aCallInfo;
@@ -194,17 +248,13 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
                     lp.addRule(RelativeLayout.ALIGN_LEFT, RelativeLayout.TRUE);
                     lp.addRule(RelativeLayout.ALIGN_RIGHT, RelativeLayout.TRUE);
                     lp.addRule(RelativeLayout.ALIGN_TOP, RelativeLayout.TRUE);
-                    lp.addRule(RelativeLayout.ABOVE, R.id.call_action_bar);
+                    lp.addRule(RelativeLayout.ABOVE, R.id.call_action_group1);
                     renderView.setLayoutParams(lp);
                     container.addView(renderView, 0);
 
                     Log.d(THIS_FILE, "Render window added");
                     SipService.setVideoWindow(callInfo.getCallId(), renderView, false);
 
-//                    View v = findViewById(R.id.end_call_bar);
-//                    ViewGroup.LayoutParams lp2 = v.getLayoutParams();
-//                    lp2.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-//                    v.setLayoutParams(lp2);
                 }
                 hasVideo = true;
             } else {
@@ -218,22 +268,12 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
         if (onTriggerListener != null) {
             onTriggerListener.onDisplayVideo(hasVideo && canVideo);
         }
-        // End of video stuff
-
-        //requestLayout();
-        /*
-        if(dragListener != null) {
-            dragListener.setCallState(callInfo);
-        }
-        */
     }
 
     /* We accept height twice than width */
     private static float minRatio = 0.5f;
     /* We accept width 1/4 bigger than height */
     private static float maxRatio = 1.25f;
-
-    private static float minButtonRation = 0.75f;
 
 
     private final Handler handler = new Handler();
@@ -259,16 +299,6 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
                     setPadding(0, 0, 0, 0);
                 }
 
-//                TODO -- Simon
-//                View v = findViewById(R.id.end_call_bar);
-//                ViewGroup.LayoutParams lp = v.getLayoutParams();
-//                if (currentRatio < minButtonRation && !hasVideo) {
-//                    lp.height = (int) ((1.0f - minButtonRation) * newHeight);
-//                } else {
-//                    lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-//                }
-//                v.setLayoutParams(lp);
-                updateMenuView();
             }
         }
     };
@@ -299,52 +329,6 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
             return;
         }
 
-        boolean active = callInfo.isBeforeConfirmed() && callInfo.isIncoming();
-        btnMenuBuilder.findItem(R.id.takeCallButton).setVisible(active);
-        btnMenuBuilder.findItem(R.id.dontTakeCallButton).setVisible(active);
-        btnMenuBuilder.findItem(R.id.declineCallButton).setVisible(active);
-
-        active = !callInfo.isAfterEnded()
-                && (!callInfo.isBeforeConfirmed() || (!callInfo.isIncoming() && callInfo
-                .isBeforeConfirmed()));
-        btnMenuBuilder.findItem(R.id.terminateCallButton).setVisible(active);
-
-        active = (!callInfo.isAfterEnded() && !callInfo.isBeforeConfirmed());
-        btnMenuBuilder.findItem(R.id.xferCallButton).setVisible(active);
-        btnMenuBuilder.findItem(R.id.transferCallButton).setVisible(active);
-        btnMenuBuilder.findItem(R.id.holdCallButton).setVisible(active)
-                .setTitle(callInfo.isLocalHeld() ? R.string.resume_call : R.string.hold_call);
-        btnMenuBuilder.findItem(R.id.videoCallButton).setVisible(active && canVideo && !callInfo.mediaHasVideo());
-
-
-        // DTMF
-        active = callInfo.isActive();
-        active &= ((callInfo.getMediaStatus() == MediaState.ACTIVE) || (callInfo.getMediaStatus() == MediaState.REMOTE_HOLD));
-        btnMenuBuilder.findItem(R.id.dtmfCallButton).setVisible(active);
-
-        // Info
-        active = !callInfo.isAfterEnded();
-        btnMenuBuilder.findItem(R.id.detailedDisplayCallButton).setVisible(active);
-
-        // Record
-        active = CustomDistribution.supportCallRecord();
-        if (!callInfo.isRecording() && !callInfo.canRecord()) {
-            active = false;
-        }
-        if (callInfo.isAfterEnded()) {
-            active = false;
-        }
-        btnMenuBuilder.findItem(R.id.recordCallButton).setVisible(active).setTitle(
-                callInfo.isRecording() ? R.string.stop_recording : R.string.record);
-
-        // ZRTP
-        active = callInfo.getHasZrtp() && !callInfo.isAfterEnded();
-        btnMenuBuilder.findItem(R.id.zrtpAcceptance).setVisible(active).setTitle(
-                callInfo.isZrtpSASVerified() ? R.string.zrtp_revoke_trusted_remote : R.string.zrtp_trust_remote);
-
-
-        // Expand plugins
-        btnMenuBuilder.removeGroup(R.id.controls);
         for (DynActivityPlugin callPlugin : incallPlugins.values()) {
             int minState = callPlugin.getMetaDataInt(SipManager.EXTRA_SIP_CALL_MIN_STATE, SipCallSession.InvState.EARLY);
             int maxState = callPlugin.getMetaDataInt(SipManager.EXTRA_SIP_CALL_MAX_STATE, SipCallSession.InvState.CONFIRMED);
@@ -362,10 +346,7 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
             if (!callInfo.isIncoming() && ((way & (1 << 1)) == 0)) {
                 continue;
             }
-            MenuItem pluginMenu = btnMenuBuilder.add(R.id.controls, MenuBuilder.NONE, MenuBuilder.NONE, callPlugin.getName());
-            Intent it = callPlugin.getIntent();
-            it.putExtra(SipManager.EXTRA_CALL_INFO, new SipCallSession(callInfo));
-            pluginMenu.setIntent(it);
+
         }
 
 
@@ -395,9 +376,11 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
         }
         if ((callInfo.isBeforeConfirmed() && callInfo.isIncoming()) /* Before call is established we have the slider */ ||
                 callInfo.isAfterEnded() /*Once ended, just wait for the call finalization*/) {
-            endCallBar.setVisibility(GONE);
+            callAction1.setVisibility(GONE);
+            callAction2.setVisibility(GONE);
         } else {
-            endCallBar.setVisibility(VISIBLE);
+            callAction1.setVisibility(VISIBLE);
+            callAction2.setVisibility(VISIBLE);
         }
 
         if (stateText != -1) {
@@ -413,6 +396,8 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
     private void updateRemoteName() {
 
         final String aRemoteUri = callInfo.getRemoteContact();
+
+        Log.d(Constants.LOCATION_TAG, "aRemoteUri: " + aRemoteUri);
 
         // If not already set with the same value, just ignore it
         if (aRemoteUri != null && !aRemoteUri.equalsIgnoreCase(cachedRemoteUri)) {
@@ -557,16 +542,6 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
         }
     }
 
-    ;
-
-    /*
-    private OnBadgeTouchListener dragListener;
-    public void setOnTouchListener(OnBadgeTouchListener l) {
-        dragListener = l;
-        super.setOnTouchListener(l);
-    }
-    */
-
     private IOnCallActionTrigger onTriggerListener;
 
     /*
@@ -611,7 +586,7 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.endButton) {
+        if (id == R.id.call_action_endCallButton) {
             if (callInfo.isBeforeConfirmed() && callInfo.isIncoming()) {
                 dispatchTriggerEvent(IOnCallActionTrigger.REJECT_CALL);
             } else if (!callInfo.isAfterEnded()) {

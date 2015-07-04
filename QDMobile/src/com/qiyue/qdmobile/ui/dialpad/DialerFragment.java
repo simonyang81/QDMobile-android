@@ -557,6 +557,8 @@ public class DialerFragment extends Fragment implements OnClickListener, OnLongC
             return;
         }
 
+        Log.d(Constants.LOCATION_TAG, "toCall: " + toCall);
+
         // Well we have now the fields, clear theses fields
         digits.getText().clear();
 

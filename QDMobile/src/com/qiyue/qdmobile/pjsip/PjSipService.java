@@ -1253,10 +1253,13 @@ public class PjSipService {
             // Call settings to add video
             pjsua.call_setting_default(cs);
             cs.setAud_cnt(1);
-            cs.setVid_cnt(0);
+//            cs.setVid_cnt(0);
             if (b != null && b.getBoolean(SipCallSession.OPT_CALL_VIDEO, false)) {
                 Log.d(THIS_FILE, "=== setVid_cnt to 1 ===");
                 cs.setVid_cnt(1);
+            } else {
+                Log.d(THIS_FILE, "=== setVid_cnt to 0 ===");
+                cs.setVid_cnt(0);
             }
             cs.setFlag(0);
 

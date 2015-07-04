@@ -247,7 +247,8 @@ public class SipService extends Service {
             intent.putExtra(SipProfile.FIELD_ID, accountId);
             intent.putExtra(SipManager.EXTRA_SIP_CALL_TARGET, callee);
             intent.putExtra(SipManager.EXTRA_SIP_CALL_OPTIONS, options);
-            sendOrderedBroadcast (intent , SipManager.PERMISSION_USE_SIP, mPlaceCallResultReceiver, null,  Activity.RESULT_OK, null, null);
+            sendOrderedBroadcast(intent, SipManager.PERMISSION_USE_SIP,
+					mPlaceCallResultReceiver, null,  Activity.RESULT_OK, null, null);
             
         }
 		
@@ -1013,12 +1014,6 @@ public class SipService extends Service {
 		singleton = this;
 
 		Log.i(THIS_FILE, "Create SIP Service");
-
-		mLocationClient = ((QDMobileApplication) getApplication()).mLocationClient;
-		if (mLocationClient != null && mLocationClient.isStarted() == false) {
-			mLocationClient.start();
-		}
-
 		prefsWrapper = new PreferencesProviderWrapper(this);
 
 		telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -1993,30 +1988,32 @@ public class SipService extends Service {
     
     private static String UI_CALL_PACKAGE = null;
     public static Intent buildCallUiIntent(Context ctxt, SipCallSession callInfo) {
-        // Resolve the package to handle call.
-        if(UI_CALL_PACKAGE == null) {
-            UI_CALL_PACKAGE = ctxt.getPackageName();
-            try {
-                Map<String, DynActivityPlugin> callsUis = ExtraPlugins.getDynActivityPlugins(ctxt, SipManager.ACTION_SIP_CALL_UI);
-                String preferredPackage  = SipConfigManager.getPreferenceStringValue(ctxt, SipConfigManager.CALL_UI_PACKAGE, UI_CALL_PACKAGE);
-                String packageName = null;
-                boolean foundPref = false;
-                for(String activity : callsUis.keySet()) {
-                    packageName = activity.split("/")[0];
-                    if(preferredPackage.equalsIgnoreCase(packageName)) {
-                        UI_CALL_PACKAGE = packageName;
-                        foundPref = true;
-                        break;
-                    }
-                }
-                if(!foundPref && !TextUtils.isEmpty(packageName)) {
-                    UI_CALL_PACKAGE = packageName;
-                }
-            }catch(Exception e) {
-                Log.e(THIS_FILE, "Error while resolving package", e);
-            }
-        }
-        SipCallSession toSendInfo = new SipCallSession(callInfo);
+
+		Log.d(THIS_FILE, ">>--- buildCallUiIntent ---<<");
+
+		if (UI_CALL_PACKAGE == null) {
+			UI_CALL_PACKAGE = ctxt.getPackageName();
+			try {
+				Map<String, DynActivityPlugin> callsUis = ExtraPlugins.getDynActivityPlugins(ctxt, SipManager.ACTION_SIP_CALL_UI);
+				String preferredPackage = SipConfigManager.getPreferenceStringValue(ctxt, SipConfigManager.CALL_UI_PACKAGE, UI_CALL_PACKAGE);
+				String packageName = null;
+				boolean foundPref = false;
+				for (String activity : callsUis.keySet()) {
+					packageName = activity.split("/")[0];
+					if (preferredPackage.equalsIgnoreCase(packageName)) {
+						UI_CALL_PACKAGE = packageName;
+						foundPref = true;
+						break;
+					}
+				}
+				if (!foundPref && !TextUtils.isEmpty(packageName)) {
+					UI_CALL_PACKAGE = packageName;
+				}
+			} catch (Exception e) {
+				Log.e(THIS_FILE, "Error while resolving package", e);
+			}
+		}
+		SipCallSession toSendInfo = new SipCallSession(callInfo);
         Intent intent = new Intent(SipManager.ACTION_SIP_CALL_UI);
         intent.putExtra(SipManager.EXTRA_CALL_INFO, toSendInfo);
         intent.setPackage(UI_CALL_PACKAGE);

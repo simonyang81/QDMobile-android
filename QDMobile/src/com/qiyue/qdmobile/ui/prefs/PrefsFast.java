@@ -21,6 +21,7 @@
 
 package com.qiyue.qdmobile.ui.prefs;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,12 +29,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipConfigManager;
 import com.qiyue.qdmobile.utils.PreferencesWrapper;
 
-public class PrefsFast extends SherlockActivity implements OnClickListener {
+public class PrefsFast extends Activity implements OnClickListener {
 	
 	private CheckBox globIntegrate;
 	private RadioButton globProfileAlways;

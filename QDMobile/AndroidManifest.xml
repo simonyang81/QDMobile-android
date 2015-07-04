@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.qiyue.qdmobile"
     android:installLocation="auto"
-    android:versionCode="3000"
-    android:versionName="3.0" >
+    android:versionCode="3100"
+    android:versionName="3.1" >
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -265,7 +265,7 @@
         <!-- Main ui -->
         <activity
             android:name=".ui.calllog.CallLogDetailsActivity"
-            android:theme="@style/DarkTheme" />
+            android:theme="@style/Holo.Light" />
 
         <!-- Accounts -->
         <activity
@@ -456,7 +456,7 @@
             android:permission="android.permission.CONFIGURE_SIP"
             android:process=":sipStack"
             android:taskAffinity=""
-            android:theme="@style/DarkTheme.NoTitle" >
+            android:theme="@style/Holo.Light" >
             <intent-filter android:priority="10" >
                 <action android:name="com.qiyue.qdmobile.phone.action.INCALL" />
 
@@ -597,6 +597,12 @@
             android:stateNotNeeded="true"
             android:theme="@style/Holo.Light"
             android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <activity android:name=".lbs.LocationActivity"
+            android:theme="@style/Holo.Light"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            />
 
         <!-- Receiver for standard video -->
         <receiver android:name=".plugins.video.PluginReceiver" >

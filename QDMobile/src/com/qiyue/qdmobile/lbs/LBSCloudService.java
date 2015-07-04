@@ -5,10 +5,13 @@ import com.qiyue.qdmobile.utils.Constants;
 import java.util.Map;
 
 import retrofit.Callback;
+import retrofit.http.GET;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.Part;
 import retrofit.http.PartMap;
+import retrofit.http.Path;
+import retrofit.http.Query;
 import retrofit.mime.TypedString;
 
 /**
@@ -38,6 +41,13 @@ public interface LBSCloudService {
     @Multipart
     @POST(Constants.LBS_CLOUD_DELETE_POI_API_URL)
     void deletePOI(@PartMap Map<String, Object> params, Callback<LBSBasPO> cb);
+
+
+    @GET(Constants.LBS_CLOUD_LIST_POI_API_URL)
+    void listPOI(@Query("ak") String ak,
+                 @Query("geotable_id") String geotable_id,
+                 @Query(Constants.LBS_GEO_TABLE_COLUMN_SIP_ACCOUNT) String account,
+                 Callback<LBSListPO> cb);
 
 
 }

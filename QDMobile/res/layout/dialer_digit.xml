@@ -53,14 +53,7 @@
                 android:textStyle="italic"
                 android:visibility="gone"/>
 
-        <!--<com.qiyue.qdmobile.widgets.AccountChooserButton-->
-                <!--android:id="@+id/accountChooserButton"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_alignParentTop="true"/>-->
     </RelativeLayout>
-    <!-- Autocomplete -->
 
     <ListView
             android:id="@+id/autoCompleteList"

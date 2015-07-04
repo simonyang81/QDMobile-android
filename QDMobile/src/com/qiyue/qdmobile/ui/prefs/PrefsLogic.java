@@ -6,8 +6,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.telephony.TelephonyManager;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipConfigManager;
 import com.qiyue.qdmobile.api.SipManager;
@@ -329,7 +327,6 @@ public class PrefsLogic {
 
     }
 
-
     public static void updateDescriptionForType(Context ctxt, IPreferenceHelper pfh, int t) {
 
         switch (t) {
@@ -342,25 +339,4 @@ public class PrefsLogic {
     }
 
 
-    public static boolean onMainActivityOptionsItemSelected(MenuItem item, Context ctxt, PreferencesWrapper prefsWrapper) {
-        int id = item.getItemId();
-        if (id == R.id.audio_test) {
-            ctxt.startActivity(new Intent(ctxt, AudioTester.class));
-            return true;
-        } else if (id == R.id.reset_settings) {
-            prefsWrapper.resetAllDefaultValues();
-            return true;
-        } else if (id == R.id.expert) {
-            prefsWrapper.toogleExpertMode();
-
-            return true;
-        }
-        return false;
-    }
-
-    public static void onMainActivityPrepareOptionMenu(Menu menu, Context ctxt, PreferencesWrapper prefsWrapper) {
-
-        menu.findItem(R.id.expert).setTitle(prefsWrapper.isAdvancedUser() ? R.string.normal_preferences : R.string.expert_preferences);
-        //menu.findItem(R.id.audio_test).setVisible(prefsWrapper.isAdvancedUser());
-    }
 }

@@ -1,25 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
 package com.qiyue.qdmobile.ui.calllog;
 
 import android.content.ContentResolver;
@@ -30,27 +8,24 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CallLog;
-import android.provider.CallLog.Calls;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.github.snowdream.android.util.Log;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipManager;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.api.SipUri;
 import com.qiyue.qdmobile.models.CallerInfo;
+import com.qiyue.qdmobile.utils.AccountUtils;
 import com.qiyue.qdmobile.utils.ContactsAsyncHelper;
 import com.qiyue.qdmobile.utils.contacts.ContactsWrapper;
-import com.qiyue.qdmobile.widgets.AccountChooserButton;
 
 /**
  * Displays the details of a specific call log entry.
@@ -59,18 +34,19 @@ import com.qiyue.qdmobile.widgets.AccountChooserButton;
  * or with the {@link #EXTRA_CALL_LOG_IDS} extra to specify a group of call log
  * entries.
  */
-public class CallLogDetailsFragment extends SherlockFragment {
+public class CallLogDetailsFragment extends Fragment {
 
-    private static final String THIS_FILE = "CallLogDetailsFragment";
+    private static final String THIS_FILE = CallLogDetailsFragment.class.getSimpleName();
     /** A long array extra containing ids of call log entries to display. */
     public static final String EXTRA_CALL_LOG_IDS = "EXTRA_CALL_LOG_IDS";
 
     private PhoneCallDetailsHelper mPhoneCallDetailsHelper;
     private TextView mHeaderTextView;
-    private View mHeaderOverlayView;
-    private ImageView mMainActionView, mContactBackgroundView;
-    private ImageButton mMainActionPushLayerView;
-    private AccountChooserButton mAccountChooserButton;
+//    private View mHeaderOverlayView;
+//    private ImageView mMainActionView;
+    private RoundedImageView mContactBackgroundView;
+//    private ImageButton mMainActionPushLayerView;
+//    private AccountChooserButton mAccountChooserButton;
 
     /* package */Resources mResources;
     private LayoutInflater mInflater;
@@ -113,8 +89,13 @@ public class CallLogDetailsFragment extends SherlockFragment {
         @Override
         public void onClick(View view) {
             String nbr = (String) view.getTag();
+
+            Log.d(THIS_FILE, "nbr: " + nbr);
+
             if (!TextUtils.isEmpty(nbr)) {
-                SipProfile acc = mAccountChooserButton.getSelectedAccount();
+//                SipProfile acc = mAccountChooserButton.getSelectedAccount();
+
+                SipProfile acc = AccountUtils.getAccount();
                 Intent it = new Intent(Intent.ACTION_CALL);
                 it.setData(SipUri.forgeSipUri(SipManager.PROTOCOL_CSIP, nbr));
                 it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -132,11 +113,11 @@ public class CallLogDetailsFragment extends SherlockFragment {
 
         mPhoneCallDetailsHelper = new PhoneCallDetailsHelper(mResources);
         mHeaderTextView = (TextView) v.findViewById(R.id.header_text);
-        mHeaderOverlayView = v.findViewById(R.id.photo_text_bar);
-        mMainActionView = (ImageView) v.findViewById(R.id.main_action);
-        mMainActionPushLayerView = (ImageButton) v.findViewById(R.id.main_action_push_layer);
-        mContactBackgroundView = (ImageView) v.findViewById(R.id.contact_background);
-        mAccountChooserButton = (AccountChooserButton) v.findViewById(R.id.call_choose_account);
+//        mHeaderOverlayView = v.findViewById(R.id.photo_text_bar);
+//        mMainActionView = (ImageView) v.findViewById(R.id.main_action);
+//        mMainActionPushLayerView = (ImageButton) v.findViewById(R.id.main_action_push_layer);
+        mContactBackgroundView = (RoundedImageView) v.findViewById(R.id.contact_background);
+//        mAccountChooserButton = (AccountChooserButton) v.findViewById(R.id.call_choose_account);
         return v;
     }
 
@@ -220,15 +201,22 @@ public class CallLogDetailsFragment extends SherlockFragment {
             mainActionIcon = R.drawable.ic_contacts_holo_dark;
             mainActionDescription = nameOrNumber.toString();
         } else if(!TextUtils.isEmpty(firstDetails.number)){
-            mainActionIntent = ContactsWrapper.getInstance().getAddContactIntent((String) firstDetails.name, (String) firstDetails.number);
+            mainActionIntent
+                    = ContactsWrapper.getInstance().getAddContactIntent((String) firstDetails.name, (String) firstDetails.number);
             mainActionIcon = R.drawable.ic_add_contact_holo_dark;
             mainActionDescription = getString(R.string.menu_add_to_contacts);
-            if(TextUtils.isEmpty(firstDetails.name)) {
+            if (TextUtils.isEmpty(firstDetails.name)) {
                 mHeaderTextView.setText(R.string.menu_add_to_contacts);
-            }else {
+                mHeaderTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(mainActionIntent);
+                    }
+                });
+            } else {
                 mHeaderTextView.setText(getString(R.string.menu_add_address_to_contacts, firstDetails.name));
             }
-        }else {
+        } else {
             // If we cannot call the number, when we probably cannot add it as a
             // contact either.
             // This is usually the case of private, unknown, or payphone
@@ -239,23 +227,23 @@ public class CallLogDetailsFragment extends SherlockFragment {
         }
 
         if (mainActionIntent == null) {
-            mMainActionView.setVisibility(View.INVISIBLE);
-            mMainActionPushLayerView.setVisibility(View.GONE);
+//            mMainActionView.setVisibility(View.INVISIBLE);
+//            mMainActionPushLayerView.setVisibility(View.GONE);
             mHeaderTextView.setVisibility(View.INVISIBLE);
-            mHeaderOverlayView.setVisibility(View.INVISIBLE);
+//            mHeaderOverlayView.setVisibility(View.INVISIBLE);
         } else {
-            mMainActionView.setVisibility(View.VISIBLE);
-            mMainActionView.setImageResource(mainActionIcon);
-            mMainActionPushLayerView.setVisibility(View.VISIBLE);
-            mMainActionPushLayerView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(mainActionIntent);
-                }
-            });
-            mMainActionPushLayerView.setContentDescription(mainActionDescription);
+//            mMainActionView.setVisibility(View.VISIBLE);
+//            mMainActionView.setImageResource(mainActionIcon);
+//            mMainActionPushLayerView.setVisibility(View.GONE);
+//            mMainActionPushLayerView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    startActivity(mainActionIntent);
+//                }
+//            });
+//            mMainActionPushLayerView.setContentDescription(mainActionDescription);
             mHeaderTextView.setVisibility(View.VISIBLE);
-            mHeaderOverlayView.setVisibility(View.VISIBLE);
+//            mHeaderOverlayView.setVisibility(View.VISIBLE);
         }
 
         // This action allows to call the number that places the call.
@@ -273,7 +261,7 @@ public class CallLogDetailsFragment extends SherlockFragment {
         ListView historyList = (ListView) getView().findViewById(R.id.history);
         historyList.setAdapter(new CallDetailHistoryAdapter(getActivity(), mInflater, details));
 
-        mAccountChooserButton.setTargetAccount(firstDetails.accountId);
+//        mAccountChooserButton.setTargetAccount(firstDetails.accountId);
         loadContactPhotos(photoUri, contactUri);
     }
 
@@ -356,22 +344,34 @@ public class CallLogDetailsFragment extends SherlockFragment {
     }
 
     /** Configures the call button area using the given entry. */
-    private void configureCallButton(String callText, CharSequence nbrLabel, CharSequence number) {
-        View convertView = getView().findViewById(R.id.call_and_sms);
-        convertView.setVisibility(TextUtils.isEmpty(number) ? View.GONE : View.VISIBLE);
+    private void configureCallButton(final String callText, CharSequence nbrLabel, CharSequence number) {
+//        View convertView = getView().findViewById(R.id.call_and_sms_main_action);
+        View mainAction = getView().findViewById(R.id.call_and_sms_main_action);
+        mainAction.setVisibility(TextUtils.isEmpty(number) ? View.GONE : View.VISIBLE);
 
-        TextView text = (TextView) convertView.findViewById(R.id.call_and_sms_text);
+        TextView text = (TextView) mainAction.findViewById(R.id.call_and_sms_text);
 
-        View mainAction = convertView.findViewById(R.id.call_and_sms_main_action);
-        mainAction.setOnClickListener(mPrimaryActionListener);
+        View callBtn = mainAction.findViewById(R.id.call_log_call_btn);
+        callBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SipProfile acc = AccountUtils.getAccount();
+                Intent it = new Intent(Intent.ACTION_CALL);
+                it.setData(SipUri.forgeSipUri(SipManager.PROTOCOL_CSIP, callText));
+                it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                it.putExtra(SipProfile.FIELD_ACC_ID, acc.id);
+                startActivity(it);
+            }
+        });
+
         mainAction.setContentDescription(callText);
-        if(TextUtils.isEmpty(number)) {
+        if (TextUtils.isEmpty(number)) {
             number = "";
         }
         mainAction.setTag(SipUri.getCanonicalSipContact(number.toString(), false));
         text.setText(callText);
 
-        TextView label = (TextView) convertView.findViewById(R.id.call_and_sms_label);
+        TextView label = (TextView) mainAction.findViewById(R.id.call_and_sms_label);
         if (TextUtils.isEmpty(nbrLabel)) {
             label.setVisibility(View.GONE);
         } else {
@@ -380,20 +380,20 @@ public class CallLogDetailsFragment extends SherlockFragment {
         }
     }
 
-    public void onMenuRemoveFromCallLog(MenuItem menuItem) {
-        final StringBuilder callIds = new StringBuilder();
-        for (Uri callUri : getCallLogEntryUris()) {
-            if (callIds.length() != 0) {
-                callIds.append(",");
-            }
-            callIds.append(ContentUris.parseId(callUri));
-        }
-
-        getActivity().getContentResolver().delete(SipManager.CALLLOG_URI,
-                Calls._ID + " IN (" + callIds + ")", null);
-        if (quitListener != null) {
-            quitListener.onQuit();
-        }
-    }
+//    public void onMenuRemoveFromCallLog(MenuItem menuItem) {
+//        final StringBuilder callIds = new StringBuilder();
+//        for (Uri callUri : getCallLogEntryUris()) {
+//            if (callIds.length() != 0) {
+//                callIds.append(",");
+//            }
+//            callIds.append(ContentUris.parseId(callUri));
+//        }
+//
+//        getActivity().getContentResolver().delete(SipManager.CALLLOG_URI,
+//                Calls._ID + " IN (" + callIds + ")", null);
+//        if (quitListener != null) {
+//            quitListener.onQuit();
+//        }
+//    }
 
 }

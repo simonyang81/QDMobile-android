@@ -9,13 +9,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.actionbarsherlock.view.Menu;
 import com.github.snowdream.android.util.Log;
 import com.google.gson.Gson;
 import com.qiyue.qdmobile.R;
@@ -36,9 +36,6 @@ import java.util.UUID;
 public class BasePrefsWizard extends GenericPrefs {
 	
 	public static final int SAVE_MENU 		= Menu.FIRST + 1;
-	public static final int TRANSFORM_MENU 	= Menu.FIRST + 2;
-	public static final int FILTERS_MENU 	= Menu.FIRST + 3;
-	public static final int DELETE_MENU 	= Menu.FIRST + 4;
 
 	private static final String THIS_FILE = BasePrefsWizard.class.getSimpleName();
 
@@ -188,12 +185,12 @@ public class BasePrefsWizard extends GenericPrefs {
 		saveButton.setEnabled(wizard.canSave());
 	}
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		menu.findItem(SAVE_MENU).setVisible(wizard.canSave());
-
-		return super.onPrepareOptionsMenu(menu);
-	}
+//	@Override
+//	public boolean onPrepareOptionsMenu(Menu menu) {
+//		menu.findItem(SAVE_MENU).setVisible(wizard.canSave());
+//
+//		return super.onPrepareOptionsMenu(menu);
+//	}
 
     private static final int CHOOSE_WIZARD = 0;
     private static final int MODIFY_FILTERS = CHOOSE_WIZARD + 1;

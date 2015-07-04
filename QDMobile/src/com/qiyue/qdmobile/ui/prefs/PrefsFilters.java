@@ -3,11 +3,9 @@ package com.qiyue.qdmobile.ui.prefs;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.qiyue.qdmobile.api.SipProfile;
 import com.qiyue.qdmobile.ui.account.AccountsChooserListActivity;
 import com.qiyue.qdmobile.ui.filters.AccountFilters;
-import com.qiyue.qdmobile.utils.Compatibility;
 
 public class PrefsFilters extends AccountsChooserListActivity {
 
@@ -32,12 +30,4 @@ public class PrefsFilters extends AccountsChooserListActivity {
         }
     }
     
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == Compatibility.getHomeMenuId()) {
-            finish();
-            return true;
-        }
-        return false;
-    }
 }

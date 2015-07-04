@@ -82,10 +82,10 @@ public class CallDetailHistoryAdapter extends BaseAdapter {
         StringBuilder typeSb = new StringBuilder();
         typeSb.append(mContext.getResources().getString(getCallTypeText(callType)));
         // If not 200, we add text for user feedback about what went wrong
-        if(details.statusCode != 200) {
+        if (details.statusCode != 200) {
             typeSb.append(" - ");
             typeSb.append(details.statusCode);
-            if(!TextUtils.isEmpty(details.statusText)) {
+            if (!TextUtils.isEmpty(details.statusText)) {
                 typeSb.append(" / ");
                 typeSb.append(details.statusText);
             }
@@ -124,13 +124,12 @@ public class CallDetailHistoryAdapter extends BaseAdapter {
 
     private String formatDuration(long elapsedSeconds) {
         long minutes = 0;
-        long seconds = 0;
 
         if (elapsedSeconds >= 60) {
             minutes = elapsedSeconds / 60;
             elapsedSeconds -= minutes * 60;
         }
-        seconds = elapsedSeconds;
+        long seconds = elapsedSeconds;
 
         return mContext.getString(R.string.callDetailsDurationFormat, minutes, seconds);
     }

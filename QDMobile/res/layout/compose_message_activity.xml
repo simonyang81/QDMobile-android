@@ -24,48 +24,6 @@
         />
 
 
-    <!--<RelativeLayout-->
-    <!--android:id="@+id/recipients_subject_linear"-->
-    <!--style="@style/ButtonBar"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="75dip"-->
-    <!--android:orientation="horizontal"-->
-    <!--android:paddingBottom="5dip"-->
-    <!--android:paddingLeft="5dip"-->
-    <!--android:paddingRight="5dip"-->
-    <!--android:paddingTop="5dip">-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/subject"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentLeft="true"-->
-    <!--android:layout_marginTop="10dip"-->
-    <!--android:layout_toLeftOf="@+id/accountChooserButton"-->
-    <!--android:clickable="true"-->
-    <!--android:ellipsize="end"-->
-    <!--android:focusable="true"-->
-    <!--android:textAppearance="?android:attr/textAppearanceLarge"/>-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/subjectLabel"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignLeft="@+id/subject"-->
-    <!--android:layout_alignRight="@+id/subject"-->
-    <!--android:layout_below="@+id/subject"-->
-    <!--android:ellipsize="end"-->
-    <!--android:text=""-->
-    <!--android:textAppearance="?android:attr/textAppearanceSmall">-->
-    <!--</TextView>-->
-
-    <!--<com.qiyue.qdmobile.widgets.AccountChooserButton-->
-    <!--android:id="@+id/accountChooserButton"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentRight="true"/>-->
-    <!--</RelativeLayout>-->
-
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"

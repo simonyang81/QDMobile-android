@@ -20,7 +20,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.internal.utils.UtilityWrapper;
 import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipConfigManager;
@@ -121,7 +120,7 @@ public class Theme {
     public void applyBackgroundDrawable(View button, String res) {
         Drawable d = getDrawableResource(res);
         if (d != null) {
-            UtilityWrapper.getInstance().setBackgroundDrawable(button, d);
+            button.setBackgroundDrawable(d);
         }
     }
 
@@ -157,7 +156,7 @@ public class Theme {
         }
 
         if (std != null) {
-            UtilityWrapper.getInstance().setBackgroundDrawable(v, std);
+            v.setBackgroundDrawable(std);
         }
     }
 
@@ -180,7 +179,7 @@ public class Theme {
         }
 
         if (std != null) {
-            UtilityWrapper.getInstance().setBackgroundDrawable(v, std);
+            v.setBackgroundDrawable(std);
         }
     }
 

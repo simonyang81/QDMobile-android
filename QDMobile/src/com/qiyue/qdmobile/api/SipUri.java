@@ -151,19 +151,19 @@ public final class SipUri {
                 parsedInfos.domain = m.group(4);
                 parsedInfos.userName = Uri.decode(m.group(3));
                 parsedInfos.scheme = m.group(2);
-            }else {
+            } else {
                 // Try to consider that as host
                 m = SIP_HOST_PATTERN.matcher(sipUri);
-                if(m.matches()) {
+                if (m.matches()) {
                     parsedInfos.displayName = Uri.decode(m.group(1).trim());
                     parsedInfos.domain = m.group(3);
                     parsedInfos.scheme = m.group(2);
-                }else {
+                } else {
                     m = SIP_CONTACT_ADDRESS_PATTERN.matcher(sipUri);
-                    if(m.matches()) {
+                    if (m.matches()) {
                         parsedInfos.userName = Uri.decode(m.group(1));
                         parsedInfos.domain = m.group(2);
-                    }else {
+                    } else {
                         // Final fallback, we have only a username given
                         parsedInfos.userName = sipUri;
                     }

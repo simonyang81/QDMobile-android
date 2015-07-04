@@ -8,6 +8,7 @@
     <color name="account_error">#FFFF0F00</color>
 
 	<color name="menu_text_color">#8558AA</color>
+	<color name="main_color_press">#B276E4</color>
 	<color name="menu_text_color_nor">#777777</color>
 
 	<color name="primary">#3f51b5</color>
@@ -33,5 +34,7 @@
 	<color name="transparent">#00000000</color>
 	<color name="viewfinder_laser">#ffcc0000</color> <!-- Android standard ICS color -->
 	<color name="viewfinder_mask">#60000000</color>
+
+	<color name="call_action_on_pressed">#FFE3E3E3</color>
 
 </resources>

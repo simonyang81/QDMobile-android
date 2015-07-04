@@ -18,6 +18,7 @@ import android.support.v4.view.ViewPager;
 import android.view.*;
 import android.widget.TextView;
 
+import com.baidu.location.LocationClient;
 import com.github.snowdream.android.util.Log;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.qiyue.qdmobile.BasFragmentActivity;
@@ -62,6 +63,8 @@ public class SipHome extends BasFragmentActivity {
 
     private int mMenuHeight;
 
+    private LocationClient mLocalLocationClient;
+
 
     /**
      * Listener interface for Fragments accommodated in {@link ViewPager}
@@ -89,6 +92,11 @@ public class SipHome extends BasFragmentActivity {
         mHeaderGroup = (ViewGroup) findViewById(R.id.ll_menu_btn);
         mMenuHeight = getResources().getDimensionPixelSize(R.dimen.menu_height);
 
+        mLocalLocationClient = ((QDMobileApplication) getApplication()).mLocalLocationClient;
+        if (mLocalLocationClient != null && mLocalLocationClient.isStarted() == false) {
+            mLocalLocationClient.start();
+        }
+
         hideMenu();
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -100,100 +108,21 @@ public class SipHome extends BasFragmentActivity {
         ft.commit();
 
         mDialpadBtn = (TextView) findViewById(R.id.menu_dialpad);
-        mDialpadBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                setMenuButton(MenuButton.dialpad);
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-                mDialpadFragment
-                        = (DialerFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_DIALPAD);
-                if (mDialpadFragment == null) {
-                    mDialpadFragment = new DialerFragment();
-                }
-                ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-                ft.replace(R.id.content_frame, mDialpadFragment, Constants.FRAGMENT_TAG_DIALPAD);
-
-                ft.commit();
-
-            }
-        });
+        mDialpadBtn.setOnClickListener((View v) ->  onClickDialpad());
 
         mRecentsBtn = (TextView) findViewById(R.id.menu_recents);
-        mRecentsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                setMenuButton(MenuButton.recents);
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-                mCallLogFragment
-                        = (CallLogListFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_RECENTS);
-                if (mCallLogFragment == null) {
-                    mCallLogFragment = new CallLogListFragment();
-                }
-                ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-                ft.replace(R.id.content_frame, mCallLogFragment, Constants.FRAGMENT_TAG_RECENTS);
-
-                ft.commit();
-            }
-        });
-
-        mContactsBtn = (TextView) findViewById(R.id.menu_contacts);
+        mRecentsBtn.setOnClickListener(v -> onClickRecents());
 
         // TODO
+        mContactsBtn = (TextView) findViewById(R.id.menu_contacts);
         mContactsBtn.setVisibility(View.GONE);
-        mContactsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                setMenuButton(MenuButton.contacts);
-            }
-        });
+        mContactsBtn.setOnClickListener(v -> setMenuButton(MenuButton.contacts));
 
         mMessagesBtn = (TextView) findViewById(R.id.menu_messages);
-        mMessagesBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                setMenuButton(MenuButton.messages);
-
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-                mMessagesFragment
-                        = (ConversationsListFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_CONVERSATIONS_LIST);
-                if (mMessagesFragment == null) {
-                    mMessagesFragment = new ConversationsListFragment();
-                }
-                ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-                ft.replace(R.id.content_frame, mMessagesFragment, Constants.FRAGMENT_TAG_CONVERSATIONS_LIST);
-                ft.commit();
-
-            }
-        });
+        mMessagesBtn.setOnClickListener(v -> onClickMessages());
 
         mSettingsBtn = (TextView) findViewById(R.id.menu_settings);
-        mSettingsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                setMenuButton(MenuButton.settings);
-
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-                mSettingsFragment
-                        = (SettingsFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_SETTINGS);
-                if (mSettingsFragment == null) {
-                    mSettingsFragment = new SettingsFragment();
-                }
-                ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-                ft.replace(R.id.content_frame, mSettingsFragment, Constants.FRAGMENT_TAG_SETTINGS);
-
-                ft.commit();
-
-            }
-        });
+        mSettingsBtn.setOnClickListener(v -> onClickSettings());
 
         setMenuButton(MenuButton.dialpad);
 
@@ -211,6 +140,67 @@ public class SipHome extends BasFragmentActivity {
         };
         asyncSanityChecker.start();
 
+    }
+
+    private void onClickSettings() {
+        setMenuButton(MenuButton.settings);
+
+        FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
+
+        mSettingsFragment
+                = (SettingsFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_SETTINGS);
+        if (mSettingsFragment == null) {
+            mSettingsFragment = new SettingsFragment();
+        }
+        ft1.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        ft1.replace(R.id.content_frame, mSettingsFragment, Constants.FRAGMENT_TAG_SETTINGS);
+
+        ft1.commit();
+    }
+
+    private void onClickMessages() {
+        setMenuButton(MenuButton.messages);
+
+        FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
+
+        mMessagesFragment
+                = (ConversationsListFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_CONVERSATIONS_LIST);
+        if (mMessagesFragment == null) {
+            mMessagesFragment = new ConversationsListFragment();
+        }
+        ft1.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        ft1.replace(R.id.content_frame, mMessagesFragment, Constants.FRAGMENT_TAG_CONVERSATIONS_LIST);
+        ft1.commit();
+    }
+
+    private void onClickRecents() {
+        setMenuButton(MenuButton.recents);
+        FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
+
+        mCallLogFragment
+                = (CallLogListFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_RECENTS);
+        if (mCallLogFragment == null) {
+            mCallLogFragment = new CallLogListFragment();
+        }
+        ft1.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        ft1.replace(R.id.content_frame, mCallLogFragment, Constants.FRAGMENT_TAG_RECENTS);
+
+        ft1.commit();
+    }
+
+    private void onClickDialpad() {
+        setMenuButton(MenuButton.dialpad);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+        mDialpadFragment
+                = (DialerFragment) getSupportFragmentManager().findFragmentByTag(Constants.FRAGMENT_TAG_DIALPAD);
+        if (mDialpadFragment == null) {
+            mDialpadFragment = new DialerFragment();
+        }
+        ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        ft.replace(R.id.content_frame, mDialpadFragment, Constants.FRAGMENT_TAG_DIALPAD);
+
+        ft.commit();
     }
 
     public enum MenuButton {
@@ -460,6 +450,7 @@ public class SipHome extends BasFragmentActivity {
         disconnect(false);
         super.onDestroy();
         Log.d(THIS_FILE, "---DESTROY SIP HOME END---");
+
     }
 
 

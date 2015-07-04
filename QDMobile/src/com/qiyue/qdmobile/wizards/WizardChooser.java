@@ -1,5 +1,6 @@
 package com.qiyue.qdmobile.wizards;
 
+import android.app.ExpandableListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,14 +12,13 @@ import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockExpandableListActivity;
 import com.qiyue.qdmobile.R;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class WizardChooser extends SherlockExpandableListActivity {
+public class WizardChooser extends ExpandableListActivity {
 
 	private static final String TAG = WizardChooser.class.getSimpleName();
 

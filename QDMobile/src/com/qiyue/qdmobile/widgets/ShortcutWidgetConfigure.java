@@ -1,5 +1,6 @@
 package com.qiyue.qdmobile.widgets;
 
+import android.app.ListActivity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-import com.actionbarsherlock.app.SherlockListActivity;
 import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipManager;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ShortcutWidgetConfigure extends SherlockListActivity {
+public class ShortcutWidgetConfigure extends ListActivity {
 
     private static final String THIS_FILE = ShortcutWidgetConfigure.class.getSimpleName();
 

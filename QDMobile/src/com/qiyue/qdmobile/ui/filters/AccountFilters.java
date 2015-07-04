@@ -1,18 +1,14 @@
 package com.qiyue.qdmobile.ui.filters;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipProfile;
-import com.qiyue.qdmobile.utils.Compatibility;
-import com.qiyue.qdmobile.wizards.WizardUtils;
 
-public class AccountFilters extends SherlockFragmentActivity {
+public class AccountFilters extends FragmentActivity {
 
     private static final String THIS_FILE = "AccountFilters";
     private long accountId = SipProfile.INVALID_ID;
@@ -37,24 +33,10 @@ public class AccountFilters extends SherlockFragmentActivity {
         if (!TextUtils.isEmpty(accountName)) {
             setTitle(getResources().getString(R.string.filters) + " : " + accountName);
         }
-        if (!TextUtils.isEmpty(wizard)) {
-            ActionBar ab = getSupportActionBar();
-            if (ab != null) {
-                ab.setIcon(WizardUtils.getWizardIconRes(wizard));
-            }
-        }
 
         setContentView(R.layout.account_filters_view);
         listFragment = (AccountFiltersListFragment) getSupportFragmentManager().findFragmentById(R.id.list);
         listFragment.setAccountId(accountId);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == Compatibility.getHomeMenuId()) {
-            finish();
-            return true;
-        }
-        return false;
-    }
 }

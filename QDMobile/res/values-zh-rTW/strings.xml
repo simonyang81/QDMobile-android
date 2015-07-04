@@ -220,5 +220,8 @@
     <string name="call_action_video_call">視頻通話</string>
     <string name="call_action_mute">靜音</string>
     <string name="call_action_bluetooth">藍芽</string>
+    <string name="call_action_location">位置信息</string>
+
+    <string name="call_log_title">簡介</string>
 
 </resources>

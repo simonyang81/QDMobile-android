@@ -1,5 +1,6 @@
 package com.qiyue.qdmobile.ui.prefs.cupcake;
 
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,10 +12,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockListActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.SipManager;
@@ -25,7 +22,7 @@ import com.qiyue.qdmobile.utils.PreferencesWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainPrefs extends SherlockListActivity {
+public class MainPrefs extends ListActivity {
 	
 	private static final String THIS_FILE = MainPrefs.class.getSimpleName();
 	private PrefGroupAdapter adapter;
@@ -132,26 +129,5 @@ public class MainPrefs extends SherlockListActivity {
 	    }
 	}
 	
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getSupportMenuInflater();
-        inflater.inflate(R.menu.main_prefs, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-	
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        PrefsLogic.onMainActivityPrepareOptionMenu(menu, this, prefsWrapper);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (PrefsLogic.onMainActivityOptionsItemSelected(item, this, prefsWrapper)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 	
 }

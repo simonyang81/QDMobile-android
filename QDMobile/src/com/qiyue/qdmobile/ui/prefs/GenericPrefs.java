@@ -6,16 +6,16 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.text.TextUtils;
 
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.github.snowdream.android.util.Log;
 import com.qiyue.qdmobile.R;
 
 @SuppressWarnings("deprecation")
-public abstract class GenericPrefs extends SherlockPreferenceActivity implements
+public abstract class GenericPrefs extends PreferenceActivity implements
         OnSharedPreferenceChangeListener, IPreferenceHelper {
 
     private static final String THIS_FILE = "GenericPrefs";

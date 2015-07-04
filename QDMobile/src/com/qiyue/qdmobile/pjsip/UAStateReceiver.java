@@ -1,25 +1,3 @@
-/**
- * Copyright (C) 2010-2012 Regis Montoya (aka r3gis - www.r3gis.fr)
- * Copyright (C) 2010 Chris McCormick (aka mccormix - chris@mccormick.cx) 
- * This file is part of CSipSimple.
- *
- *  CSipSimple is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  If you own a pjsip commercial license you can also redistribute it
- *  and/or modify it under the terms of the GNU Lesser General Public License
- *  as an android library.
- *
- *  CSipSimple is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with CSipSimple.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.qiyue.qdmobile.pjsip;
 
 import android.content.ContentResolver;
@@ -80,7 +58,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UAStateReceiver extends Callback {
-    private final static String THIS_FILE = "SIP UA Receiver";
+
+    private final static String THIS_FILE = UAStateReceiver.class.getSimpleName();
+
     private final static String ACTION_PHONE_STATE_CHANGED = "android.intent.action.PHONE_STATE";
 
     private SipNotifications notificationManager;
@@ -114,12 +94,13 @@ public class UAStateReceiver extends Callback {
         }
     }
 
-    /*
-     * private class IncomingCallInfos { public SipCallSession callInfo; public
-     * Integer accId; }
-     */
     @Override
     public void on_incoming_call(final int accId, final int callId, SWIGTYPE_p_pjsip_rx_data rdata) {
+
+
+        Log.d(THIS_FILE, ">>---  on_incoming_call ---<<");
+        Log.d(THIS_FILE, "rdata : " + SWIGTYPE_p_pjsip_rx_data.getCPtr(rdata));
+
         lockCpu();
 
         // Check if we have not already an ongoing call
@@ -130,8 +111,7 @@ public class UAStateReceiver extends Callback {
                 for (SipCallSessionImpl existingCall : calls) {
                     if (!existingCall.isAfterEnded() && existingCall.getCallId() != callId) {
                         if (!pjService.service.supportMultipleCalls) {
-                            Log.e(THIS_FILE,
-                                    "Settings to not support two call at the same time !!!");
+                            Log.e(THIS_FILE, "Settings to not support two call at the same time !!!");
                             // If there is an ongoing call and we do not support
                             // multiple calls
                             // Send busy here
@@ -163,8 +143,7 @@ public class UAStateReceiver extends Callback {
             SipProfile acc = pjService.getAccountForPjsipId(accId);
             Bundle extraHdr = new Bundle();
             fillRDataHeader("Call-Info", rdata, extraHdr);
-            final int shouldAutoAnswer = pjService.service.shouldAutoAnswer(remContact, acc,
-                    extraHdr);
+            final int shouldAutoAnswer = pjService.service.shouldAutoAnswer(remContact, acc, extraHdr);
             Log.d(THIS_FILE, "Should I anto answer ? " + shouldAutoAnswer);
             if (shouldAutoAnswer >= 200) {
                 // Automatically answer incoming calls with 200 or higher final

@@ -242,5 +242,8 @@
     <string name="call_action_video_call">Video Call</string>
     <string name="call_action_mute">Mute</string>
     <string name="call_action_bluetooth">Bluetooth</string>
+    <string name="call_action_location">Location Info</string>
+
+    <string name="call_log_title">Info</string>
 
 </resources>

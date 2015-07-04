@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/bg_shape"
+    android:background="@android:color/white"
     >
 
     <TextView
@@ -24,6 +24,8 @@
     <com.qiyue.qdmobile.widgets.Dialpad
         android:id="@+id/dialPad"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginBottom="20dp"
+        />
 
 </LinearLayout>

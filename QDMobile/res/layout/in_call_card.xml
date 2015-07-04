@@ -11,7 +11,7 @@
         android:id="@+id/contact_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/call_action_bar"
+        android:layout_above="@+id/call_action_group1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
@@ -105,31 +105,31 @@
             android:textSize="15sp" />
     </RelativeLayout>
 
-    <FrameLayout
-        android:id="@+id/call_action_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/end_call_bar"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_marginTop="2dip"
-        android:background="#000000" />
+    <!--<FrameLayout-->
+        <!--android:id="@+id/call_action_bar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_above="@+id/end_call_bar"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignWithParentIfMissing="true"-->
+        <!--android:layout_marginTop="2dip"-->
+        <!--android:background="#000000" />-->
 
     <LinearLayout
-        android:id="@+id/end_call_bar"
+        android:id="@+id/call_action_group1"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:orientation="horizontal"
-        android:layout_above="@+id/end_call_bar_2"
-        android:paddingLeft="1dp"
-        android:paddingRight="1dp"
+        android:layout_above="@+id/call_action_group2"
+        android:paddingTop="1dp"
+        android:background="@android:color/black"
         >
 
         <TextView
-            android:id="@+id/dialpadButton"
+            android:id="@+id/call_action_dialpadButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -138,7 +138,7 @@
             android:layout_gravity="center"
             android:text="@string/call_action_dialer"
             android:textColor="#FFFFFFFF"
-            android:background="@color/menu_text_color"
+            android:background="@drawable/in_call_bg"
             android:padding="10dp"
             android:textSize="14sp"
             android:layout_marginRight="1dp"
@@ -146,16 +146,16 @@
             />
 
         <TextView
-            android:id="@+id/videoCallButton"
+            android:id="@+id/call_action_location"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/call_action_video_call"
+            android:drawableTop="@drawable/call_action_location"
             android:gravity="center"
             android:layout_gravity="center"
-            android:text="@string/call_action_video_call"
+            android:text="@string/call_action_location"
             android:textColor="#FFFFFFFF"
-            android:background="@color/menu_text_color"
+            android:background="@drawable/in_call_bg"
             android:padding="10dp"
             android:textSize="14sp"
             android:layout_marginRight="1dp"
@@ -163,7 +163,7 @@
             />
 
         <TextView
-            android:id="@+id/endButton"
+            android:id="@+id/call_action_endCallButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -172,7 +172,7 @@
             android:layout_gravity="center"
             android:text="@string/call_action_end_call"
             android:textColor="#FFFFFFFF"
-            android:background="@color/menu_text_color"
+            android:background="@drawable/in_call_bg"
             android:padding="10dp"
             android:textSize="14sp"
 
@@ -181,20 +181,19 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/end_call_bar_2"
+        android:id="@+id/call_action_group2"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:orientation="horizontal"
-        android:layout_marginTop="1dp"
-        android:paddingLeft="1dp"
-        android:paddingRight="1dp"
+        android:background="@android:color/black"
+        android:paddingTop="1dp"
         >
 
         <TextView
-            android:id="@+id/speakerButton"
+            android:id="@+id/call_action_speakerButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -203,18 +202,19 @@
             android:layout_gravity="center"
             android:text="@string/call_action_speaker"
             android:textColor="#FFFFFFFF"
-            android:background="@color/menu_text_color"
             android:padding="10dp"
             android:textSize="14sp"
             android:layout_marginRight="1dp"
+            android:background="@color/menu_text_color"
 
             />
 
         <TextView
+            android:id="@+id/call_action_muteButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/call_action_mute"
+            android:drawableTop="@drawable/call_action_unmute"
             android:gravity="center"
             android:layout_gravity="center"
             android:text="@string/call_action_mute"
@@ -227,6 +227,7 @@
             />
 
         <TextView
+            android:id="@+id/call_action_bluetoothButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

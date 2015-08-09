@@ -48,6 +48,10 @@ public class QDMobileApplication extends Application {
     public RestAdapter mRestAdapter;
 
     public Action1<MyLocationData> mSubscriber;
+    public MyLocationData mLocalData;
+    public Action1<MyLocationData> mLocalSubscriber = myLocationData -> {
+        mLocalData = myLocationData;
+    };
 
     @Override
     public void onCreate() {

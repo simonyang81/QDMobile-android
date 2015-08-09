@@ -1,5 +1,6 @@
 package com.qiyue.qdmobile.ui.incall;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -127,6 +128,10 @@ public class InCallCard extends FrameLayout implements OnClickListener, Callback
                 Intent intent = new Intent(mContext, LocationActivity.class);
                 intent.putExtra(Constants.EXTRA_SIP_ACCOUNT, callInfo.getRemoteContact());
                 mContext.startActivity(intent);
+
+                ((Activity) mContext)
+                        .overridePendingTransition(R.anim.fragment_slide_in_from_bottom, R.anim.fragment_slide_out_to_top);
+
 
             });
         }

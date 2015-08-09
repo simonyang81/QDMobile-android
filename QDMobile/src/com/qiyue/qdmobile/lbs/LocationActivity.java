@@ -1,13 +1,14 @@
 package com.qiyue.qdmobile.lbs;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.baidu.location.LocationClient;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -47,6 +48,7 @@ public class LocationActivity extends BasActivity {
             = BitmapDescriptorFactory.fromResource(R.drawable.icon_remote_location_marker);
 
     private Observable<LatLng> mObservable;
+    private View mbmapProgress;
 
 //    private LatLng[] mArrays
 //        = {new LatLng(24.447405, 118.152257), new LatLng(24.503183, 118.155131), new LatLng(24.541582, 118.143633)};
@@ -78,6 +80,9 @@ public class LocationActivity extends BasActivity {
                 }
 
                 mBaiduMap.clear();
+                if (mbmapProgress != null && mbmapProgress.getVisibility() == View.VISIBLE) {
+                    mbmapProgress.setVisibility(View.GONE);
+                }
 
                 if (mLocalData != null) {
                     LatLng ll1 = new LatLng(mLocalData.latitude, mLocalData.longitude);
@@ -110,6 +115,7 @@ public class LocationActivity extends BasActivity {
         Log.i(TAG, "--->> onCreate() <<---");
 
         setContentView(R.layout.fragment_location);
+        mbmapProgress = findViewById(R.id.bmapProgress);
         initBarTintManager();
 
         Intent i = getIntent();
@@ -129,6 +135,11 @@ public class LocationActivity extends BasActivity {
 
         // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
+
+        MyLocationData initLocationData = ((QDMobileApplication) getApplication()).mLocalData;
+        LatLng ll = new LatLng(initLocationData.latitude, initLocationData.longitude);
+        mBaiduMap.setMapStatus(MapStatusUpdateFactory.newMapStatus(
+                new MapStatus.Builder().zoom(14).target(ll).build()));
 
         mLocClient = new LocationClient(this);
 

@@ -98,9 +98,16 @@ public class LBSLocationListener implements BDLocationListener {
         Action1<MyLocationData> subscriber = mApplication.mSubscriber;
         Log.d(Constants.LOCATION_TAG, "subscriber: " + subscriber);
 
-        if (observable != null && subscriber != null) {
-            Log.d(Constants.LOCATION_TAG, "subscriber --->>> ");
-            observable.subscribe(subscriber);
+        if (observable != null) {
+            if (subscriber != null) {
+                Log.d(Constants.LOCATION_TAG, "subscriber --->>> ");
+                observable.subscribe(subscriber);
+            }
+
+            if (mApplication != null && mApplication.mLocalSubscriber != null) {
+                observable.subscribe(mApplication.mLocalSubscriber);
+            }
+
         }
 
         if (location != null) {

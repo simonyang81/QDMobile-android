@@ -55,15 +55,12 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
 
         ListView lv = (ListView) getActivity().findViewById(android.R.id.list);
 
-        View.OnClickListener addClickButtonListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickAddMessage();
-            }
-        };
+        View.OnClickListener addClickButtonListener = v -> onClickAddMessage();
 
         mCreateMsg = (FloatingActionButton) getActivity().findViewById(R.id.fab_create_messages);
-        mCreateMsg.setOnClickListener(addClickButtonListener);
+        if (mCreateMsg != null && addClickButtonListener != null) {
+            mCreateMsg.setOnClickListener(addClickButtonListener);
+        }
 
         mCreateMsg.attachToListView(lv, new ScrollDirectionListener() {
             @Override
@@ -100,12 +97,9 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
             mAdapter = new ConversationsAdapter(getActivity(), null);
             setListAdapter(mAdapter);
 
-            mAdapter.setCallbackListener(new ConversationsAdapter.ConversationItemClick() {
-                @Override
-                public void callback(View view, final int position) {
-                    ConversationListItemViews cri = (ConversationListItemViews) view.getTag();
-                    viewDetails(cri);
-                }
+            mAdapter.setCallbackListener((view, position) -> {
+                ConversationListItemViews cri = (ConversationListItemViews) view.getTag();
+                viewDetails(cri);
             });
         }
 
@@ -192,12 +186,7 @@ public class ConversationsListFragment extends CSSListFragment implements ViewPa
                                     number = to;
                                 }
                                 final String nbr = number;
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        viewDetails(nbr, fromFull);
-                                    }
-                                });
+                                getActivity().runOnUiThread(() -> viewDetails(nbr, fromFull));
                             }
                         };
                     };

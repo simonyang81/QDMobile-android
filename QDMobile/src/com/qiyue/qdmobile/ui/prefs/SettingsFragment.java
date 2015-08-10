@@ -2,19 +2,19 @@ package com.qiyue.qdmobile.ui.prefs;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.snowdream.android.util.Log;
+import com.qiyue.qdmobile.BasFragment;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.ui.prefs.cupcake.PrefsLoaderActivity;
 
 /**
  * Created by simon on 4/16/15.
  */
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends BasFragment {
 
     private static final String TAG = SettingsFragment.class.getSimpleName();
 

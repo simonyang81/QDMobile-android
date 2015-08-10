@@ -2,15 +2,15 @@ package com.qiyue.qdmobile.widgets;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
+import com.qiyue.qdmobile.BasListFragment;
 import com.qiyue.qdmobile.R;
 
-public abstract class CSSListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public abstract class CSSListFragment extends BasListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private View mListContainer = null;
     private View mProgressContainer = null;

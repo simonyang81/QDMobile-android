@@ -10,12 +10,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.PhoneNumberUtils;
@@ -42,6 +40,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.github.snowdream.android.util.Log;
+import com.qiyue.qdmobile.BasFragment;
 import com.qiyue.qdmobile.R;
 import com.qiyue.qdmobile.api.ISipService;
 import com.qiyue.qdmobile.api.SipCallSession;
@@ -64,7 +63,7 @@ import com.qiyue.qdmobile.widgets.DialerCallBar.OnDialActionListener;
 import com.qiyue.qdmobile.widgets.Dialpad;
 import com.qiyue.qdmobile.widgets.Dialpad.OnDialKeyListener;
 
-public class DialerFragment extends Fragment implements OnClickListener, OnLongClickListener,
+public class DialerFragment extends BasFragment implements OnClickListener, OnLongClickListener,
         OnDialKeyListener, TextWatcher, OnDialActionListener, ViewPagerVisibilityListener, OnKeyListener,
         OnAutoCompleteListVisibilityChangedListener {
 

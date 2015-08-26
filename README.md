@@ -9,3 +9,4 @@ With QDMobile, Everyone in the world can connect. Freely. QDMobile users text, m
 * Make free phone and video call
 * Share locations
 * Push notifications guarantee that you never miss a call or message, even when QDMobile off.
+* Localized to: English, Chinese(SP), Chinese(TR)

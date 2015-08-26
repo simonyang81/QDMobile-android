@@ -109,28 +109,12 @@ public class SipHome : BasFragmentActivity() {
         ft.replace(R.id.content_frame, flashFragment, Constants.FRAGMENT_TAG_FLASH)
         ft.commit()
 
-        menu_dialpad.setOnClickListener { onClickDialpad() }
-
-        menu_recents.setOnClickListener { onClickRecents() }
-
-//        mRecentsBtn = findViewById(R.id.menu_recents) as TextView
-//        mRecentsBtn!!.setOnClickListener()
-
         // TODO
         menu_contacts.setVisibility(View.GONE)
 
-//        mContactsBtn = findViewById(R.id.menu_contacts) as TextView
-//        mContactsBtn!!.setVisibility(View.GONE)
-//        mContactsBtn!!.setOnClickListener()
-
-//        mMessagesBtn = findViewById(R.id.menu_messages) as TextView
-//        mMessagesBtn!!.setOnClickListener()
-
+        menu_dialpad.setOnClickListener { onClickDialpad() }
+        menu_recents.setOnClickListener { onClickRecents() }
         menu_messages.setOnClickListener { onClickMessages() }
-
-//        mSettingsBtn = findViewById(R.id.menu_settings) as TextView
-//        mSettingsBtn!!.setOnClickListener()
-
         menu_settings.setOnClickListener { onClickSettings() }
 
         setMenuButton(MenuButton.dialpad)
@@ -218,11 +202,11 @@ public class SipHome : BasFragmentActivity() {
 
     public fun setMenuButton(menuButton: MenuButton) {
 
-        var dialpadDrawable: Drawable = getResources().getDrawable(R.drawable.icon_keypad_idle)
-        var recentsDrawable: Drawable = getResources().getDrawable(R.drawable.icon_recents_idle)
-        var contactsDrawable: Drawable = getResources().getDrawable(R.drawable.icon_contacts_idle)
-        var messagesDrawable: Drawable = getResources().getDrawable(R.drawable.icon_messages_idle)
-        var settingsDrawable: Drawable = getResources().getDrawable(R.drawable.icon_settings_idle)
+        var dialpadDrawable: Drawable = getResources().getDrawable(R.drawable.icon_keypad_idle, null)
+        var recentsDrawable: Drawable = getResources().getDrawable(R.drawable.icon_recents_idle, null)
+        var contactsDrawable: Drawable = getResources().getDrawable(R.drawable.icon_contacts_idle, null)
+        var messagesDrawable: Drawable = getResources().getDrawable(R.drawable.icon_messages_idle, null)
+        var settingsDrawable: Drawable = getResources().getDrawable(R.drawable.icon_settings_idle, null)
 
         var dialpadColor = getResources().getColor(R.color.menu_text_color_nor)
         var recentsColor = getResources().getColor(R.color.menu_text_color_nor)
@@ -233,27 +217,27 @@ public class SipHome : BasFragmentActivity() {
         when (menuButton) {
             SipHome.MenuButton.dialpad -> {
                 dialpadColor = getResources().getColor(R.color.menu_text_color)
-                dialpadDrawable = getResources().getDrawable(R.drawable.icon_keypad_selected)
+                dialpadDrawable = getResources().getDrawable(R.drawable.icon_keypad_selected, null)
             }
 
             SipHome.MenuButton.recents -> {
                 recentsColor = getResources().getColor(R.color.menu_text_color)
-                recentsDrawable = getResources().getDrawable(R.drawable.icon_recents_selected)
+                recentsDrawable = getResources().getDrawable(R.drawable.icon_recents_selected, null)
             }
 
             SipHome.MenuButton.contacts -> {
                 contactColor = getResources().getColor(R.color.menu_text_color)
-                contactsDrawable = getResources().getDrawable(R.drawable.icon_contacts_selected)
+                contactsDrawable = getResources().getDrawable(R.drawable.icon_contacts_selected, null)
             }
 
             SipHome.MenuButton.messages -> {
                 messageColor = getResources().getColor(R.color.menu_text_color)
-                messagesDrawable = getResources().getDrawable(R.drawable.icon_messages_selected)
+                messagesDrawable = getResources().getDrawable(R.drawable.icon_messages_selected, null)
             }
 
             SipHome.MenuButton.settings -> {
                 settingsColor = getResources().getColor(R.color.menu_text_color)
-                settingsDrawable = getResources().getDrawable(R.drawable.icon_more_selected)
+                settingsDrawable = getResources().getDrawable(R.drawable.icon_more_selected, null)
             }
         }
 
@@ -365,7 +349,7 @@ public class SipHome : BasFragmentActivity() {
         // If we have no account yet, open account panel,
         if (!hasTriedOnceActivateAcc) {
 
-            val c = getContentResolver().query(SipProfile.ACCOUNT_URI, arrayOf<String>(SipProfile.FIELD_ID), null, null, null)
+            val c = getContentResolver().query(SipProfile.ACCOUNT_URI, arrayOf(SipProfile.FIELD_ID), null, null, null)
             var accountCount = 0
             if (c != null) {
                 try {
@@ -378,7 +362,7 @@ public class SipHome : BasFragmentActivity() {
             }
 
             if (accountCount == 0) {
-                var accountIntent: Intent? = null
+                var accountIntent: Intent?
                 val distribWizard = CustomDistribution.getCustomDistributionWizard()
                 if (distribWizard != null) {
                     accountIntent = Intent(this, javaClass<BasePrefsWizard>())
@@ -387,12 +371,12 @@ public class SipHome : BasFragmentActivity() {
                     accountIntent = Intent(this, javaClass<AccountActivity>())
                 }
 
-                if (accountIntent != null) {
+//                if (accountIntent != null) {
                     accountIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(accountIntent)
                     hasTriedOnceActivateAcc = true
                     return
-                }
+//                }
             }
             hasTriedOnceActivateAcc = true
         }
@@ -428,28 +412,28 @@ public class SipHome : BasFragmentActivity() {
 
     }
 
-    private fun getVisibleLeafs(v: View): ArrayList<View> {
-        val res = ArrayList<View>()
-        if (v.getVisibility() != View.VISIBLE) {
-            return res
-        }
-        if (v is ViewGroup) {
-            for (i in 0..v.getChildCount() - 1) {
-                val subLeafs = getVisibleLeafs(v.getChildAt(i))
-                res.addAll(subLeafs)
-            }
-            return res
-        }
-        res.add(v)
-        return res
-    }
+//    private fun getVisibleLeafs(v: View): ArrayList<View> {
+//        val res = ArrayList<View>()
+//        if (v.getVisibility() != View.VISIBLE) {
+//            return res
+//        }
+//        if (v is ViewGroup) {
+//            for (i in 0..v.getChildCount() - 1) {
+//                val subLeafs = getVisibleLeafs(v.getChildAt(i))
+//                res.addAll(subLeafs)
+//            }
+//            return res
+//        }
+//        res.add(v)
+//        return res
+//    }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
     }
 
-    private val initDialerWithText: String? = null
-    var initTabId: Int? = null
+//    private val initDialerWithText: String? = null
+//    var initTabId: Int? = null
 
     override fun onDestroy() {
         disconnect(false)
@@ -476,13 +460,13 @@ public class SipHome : BasFragmentActivity() {
         }
     }
 
-    public fun showMenu() {
-        if (mHeaderGroup != null) {
-            val menu_lp = mHeaderGroup!!.getLayoutParams()
-            menu_lp.height = mMenuHeight
-            mHeaderGroup!!.setLayoutParams(menu_lp)
-        }
-    }
+//    public fun showMenu() {
+//        if (mHeaderGroup != null) {
+//            val menu_lp = mHeaderGroup!!.getLayoutParams()
+//            menu_lp.height = mMenuHeight
+//            mHeaderGroup!!.setLayoutParams(menu_lp)
+//        }
+//    }
 
     public fun hideMenu() {
         if (mHeaderGroup != null) {
@@ -492,22 +476,22 @@ public class SipHome : BasFragmentActivity() {
         }
     }
 
-    public fun hideMenuWithAnimator() {
-        if (mHeaderGroup != null) {
-
-            val menu_lp = mHeaderGroup!!.getLayoutParams()
-            val animator = ValueAnimator.ofInt(mMenuHeight, 0).setDuration(300)
-
-            animator.addUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
-                override fun onAnimationUpdate(valueAnimator: ValueAnimator) {
-                    menu_lp.height = valueAnimator.getAnimatedValue() as Int
-                    mHeaderGroup!!.setLayoutParams(menu_lp)
-                }
-            })
-
-            animator.start()
-        }
-    }
+//    public fun hideMenuWithAnimator() {
+//        if (mHeaderGroup != null) {
+//
+//            val menu_lp = mHeaderGroup!!.getLayoutParams()
+//            val animator = ValueAnimator.ofInt(mMenuHeight, 0).setDuration(300)
+//
+//            animator.addUpdateListener(object : ValueAnimator.AnimatorUpdateListener {
+//                override fun onAnimationUpdate(valueAnimator: ValueAnimator) {
+//                    menu_lp.height = valueAnimator.getAnimatedValue() as Int
+//                    mHeaderGroup!!.setLayoutParams(menu_lp)
+//                }
+//            })
+//
+//            animator.start()
+//        }
+//    }
 
     public fun showMenuWithAnimator() {
         if (mHeaderGroup != null) {
@@ -572,11 +556,11 @@ public class SipHome : BasFragmentActivity() {
                             }
                         }
 
-                        if (attachments == null || attachments.isEmpty()) {
+                        if (attachments.isEmpty()) {
                             return
                         }
 
-                        var emailBody = ""
+                        var emailBody:String
                         if (attachments.size() == 1) {
                             emailBody = "The attached is QDMobile log"
                         } else {

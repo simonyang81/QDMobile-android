@@ -348,6 +348,7 @@
             android:name=".wizards.BasePrefsWizard"
             android:configChanges="orientation"
             android:label="@string/edit"
+            android:screenOrientation="portrait"
             android:theme="@style/DarkTheme.NoTitle" />
 
         <!-- Call management -->
